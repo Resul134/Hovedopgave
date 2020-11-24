@@ -12,14 +12,62 @@ namespace RestAPI.DBUtil
         private static ConnectionString connst = new ConnectionString();
         private string connectionString = connst.ConnectionStr;
 
-        public bool CreateUser(User item)
+        public bool CreateUser(User user)
         {
-            throw new NotImplementedException();
+            int noRows;
+            string queryString = "INSERT INTO User (FirstName,LastName,Birthday,Gender,Phone,Email,Username,Password,Rating,Suspended) VALUES (@FirstName,@LastName,@Birthday,@Gender,@Phone,@Email,@Username,@Password,@Rating,@Suspended)";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    command.Parameters.AddWithValue("@FirstName", user.FirstName);
+                    command.Parameters.AddWithValue("@LastName", user.LastName);
+                    command.Parameters.AddWithValue("@Birthday", user.Birthday);
+                    command.Parameters.AddWithValue("@Gender", user.Gender);
+                    command.Parameters.AddWithValue("@Phone", user.Phone);
+                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@Username", user.Username);
+                    command.Parameters.AddWithValue("@Password", user.Password);
+                    command.Parameters.AddWithValue("@Rating", user.Rating);
+                    command.Parameters.AddWithValue("@Suspended", user.Suspended);
+
+                    command.Connection.Open();
+                    noRows = command.ExecuteNonQuery();
+                    command.Connection.Close();
+                }
+                catch (SqlException)
+                {
+                    return false;
+                }
+            }
+
+            return noRows == 1;
         }
 
         public bool deleteUser(int id)
         {
-            throw new NotImplementedException();
+            string queryString = "DELETE FROM [User] WHERE ID=@id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    command.Parameters.AddWithValue("@id", id);
+                    command.Connection.Open();
+                    command.ExecuteNonQuery();
+                    command.Connection.Close();
+                }
+                catch (SqlException)
+                {
+
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public List<User> getAllUsers()
@@ -36,13 +84,17 @@ namespace RestAPI.DBUtil
                     while (reader.Read())
                     {
                         User user = new User();
-                        user.Id = reader.GetInt32(0);
-                        user.Username = reader.GetString(1);
-                        user.Password = reader.GetString(2);
-                        user.Age = reader.GetInt32(3);
-                        user.Date = reader.GetDateTime(4);
-                        user.Rating = reader.GetDouble(5);
-                        user.Suspended = reader.GetBoolean(6);
+                        user.ID = reader.GetInt32(0);
+                        user.FirstName = reader.GetString(1);
+                        user.LastName = reader.GetString(2);
+                        user.Birthday = reader.GetDateTime(3);
+                        user.Gender = reader.GetString(4);
+                        user.Phone = reader.GetInt32(5);
+                        user.Email = reader.GetString(6);
+                        user.Username = reader.GetString(7);
+                        user.Password = reader.GetString(8);
+                        user.Rating = reader.GetDouble(9);
+                        user.Suspended = reader.GetBoolean(10);
                         UserList.Add(user);
                     }
                 }
@@ -56,12 +108,69 @@ namespace RestAPI.DBUtil
 
         public User GetUserFromId(int id)
         {
-            throw new NotImplementedException();
+            User user = new User();
+            string queryString = "SELECT * FROM [User] WHERE ID=" + id;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        user.ID = reader.GetInt32(0);
+                        user.FirstName = reader.GetString(1);
+                        user.LastName = reader.GetString(2);
+                        user.Birthday = reader.GetDateTime(3);
+                        user.Gender = reader.GetString(4);
+                        user.Phone = reader.GetInt32(5);
+                        user.Email = reader.GetString(6);
+                        user.Username = reader.GetString(7);
+                        user.Password = reader.GetString(8);
+                        user.Rating = reader.GetDouble(9);
+                        user.Suspended = reader.GetBoolean(10);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            return user;
         }
 
-        public bool UpdateUser(User item, int id)
+        public bool UpdateUser(User user, int id)
         {
-            throw new NotImplementedException();
+            string queryString = "UPDATE [User] SET FirstName=@FirstName, LastName=@LastName, Birthday=@Birthday, Gender=@Gender, Phone=@Phone, Email=@Email, Username=@Username, Password=@Password, Rating=@Rating, Suspended=@Suspended WHERE ID=@Id";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    SqlCommand command = new SqlCommand(queryString, connection);
+                    command.Parameters.AddWithValue("@Id", user.ID);
+                    command.Parameters.AddWithValue("@FirstName", user.FirstName);
+                    command.Parameters.AddWithValue("@LastName", user.LastName);
+                    command.Parameters.AddWithValue("@Birthday", user.Birthday);
+                    command.Parameters.AddWithValue("@Gender", user.Gender);
+                    command.Parameters.AddWithValue("@Phone", user.Phone);
+                    command.Parameters.AddWithValue("@Email", user.Email);
+                    command.Parameters.AddWithValue("@Username", user.Username);
+                    command.Parameters.AddWithValue("@Password", user.Password);
+                    command.Parameters.AddWithValue("@Rating", user.Rating);
+                    command.Parameters.AddWithValue("@Suspended", user.Suspended);
+                    
+                    command.Connection.Open();
+                    command.ExecuteNonQuery();
+                    command.Connection.Close();
+                }
+                catch (SqlException)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
