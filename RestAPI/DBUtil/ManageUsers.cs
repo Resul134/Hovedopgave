@@ -15,7 +15,7 @@ namespace RestAPI.DBUtil
         public bool CreateUser(User user)
         {
             int noRows;
-            string queryString = "INSERT INTO User (FirstName,LastName,Birthday,Gender,Phone,Email,Username,Password,Rating,Suspended) VALUES (@FirstName,@LastName,@Birthday,@Gender,@Phone,@Email,@Username,@Password,@Rating,@Suspended)";
+            string queryString = "INSERT INTO [User] (FirstName,LastName,Birthday,Gender,Phone,Email,Username,Password,Rating,Suspended) VALUES (@FirstName,@LastName,@Birthday,@Gender,@Phone,@Email,@Username,@Password,@Rating,@Suspended)";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
