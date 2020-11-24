@@ -109,12 +109,15 @@ namespace RestAPI.DBUtil
         public User GetUserFromId(int id)
         {
             User user = new User();
-            string queryString = "SELECT * FROM [User] WHERE ID=" + id;
+            string queryString = "SELECT * FROM [User] WHERE ID=@Id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 command.Connection.Open();
+
+                command.Parameters.AddWithValue("@Id", id);
+
                 SqlDataReader reader = command.ExecuteReader();
                 try
                 {
@@ -149,7 +152,7 @@ namespace RestAPI.DBUtil
                 try
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
-                    command.Parameters.AddWithValue("@Id", user.ID);
+                    command.Parameters.AddWithValue("@Id", id);
                     command.Parameters.AddWithValue("@FirstName", user.FirstName);
                     command.Parameters.AddWithValue("@LastName", user.LastName);
                     command.Parameters.AddWithValue("@Birthday", user.Birthday);
