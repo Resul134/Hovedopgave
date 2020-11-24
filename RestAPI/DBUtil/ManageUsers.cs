@@ -12,6 +12,15 @@ namespace RestAPI.DBUtil
         private const string ConnectionString =
             "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog = master; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
+        public bool CreateUser(User item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool deleteUser(int id)
+        {
+            throw new NotImplementedException();
+        }
 
         public List<User> getAllUsers()
         {
@@ -44,6 +53,16 @@ namespace RestAPI.DBUtil
                 }
             }
             return UserList;
+        }
+
+        public User GetUserFromId(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool UpdateUser(User item, int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

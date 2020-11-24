@@ -19,7 +19,6 @@ namespace Library.models
         {
         }
 
-
         public int Id
         {
             get { return _id; }
