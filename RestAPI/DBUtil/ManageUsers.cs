@@ -15,7 +15,7 @@ namespace RestAPI.DBUtil
         public bool CreateUser(User user)
         {
             int noRows;
-            string queryString = "INSERT INTO User (FirstName,LastName,Birthday,Gender,Phone,Email,Username,Password,Age,Date,Rating,Suspended) VALUES (@FirstName,@LastName,@Birthday,@Gender,@Phone,@Email,@Username,@Password,@Age,@Date,@Rating,@Suspended)";
+            string queryString = "INSERT INTO User (FirstName,LastName,Birthday,Gender,Phone,Email,Username,Password,Rating,Suspended) VALUES (@FirstName,@LastName,@Birthday,@Gender,@Phone,@Email,@Username,@Password,@Rating,@Suspended)";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
@@ -29,8 +29,6 @@ namespace RestAPI.DBUtil
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@Username", user.Username);
                     command.Parameters.AddWithValue("@Password", user.Password);
-                    command.Parameters.AddWithValue("@Age", user.Age);
-                    command.Parameters.AddWithValue("@Date", user.Date);
                     command.Parameters.AddWithValue("@Rating", user.Rating);
                     command.Parameters.AddWithValue("@Suspended", user.Suspended);
 
@@ -95,10 +93,8 @@ namespace RestAPI.DBUtil
                         user.Email = reader.GetString(6);
                         user.Username = reader.GetString(7);
                         user.Password = reader.GetString(8);
-                        user.Age = reader.GetInt32(9);
-                        user.Date = reader.GetDateTime(10);
-                        user.Rating = reader.GetDouble(11);
-                        user.Suspended = reader.GetBoolean(12);
+                        user.Rating = reader.GetDouble(9);
+                        user.Suspended = reader.GetBoolean(10);
                         UserList.Add(user);
                     }
                 }
@@ -133,10 +129,8 @@ namespace RestAPI.DBUtil
                         user.Email = reader.GetString(6);
                         user.Username = reader.GetString(7);
                         user.Password = reader.GetString(8);
-                        user.Age = reader.GetInt32(9);
-                        user.Date = reader.GetDateTime(10);
-                        user.Rating = reader.GetDouble(11);
-                        user.Suspended = reader.GetBoolean(12);
+                        user.Rating = reader.GetDouble(9);
+                        user.Suspended = reader.GetBoolean(10);
                     }
                 }
                 finally
@@ -149,7 +143,7 @@ namespace RestAPI.DBUtil
 
         public bool UpdateUser(User user, int id)
         {
-            string queryString = "UPDATE [User] SET FirstName=@FirstName, LastName=@LastName, Birthday=@Birthday, Gender=@Gender, Phone=@Phone, Email=@Email, Username=@Username, Password=@Password, Age=@Age, Date=@Date, Rating=@Rating, Suspended=@Suspended WHERE ID=@Id";
+            string queryString = "UPDATE [User] SET FirstName=@FirstName, LastName=@LastName, Birthday=@Birthday, Gender=@Gender, Phone=@Phone, Email=@Email, Username=@Username, Password=@Password, Rating=@Rating, Suspended=@Suspended WHERE ID=@Id";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
@@ -164,8 +158,6 @@ namespace RestAPI.DBUtil
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@Username", user.Username);
                     command.Parameters.AddWithValue("@Password", user.Password);
-                    command.Parameters.AddWithValue("@Age", user.Age);
-                    command.Parameters.AddWithValue("@Date", user.Date);
                     command.Parameters.AddWithValue("@Rating", user.Rating);
                     command.Parameters.AddWithValue("@Suspended", user.Suspended);
                     
