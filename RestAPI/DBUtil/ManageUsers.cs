@@ -49,7 +49,7 @@ namespace RestAPI.DBUtil
 
         public bool deleteUser(int id)
         {
-            string queryString = "DELETE FROM [User] WHERE Id=@id";
+            string queryString = "DELETE FROM [User] WHERE ID=@id";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -86,7 +86,7 @@ namespace RestAPI.DBUtil
                     while (reader.Read())
                     {
                         User user = new User();
-                        user.Id = reader.GetInt32(0);
+                        user.ID = reader.GetInt32(0);
                         user.FirstName = reader.GetString(1);
                         user.LastName = reader.GetString(2);
                         user.Birthday = reader.GetDateTime(3);
@@ -113,7 +113,7 @@ namespace RestAPI.DBUtil
         public User GetUserFromId(int id)
         {
             User user = new User();
-            string queryString = "SELECT * FROM [User] WHERE Id=" + id;
+            string queryString = "SELECT * FROM [User] WHERE ID=" + id;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -124,7 +124,7 @@ namespace RestAPI.DBUtil
                 {
                     while (reader.Read())
                     {
-                        user.Id = reader.GetInt32(0);
+                        user.ID = reader.GetInt32(0);
                         user.FirstName = reader.GetString(1);
                         user.LastName = reader.GetString(2);
                         user.Birthday = reader.GetDateTime(3);
@@ -155,7 +155,7 @@ namespace RestAPI.DBUtil
                 try
                 {
                     SqlCommand command = new SqlCommand(queryString, connection);
-                    command.Parameters.AddWithValue("@Id", user.Id);
+                    command.Parameters.AddWithValue("@Id", user.ID);
                     command.Parameters.AddWithValue("@FirstName", user.FirstName);
                     command.Parameters.AddWithValue("@LastName", user.LastName);
                     command.Parameters.AddWithValue("@Birthday", user.Birthday);
