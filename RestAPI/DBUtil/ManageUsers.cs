@@ -9,8 +9,8 @@ namespace RestAPI.DBUtil
 {
     public class ManageUsers : IManageUsers
     {
-        private const string ConnectionString =
-            "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog = master; Integrated Security = True; Connect Timeout = 30; Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        private static ConnectionString connst = new ConnectionString();
+        private string connectionString = connst.ConnectionStr;
 
         public bool CreateUser(User item)
         {
@@ -25,9 +25,8 @@ namespace RestAPI.DBUtil
         public List<User> getAllUsers()
         {
             List<User> UserList = new List<User>();
-            string queryString = "SELECT * FROM User";
-
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            string queryString = "SELECT * FROM [User]";
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 command.Connection.Open();
@@ -42,7 +41,7 @@ namespace RestAPI.DBUtil
                         user.Password = reader.GetString(2);
                         user.Age = reader.GetInt32(3);
                         user.Date = reader.GetDateTime(4);
-                        user.Rating = reader.GetFloat(5);
+                        user.Rating = reader.GetDouble(5);
                         user.Suspended = reader.GetBoolean(6);
                         UserList.Add(user);
                     }
