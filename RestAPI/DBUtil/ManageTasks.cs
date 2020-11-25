@@ -50,10 +50,11 @@ namespace RestAPI.DBUtil
         public Task GetTaskFromId(int id)
         {
             Task task = new Task();
-            string queryString = "SELECT * FROM Task WHERE ID="+id;
+            string queryString = "SELECT * FROM Task WHERE ID=@id";
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@id", id);
                 command.Connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
                 try
