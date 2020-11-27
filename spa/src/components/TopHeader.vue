@@ -1,8 +1,7 @@
 <template>
 <div id="rootDiv">
     <b-navbar toggleable="lg" type="dark" variant="info">
-      <b-navbar-brand href="#">Top Header Example</b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse" v-b-toggle.sidebar-no-header></b-navbar-toggle>
+      <b-navbar-brand href="#">Workio</b-navbar-brand>
       <b-form-input placeholder="Search" class="search-bar"></b-form-input>
     </b-navbar>
 </div>
@@ -19,6 +18,12 @@ export default class TopHeader extends Vue {
 <style lang="scss" scoped>
 
 .search-bar{
-    max-width: 800px;
+}
+
+button{
+}
+
+.topheader-style{
+    background-color: mediumblue;
 }
 </style>
