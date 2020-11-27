@@ -1,21 +1,23 @@
 <template>
   <div id="rootDiv">
-    <b-navbar toggleable="lg" type="dark" variant="primary" sticky>
+    <b-navbar toggleable="lg" type="dark" class="header-style" sticky>
       <b-navbar-brand href="#">Workio</b-navbar-brand>
       <div class="search-bar-div">
         <b-form-input placeholder="Search" class="search-bar" v-model="searchBarInput"></b-form-input>
       </div>
-      <b-button size="md" class="opret-arbejdsopgaver-button" @click="checkRoute('opgaver')">Opret arbejdsopgaver</b-button>
+      <router-link to="/register" class="opret-arbejdsopgaver-button">
+            <b-button size="md" >Opret arbejdsopgaver</b-button>
+      </router-link>
       <div class="login-div">
         <div v-if="loggedIn">
-          <a @click="checkRoute('profile')">
+          <router-link to="/">
             <b-img src="../assets/profileicon.png"></b-img>
-          </a>
+          </router-link>
         </div>
         <div v-else>
-          <a @click="checkRoute('login')">
+          <router-link to="/">
              <b-img src="../assets/login.png"></b-img>
-          </a>
+          </router-link>
         </div>
       </div>
     </b-navbar>
@@ -33,36 +35,36 @@ export default class TopHeader extends Vue {
       required: true
   };//  get the property value from mother component, or by emitting the value. Currently just local variable
 
-  changeRoute = "opgaver";
   searchBarInput = "";
 
-  redirectToArbedsOpgaver() {
-      this.$router.push({ path: "/" });
-  }; // Change path to arbejdsopgaver
-
-  checkRoute(route: string) {
-      if (route === "opgaver") {
-          this.$router.push({ path: "/" });
-      } else if (route === "login") {
-          this.$router.push({ path: "/" });
-      } else if (route === "profile") {
-          this.$router.push({ path: "/" });
-      } else {
-          console.log("Routing error");
-      }
-  };
+//   checkRoute(route: string) {
+//       if (route === "opgaver") {
+//           this.$router.push({ path: "/" });
+//       } else if (route === "login") {
+//           this.$router.push({ path: "/" });
+//       } else if (route === "profile") {
+//           this.$router.push({ path: "/" });
+//       } else {
+//           console.log("Routing error");
+//       }
+//   };
 }
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/main.scss";
+
+.header-style{
+    background-color: $primary;
+}
+
 .search-bar-div {
   padding-right: 50px;
   padding-left: 50px;
   width: 90%;
 }
 .opret-arbejdsopgaver-button{
-  margin-right: 30px;
-  width: 14%;
+    width: 10%;
 }
 .login-div {
 }
