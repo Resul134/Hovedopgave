@@ -24,6 +24,14 @@ namespace RestAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAnyOrigin",
+                    builder => builder.AllowAnyOrigin());
+
+            });
+            
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -35,6 +43,15 @@ namespace RestAPI
                 app.UseDeveloperExceptionPage();
             }
 
+
+            app.UseCors(
+                options =>
+                {
+                    options.AllowAnyOrigin().
+                        AllowAnyHeader().
+                        WithMethods("GET", "POST", "PUT", "DELETE");
+                    // allow everything from anywhere
+                });
             app.UseMvc();
         }
     }
