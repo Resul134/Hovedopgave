@@ -3,9 +3,12 @@
     <div id="nav">
       <TopHeader/>
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/about">About</router-link> |
+      <router-link to="/register">Register</router-link>
     </div>
-    <router-view/>
+    <div class="router-view">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -31,5 +34,13 @@ export default class App extends Vue {
 
 h1,h2,h3,h4,h5,h6,p,span,div {
   color: $gray;
+}
+
+a {
+  color: $primary;
+}
+
+.router-view {
+  padding: 25px;
 }
 </style>
