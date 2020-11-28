@@ -1,15 +1,15 @@
 <template>
 <div class="root">
     <div>
-        <h2>Kategorier</h2>
+        <h3>Kategorier</h3>
         <b-list-group id="group">
-            <b-list-group-item id="item" class="hvr-sweep-to-right" v-for="category in categories" :key="category" @click="filterCategory(category)" href="" v-bind:active="category.active">
+            <b-list-group-item id="item" class="hvr-sweep-to-right" v-for="(category, idx) in categories" :key="idx" @click="filterCategory(category.id)" href="" v-bind:active="category.active">
                 {{ category.name }}
             </b-list-group-item>
         </b-list-group>
-        <h2 class="region">Region</h2>
+        <h3 class="region">Region</h3>
         <b-list-group>
-            <b-list-group-item id="item" class="hvr-sweep-to-right" v-for="region in regions" :key="region" @click="filterRegion(region)" href="" v-bind:active="region.active">
+            <b-list-group-item id="item" class="hvr-sweep-to-right" v-for="(region, idx) in regions" :key="idx" @click="filterRegion(region.id)" href="" v-bind:active="region.active">
                 {{ region.name }}
             </b-list-group-item>
         </b-list-group>
@@ -34,25 +34,27 @@ export default class Sidebar extends Vue {
 
     regions = [
         { id: 1, name: "Sjælland", active: false },
-        { id: 2, name: "Jylland", active: false },
-        { id: 3, name: "Fyn", active: false }]
+        { id: 2, name: "Nordjylland", active: false },
+        { id: 3, name: "Syddanmark", active: false },
+        { id: 4, name: "Hovedstaden", active: false },
+        { id: 5, name: "Midtjylland", active: false }]
 
     currentRegion = this.regions[0];
 
-    filterCategory(category: any) {
+    filterCategory(id: number) {
         this.currentCategory.active = false;
 
-        category.active = true;
-        this.currentCategory = category;
+        this.categories[id - 1].active = true;
+        this.currentCategory = this.categories[id - 1];
 
         //  Filtering categories needs to be added here
     }
 
-    filterRegion(region: any) {
+    filterRegion(id: number) {
         this.currentRegion.active = false;
 
-        region.active = true;
-        this.currentRegion = region;
+        this.regions[id - 1].active = true;
+        this.currentRegion = this.regions[id - 1];
 
         //  Filtering regions needs to be added here
     }
@@ -62,11 +64,12 @@ export default class Sidebar extends Vue {
 <style lang="scss" scoped>
 @import "../assets/main.scss";
 
-h2 {
-    margin: 10px 0 10px 5px;
+h3 {
+    margin: 10px 0 10px 10px;
+    font-weight: bold;
 }
 .region {
-    margin: 40px 0 10px 5px;
+    margin: 40px 0 10px 10px;
 }
 
 .root {
@@ -86,8 +89,9 @@ h2 {
 
 #item {
     border-radius: 0;
+    border-right: 0;
+    font-weight: bold;
 }
-/* Sweep To Right */
 .hvr-sweep-to-right {
   display: inline-block;
   vertical-align: middle;
