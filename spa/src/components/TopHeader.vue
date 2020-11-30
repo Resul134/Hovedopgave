@@ -13,7 +13,7 @@
             v-model="searchBarInput"
           ></b-form-input></div
       ></b-col>
-         <b-button size="sm" to="/">Opret arbejdsopgave</b-button>
+         <b-button size="sm" to="/" v-if="loggedIn">Opret arbejdsopgave</b-button>
       <b-col cols="2">
         <div>
           <div v-if="!loggedIn">
@@ -67,8 +67,8 @@ export default class TopHeader extends Vue {
 
   Logout() {
       this.loggedIn = false;
-      Logout();
       this.$router.push({ name: "/" });
+      Logout();
   }
 }
 </script>
