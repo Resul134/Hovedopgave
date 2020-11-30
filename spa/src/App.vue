@@ -2,6 +2,7 @@
   <div id="app">
     <TopHeader/>
     <Sidebar />
+    <Footer />
     <div class="router-view">
       <router-view/>
     </div>
@@ -12,10 +13,12 @@
 import { Component, Vue } from "vue-property-decorator";
 import TopHeader from "@/components/TopHeader.vue";
 import Sidebar from "@/components/Sidebar.vue";
+import Footer from "@/components/Footer.vue";
 @Component({
     components: {
         TopHeader,
-        Sidebar
+        Sidebar,
+        Footer
     }
 })
 export default class App extends Vue {
