@@ -20,6 +20,10 @@ export function GetBrugerById(id: number) {
     return axios.get(`${apiEndPoint}/users/${id}`);
 }
 
+export function DeleteBrugerById(id: number) {
+    return axios.delete(`${apiEndPoint}/users/${id}`);
+}
+
 export function GetUserByLogin(username: string, password: string) {
     return axios.get(`${apiEndPoint}/users/login/${username},${password}`);
 }

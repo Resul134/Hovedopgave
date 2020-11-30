@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GetLoggedInId, GetBrugerById } from "../api/user";
+import { GetLoggedInId, GetBrugerById, DeleteBrugerById } from "../api/user";
 import { User } from "../types/user";
 
 @Component
