@@ -2,6 +2,7 @@
   <div id="app">
     <div id="nav">
       <TopHeader/>
+       <Sidebar />
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div>
@@ -13,10 +14,12 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import TopHeader from "@/components/TopHeader.vue";
+import Sidebar from "@/components/Sidebar.vue";
 import Footer from "@/components/Footer.vue";
 @Component({
     components: {
         TopHeader,
+        Sidebar,
         Footer
     }
 })
@@ -39,6 +42,7 @@ h1,h2,h3,h4,h5,h6,p,span,div {
 a {
   color: $primary;
 }
+
 .router-view {
   padding: 25px;
   margin-left: 200px;
