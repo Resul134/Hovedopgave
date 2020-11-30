@@ -2,10 +2,10 @@
   <div id="app">
     <TopHeader/>
     <Sidebar />
-    <Footer />
     <div class="router-view">
       <router-view/>
     </div>
+    <Footer />
   </div>
 </template>
 
