@@ -5,6 +5,7 @@ import Register from "../views/Register.vue";
 import About from "../views/About.vue";
 import Login from "../views/Login.vue";
 import Profile from "../views/Profile.vue";
+import Overview from "../views/Overview.vue";
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,11 @@ const routes: Array<RouteConfig> = [
         name: "Profile",
         component: Profile,
         beforeEnter: ifAuthenticated
+    },
+    {
+        path: "/overview",
+        name: "Overview",
+        component: Overview
     }
 ];
 
