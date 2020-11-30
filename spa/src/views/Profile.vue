@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GetLoggedInId, GetBrugerById, Logout } from "../api/user";
+import { GetLoggedInId, GetBrugerById } from "../api/user";
 import { User } from "../types/user";
 
 @Component
@@ -71,13 +71,24 @@ export default class Home extends Vue {
     user_gender = "";
     user_phone = "";
     user_email = "";
-    LogOut() {
-        Logout();
-        this.$router.push({ name: "Login" });
-    }
+    // LogOut() {
+    //     Logout();
+    //     this.$router.push({ name: "Login" });
+    // }
 
     redigerProfil() {
         this.edit = !this.edit;
+    }
+
+    deleteProfil() {
+        // måske en "Are you sure" box her
+        DeleteBrugerById(GetLoggedInId()).then(response => {
+            console.log(response.data);
+            // feedback for user here, eventuelt en toast
+        }).catch(() => {
+            console.log("Couldn't get user ID");
+            //feedback if it went wrong here
+        })
     }
 
     mounted() {
