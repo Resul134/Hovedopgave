@@ -144,6 +144,45 @@ namespace RestAPI.DBUtil
             return user;
         }
 
+        public User Login(string username, string password)
+        {
+            User user = new User();
+            string queryString = "SELECT * FROM [User] WHERE Username = @Username AND Password = @Password";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+
+                command.Parameters.AddWithValue("@Username", username);
+                command.Parameters.AddWithValue("@Password", password);
+
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        user.ID = reader.GetInt32(0);
+                        user.FirstName = reader.GetString(1);
+                        user.LastName = reader.GetString(2);
+                        user.Birthday = reader.GetDateTime(3);
+                        user.Gender = reader.GetString(4);
+                        user.Phone = reader.GetInt32(5);
+                        user.Email = reader.GetString(6);
+                        user.Username = reader.GetString(7);
+                        user.Password = reader.GetString(8);
+                        user.Rating = reader.GetDouble(9);
+                        user.Suspended = reader.GetBoolean(10);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            return user;
+        }
+
         public bool UpdateUser(User user, int id)
         {
             string queryString = "UPDATE [User] SET FirstName=@FirstName, LastName=@LastName, Birthday=@Birthday, Gender=@Gender, Phone=@Phone, Email=@Email, Username=@Username, Password=@Password, Rating=@Rating, Suspended=@Suspended WHERE ID=@Id";
