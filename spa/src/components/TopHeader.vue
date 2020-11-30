@@ -5,11 +5,11 @@
       <div class="search-bar-div">
         <b-form-input placeholder="Search" class="search-bar" v-model="searchBarInput"></b-form-input>
       </div>
-      <router-link to="/register" class="opret-arbejdsopgaver-button">
-            <b-button size="md" >Opret arbejdsopgaver</b-button>
+      <router-link to="/" class="opret-arbejdsopgaver-button">
+            <b-button size="sm" >Opret arbejdsopgaver</b-button>
       </router-link>
       <div class="login-div">
-        <div v-if="loggedIn">
+        <div v-if="!loggedIn">
           <router-link to="/">
           <!-- icon for profile -->
          <svg width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -20,7 +20,7 @@
           </router-link>
         </div>
         <div v-else>
-          <router-link to="/">
+          <router-link to="/register">
           <!-- icon for log in -->
           <svg width="3em" height="3em" viewBox="0 0 16 16" class="bi bi-box-arrow-in-up" fill="white" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M3.5 10a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 0 0 1h2A1.5 1.5 0 0 0 14 9.5v-8A1.5 1.5 0 0 0 12.5 0h-9A1.5 1.5 0 0 0 2 1.5v8A1.5 1.5 0 0 0 3.5 11h2a.5.5 0 0 0 0-1h-2z"/>
