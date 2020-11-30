@@ -32,4 +32,12 @@ export default class App extends Vue {
 h1,h2,h3,h4,h5,h6,p,span,div {
   color: $gray;
 }
+
+a {
+  color: $primary;
+}
+.router-view {
+  padding: 25px;
+  margin-left: 200px;
+}
 </style>
