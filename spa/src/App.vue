@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <TopHeader/>
+    <TopHeader style="margin-bottom: 100px;"/>
     <Sidebar />
     <div class="router-view">
       <router-view/>

@@ -1,6 +1,6 @@
 <template>
   <div id="rootDiv">
-    <b-navbar toggleable="lg" type="dark" class="header-style">
+    <b-navbar toggleable="lg" type="dark" class="header">
         <b-row style="width: 100%;">
               <b-col style="flex-grow: 0" cols="1">
           <b-navbar-brand to="/">Workio</b-navbar-brand>
@@ -14,7 +14,7 @@
           ></b-form-input></div
       ></b-col>
       <b-col md="auto">
-          <b-button size="sm" to="/">Opret arbejdsopgaver</b-button>
+          <b-button size="sm" to="/" v-if="loggedIn">Opret arbejdsopgaver</b-button>
         <div>
           <div v-if="!loggedIn">
             <b-dropdown>
@@ -39,7 +39,7 @@
                 </svg>
               </template>
                   <b-dropdown-item to="/profile">Profile</b-dropdown-item>
-                  <b-dropdown-item @click="Logout">Logout</b-dropdown-item>
+                  <b-dropdown-item @click="LogoutUser">Logout</b-dropdown-item>
             </b-dropdown>
           </div>
         </div>
@@ -51,24 +51,23 @@
 // https://icons.getbootstrap.com/ or https://mdbootstrap.com/docs/vue/content/icons-list/
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GetLoggedInId } from "../api/user";
+import { GetLoggedInId, Logout } from "../api/user";
 
 @Component
 export default class TopHeader extends Vue {
   loggedIn = false; //  get the property value from mother component, or by emitting the value. Currently just local variable
-
   searchBarInput = "";
-
   mounted() {
       if (GetLoggedInId() != null) {
           this.loggedIn = true;
-      } else {
-          this.loggedIn = false;
+          console.log(GetLoggedInId() + " Getloggedin ID");
       }
-  }
+  };
 
-  Logout() {
+  LogoutUser() {
       this.loggedIn = false;
+      Logout();
+      this.$router.push({ name: "/" });
   }
 }
 </script>
@@ -85,8 +84,6 @@ export default class TopHeader extends Vue {
   padding-left: 50px;
   width: 90%;
 }
-.opret-arbejdsopgaver-button {
-}
 .login-div {
   padding-left: 40px;
 }
@@ -99,5 +96,7 @@ export default class TopHeader extends Vue {
   width: 100vw; /* take up the full browser width */
   z-index: 1020; /* high z index so other content scrolls underneath */
   height: 100px; /* define height for content */
+  background-color: $primary;
+
 }
 </style>
