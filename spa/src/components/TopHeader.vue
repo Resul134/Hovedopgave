@@ -5,7 +5,7 @@
               <b-col style="flex-grow: 0" cols="1">
           <b-navbar-brand to="/">Workio</b-navbar-brand>
               </b-col>
-      <b-col cols="8"
+      <b-col cols="7"
         ><div>
           <b-form-input
             placeholder="Søg"
@@ -13,8 +13,8 @@
             v-model="searchBarInput"
           ></b-form-input></div
       ></b-col>
-      <b-col md="auto">
-          <b-button size="sm" to="/" v-if="loggedIn">Opret arbejdsopgaver</b-button>
+         <b-button size="sm" to="/">Opret arbejdsopgave</b-button>
+      <b-col cols="2">
         <div>
           <div v-if="!loggedIn">
             <b-dropdown>
@@ -39,7 +39,7 @@
                 </svg>
               </template>
                   <b-dropdown-item to="/profile">Profile</b-dropdown-item>
-                  <b-dropdown-item @click="LogoutUser">Logout</b-dropdown-item>
+                  <b-dropdown-item @click="Logout">Logout</b-dropdown-item>
             </b-dropdown>
           </div>
         </div>
@@ -56,15 +56,16 @@ import { GetLoggedInId, Logout } from "../api/user";
 @Component
 export default class TopHeader extends Vue {
   loggedIn = false; //  get the property value from mother component, or by emitting the value. Currently just local variable
+
   searchBarInput = "";
+
   mounted() {
       if (GetLoggedInId() != null) {
           this.loggedIn = true;
-          console.log(GetLoggedInId() + " Getloggedin ID");
       }
-  };
+  }
 
-  LogoutUser() {
+  Logout() {
       this.loggedIn = false;
       Logout();
       this.$router.push({ name: "/" });
@@ -75,14 +76,12 @@ export default class TopHeader extends Vue {
 <style lang="scss" scoped>
 @import "@/assets/main.scss";
 
-.header-style {
-  background-color: $primary;
-}
-
 .search-bar-div {
   padding-right: 50px;
   padding-left: 50px;
   width: 90%;
+}
+.opret-arbejdsopgaver-button {
 }
 .login-div {
   padding-left: 40px;

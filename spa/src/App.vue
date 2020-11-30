@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <TopHeader style="margin-bottom: 100px;"/>
+  <div id="app" style="padding-top: 70px;">
+    <TopHeader/>
     <Sidebar />
     <Footer />
     <div class="router-view">
