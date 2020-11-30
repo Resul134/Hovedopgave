@@ -15,3 +15,19 @@ export function OpretBruger(FirstName: string, LastName: string, Birthday: Date,
         Suspended: false
     });
 }
+
+export function GetBrugerById(id: number) {
+    return axios.get(`${apiEndPoint}/users/${id}`);
+}
+
+export function GetUserByLogin(username: string, password: string) {
+    return axios.get(`${apiEndPoint}/users/login/${username},${password}`);
+}
+
+export function GetLoggedInId() {
+    return localStorage.getItem("user") as any;
+}
+
+export function Logout() {
+    localStorage.removeItem("user");
+}
