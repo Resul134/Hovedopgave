@@ -1,10 +1,7 @@
 <template>
   <div id="app">
     <TopHeader/>
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-    </div>
+    <Sidebar />
     <div class="router-view">
       <router-view/>
     </div>
@@ -14,9 +11,11 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import TopHeader from "@/components/TopHeader.vue";
+import Sidebar from "@/components/Sidebar.vue";
 @Component({
     components: {
-        TopHeader
+        TopHeader,
+        Sidebar
     }
 })
 export default class App extends Vue {
@@ -41,5 +40,6 @@ a {
 
 .router-view {
   padding: 25px;
+  margin-left: 200px;
 }
 </style>
