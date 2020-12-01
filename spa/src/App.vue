@@ -1,5 +1,5 @@
 <template>
-  <div id="app" style="padding-top: 70px;">
+  <div id="app">
     <TopHeader/>
     <Sidebar />
     <div class="router-view">
@@ -42,7 +42,8 @@ a {
 }
 
 .router-view {
+  margin-top: 65px;
   padding: 25px;
-  margin-left: 200px;
+  margin-left: $sidebar-width;
 }
 </style>
