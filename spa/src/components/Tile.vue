@@ -4,7 +4,7 @@
             <div class="tag" :class="{ promotag: promoted }">
                 <p >{{ formattedPrice }} kr</p>
             </div>
-            <svg viewBox="0 0 14 16">
+            <svg v-if="path != 'error'" viewBox="0 0 16 16">
                 <path fill="currentColor" v-bind:d="path"/>
             </svg>
             <h4 :class="{ promotext: promoted }">{{ title }}</h4>
@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { GetCategory } from "../api/category";
+import { GetCategory, GetCategorySVG } from "../api/category";
 
 @Component
 export default class Tile extends Vue {
@@ -28,10 +28,10 @@ export default class Tile extends Vue {
     @Prop() private description!: string;
     @Prop() private categoryId!: number;
     @Prop() private region!: string;
-    @Prop() private path!: string;
     @Prop() private promoted!: boolean;
 
     categoryName = "";
+    path = "";
     snippet = this.createSnippet(this.description);
     formattedPrice = this.numberWithCommas(this.price);
 
@@ -52,8 +52,16 @@ export default class Tile extends Vue {
         });
     }
 
+    setSVGPath(name: string) {
+        this.path = GetCategorySVG(name);
+    }
+
     mounted() {
         this.setCategoryName(this.categoryId);
+    }
+
+    updated() {
+        this.setSVGPath(this.categoryName);
     }
 }
 </script>

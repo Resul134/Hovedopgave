@@ -103,6 +103,36 @@ namespace RestAPI.DBUtil
             return category;
         }
 
+        public Category GetCategoryFromName(string name)
+        {
+            Category category = new Category();
+
+            string queryString = "SELECT * FROM Category WHERE Name = @NAME";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+
+                command.Parameters.AddWithValue("@NAME", name);
+
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        category.ID = reader.GetInt32(0);
+                        category.Name = reader.GetString(1);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+
+            return category;
+        }
+
         public bool UpdateCategory(Category item, int id)
         {
             string queryString = "UPDATE Category SET Name = @Name WHERE ID = @ID";
