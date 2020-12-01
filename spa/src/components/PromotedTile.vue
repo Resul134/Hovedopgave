@@ -62,7 +62,6 @@ export default class Tile extends Vue {
 
 .tile {
     color: white;
-    width: 300px;
 }
 .tag p {
     background: white;
@@ -76,12 +75,12 @@ export default class Tile extends Vue {
 .category {
     margin: 5px 10px;
     color: white;
-    float: right;
+    float: left;
 }
 .region {
     margin: 5px 10px;
     color: white;
-    float: left;
+    float: right;
 }
 
 svg {
@@ -90,11 +89,12 @@ svg {
 }
 button {
     background: $primary;
+    width: 100%;
     border: 0;
-    margin: 10px;
     padding: 0;
     border-radius: 5px;
     box-shadow: 5px 0px 5px whitesmoke;
+    transition: .15s;
 }
 button:hover {
     box-shadow: 5px 5px 10px $gray;

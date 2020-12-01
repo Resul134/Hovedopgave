@@ -1,13 +1,12 @@
 <template>
-    <div class="overview">
+    <div>
         <div v-if="!tasks.length">
             Nothing here
         </div>
-        <div v-else>
-            <span class="task" v-for="(task, idx) in tasks" :key="idx">
-                <PromotedTile v-if="task.promoted" :title="task.title" :price="task.price" :description="task.description" :categoryId="task.categoryId" :region="task.region" :path="categoryList[task.categoryId].svg"/>
-                <Tile v-else :title="task.title" :price="task.price" :description="task.description" :categoryId="task.categoryId" :region="task.region" :path="categoryList[task.categoryId].svg"/>
-            </span>
+        <div class="overview" v-else>
+            <div class="task" v-for="(task, idx) in tasks" :key="idx">
+                <Tile :title="task.title" :price="task.price" :description="task.description" :categoryId="task.categoryId" :region="task.region" :path="categoryList[task.categoryId].svg" :promoted="task.promoted"/>
+            </div>
         </div>
     </div>
 </template>
@@ -18,7 +17,7 @@ import { GetTasks } from "../api/task";
 import { Task } from "../types/task";
 import { Category } from "../types/category";
 import Tile from "@/components/Tile.vue";
-import PromotedTile from "@/components/PromotedTile";
+import PromotedTile from "@/components/PromotedTile.vue";
 
 @Component({
     components: {
@@ -54,5 +53,15 @@ export default class Overview extends Vue {
 .overview {
     display: flex;
     flex-wrap: wrap;
+}
+
+.task {
+    width: 24.25%;
+    margin-right: 1%;
+    margin-bottom: 1%;
+}
+
+.task:nth-child(4n) {
+    margin-right: 0;
 }
 </style>

@@ -1,17 +1,17 @@
 <template>
-    <button>
-        <div class="tile">
-            <div class="tag">
-                <p>{{ formattedPrice }} kr</p>
+    <button :class="{ promo: promoted }">
+        <div class="tile" :class="{ promotext: promoted }">
+            <div class="tag" :class="{ promotag: promoted }">
+                <p >{{ formattedPrice }} kr</p>
             </div>
             <svg viewBox="0 0 14 16">
                 <path fill="currentColor" v-bind:d="path"/>
             </svg>
-            <h4>{{ title }}</h4>
-            <p class="description">{{ snippet }}</p>
+            <h4 :class="{ promotext: promoted }">{{ title }}</h4>
+            <p class="description" :class="{ promotext: promoted }">{{ snippet }}</p>
             <div class="bottom">
-                <span class="category">{{ categoryName }}</span>
-                <span class="region">{{ region }}</span>
+                <span class="category" :class="{ promotext: promoted }">{{ categoryName }}</span>
+                <span class="region" :class="{ promotext: promoted }">{{ region }}</span>
             </div>
         </div>
     </button>
@@ -29,6 +29,7 @@ export default class Tile extends Vue {
     @Prop() private categoryId!: number;
     @Prop() private region!: string;
     @Prop() private path!: string;
+    @Prop() private promoted!: boolean;
 
     categoryName = "";
     snippet = this.createSnippet(this.description);
@@ -62,7 +63,6 @@ export default class Tile extends Vue {
 
 .tile {
     color: $gray;
-    width: 300px;
 }
 .tag p {
     background: $primary;
@@ -87,11 +87,12 @@ svg {
 }
 button {
     background: $light;
+    width: 100%;
     border: 0;
-    margin: 10px;
     padding: 0;
     border-radius: 5px;
     box-shadow: 5px 0px 5px whitesmoke;
+    transition: .15s;
 }
 button:hover {
     box-shadow: 5px 5px 10px $gray;
@@ -108,5 +109,15 @@ h4 {
     padding: 0px 20px;
     margin: 0 0 30px 0;
     height: 3em;
+}
+.promo {
+    background: $primary;
+}
+.promotext {
+    color: white;
+}
+.promotag p {
+    color: $primary;
+    background: white;
 }
 </style>
