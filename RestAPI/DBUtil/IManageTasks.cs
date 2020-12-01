@@ -10,6 +10,8 @@ namespace RestAPI.DBUtil
 
         Task GetTaskFromId(int id);
 
+        List<Task> GetTasksFromTitle(string title);
+
 
         bool CreateTask(Task item);
 
