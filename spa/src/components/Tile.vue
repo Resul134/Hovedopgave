@@ -5,7 +5,7 @@
                 <p >{{ formattedPrice }} kr</p>
             </div>
             <svg v-if="path != 'error'" viewBox="0 0 16 16">
-                <path fill="currentColor" v-bind:d="path"/>
+                <path fill-rule="evenodd" fill="currentColor" v-bind:d="path"/>
             </svg>
             <h4 :class="{ promotext: promoted }">{{ title }}</h4>
             <p class="description" :class="{ promotext: promoted }">{{ snippet }}</p>
