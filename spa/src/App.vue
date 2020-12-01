@@ -42,7 +42,8 @@ a {
 }
 
 .router-view {
+  margin-top: 65px;
   padding: 25px;
-  margin-left: 200px;
+  margin-left: $sidebar-width;
 }
 </style>

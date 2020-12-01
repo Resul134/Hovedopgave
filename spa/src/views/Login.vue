@@ -32,6 +32,7 @@ export default class Login extends Vue {
                 localStorage.setItem("user", response.data.id);
                 this.loggedIn = true;
                 this.error = false;
+                this.$store.commit("loggedInState", true);
                 this.$router.push({ name: "Profile" });
             } else {
                 localStorage.removeItem("user");
