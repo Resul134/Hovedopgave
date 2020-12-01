@@ -75,12 +75,13 @@ h3 {
 }
 
 .sidebar {
-    padding-top: 60px;
     background: white;
     position: fixed;
     width: $sidebar-width;
     height: 100%;
     box-shadow: 5px 0px 5px whitesmoke;
+    top: 65px;
+    padding-top: 20px;
 }
 
 .group {
@@ -94,16 +95,17 @@ h3 {
     border-right: 0;
 }
 .hvr-sweep-to-right {
-  display: inline-block;
-  vertical-align: middle;
-  -webkit-transform: perspective(1px) translateZ(0);
-  transform: perspective(1px) translateZ(0);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-  position: relative;
-  -webkit-transition-property: color;
-  transition-property: color;
-  -webkit-transition-duration: 0.2s;
-  transition-duration: 0.2s;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-transform: perspective(1px) translateZ(0);
+    transform: perspective(1px) translateZ(0);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+    position: relative;
+    -webkit-transition-property: color;
+    transition-property: color;
+    -webkit-transition-duration: 0.2s;
+    transition-duration: 0.2s;
 }
 .hvr-sweep-to-right:before {
   content: "";

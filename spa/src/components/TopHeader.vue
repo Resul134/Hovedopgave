@@ -1,101 +1,107 @@
 <template>
-  <div id="rootDiv">
-    <b-navbar toggleable="lg" type="dark" class="header">
-        <b-row style="width: 100%;">
-              <b-col style="flex-grow: 0" cols="1">
-          <b-navbar-brand to="/">Workio</b-navbar-brand>
-              </b-col>
-      <b-col cols="7"
-        ><div>
-          <b-form-input
-            placeholder="Søg"
-            class="search-bar"
-            v-model="searchBarInput"
-          ></b-form-input></div
-      ></b-col>
-         <b-button size="sm" to="/" v-if="loggedIn">Opret arbejdsopgave</b-button>
-      <b-col cols="2">
-        <div>
-          <div v-if="!loggedIn">
-            <b-dropdown>
-              <template #button-content>
-                  <svg width="2.2em" height="2.2em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="white" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
-                  <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                  <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
-                </svg>
-              </template>
-                  <b-dropdown-item to="/login">Login</b-dropdown-item>
-                  <b-dropdown-item to="/register">Register</b-dropdown-item>
-            </b-dropdown>
-          </div>
-          <div v-else>
-            <b-dropdown>
-              <template #button-content>
-                  <svg width="2.2em" height="2.2em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="white" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
-                  <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                  <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
-                </svg>
-              </template>
-                  <b-dropdown-item to="/profile">Profile</b-dropdown-item>
-                  <b-dropdown-item @click="Logout">Logout</b-dropdown-item>
-            </b-dropdown>
-          </div>
-        </div>
-      </b-col>
-        </b-row>
-    </b-navbar>
-  </div>
+    <div id="rootDiv">
+        <b-navbar type="dark" class="header">
+            <b-navbar-brand class="brand" to="/">Workio</b-navbar-brand>
+            <b-form-input
+                placeholder="Søg"
+                class="search-bar"
+                v-model="searchBarInput"
+                ></b-form-input>
+                    <b-button variant="light" class="ml-auto arbejdsopgave-btn" to="/" v-if="loggedIn">
+                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                    Opret arbejdsopgave
+                    </b-button>
+                    <b-dropdown :class="{ 'ml-auto' : !loggedIn }" offset="500" class="icon-only">
+                        <template #button-content>
+                            <svg width="2.2em" height="2.2em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="white" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
+                            <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                            <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+                        </svg>
+                        </template>
+                        <template v-if="!loggedIn">
+                            <b-dropdown-item to="/login">Login</b-dropdown-item>
+                            <b-dropdown-item to="/register">Register</b-dropdown-item>
+                        </template>
+                        <template v-else>
+                            <b-dropdown-item to="/profile">Profile</b-dropdown-item>
+                            <b-dropdown-item @click="Logout">Logout</b-dropdown-item>
+                        </template>
+                    </b-dropdown>
+        </b-navbar>
+    </div>
 </template>
-// https://icons.getbootstrap.com/ or https://mdbootstrap.com/docs/vue/content/icons-list/
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { GetLoggedInId, Logout } from "../api/user";
 
 @Component
 export default class TopHeader extends Vue {
-  loggedIn = false; //  get the property value from mother component, or by emitting the value. Currently just local variable
+    loggedIn = false;
+    searchBarInput = "";
 
-  searchBarInput = "";
+    @Watch("$store.state.loggedIn") t() {
+        this.loggedIn = this.$store.state.loggedIn;
+    }
 
-  mounted() {
-      if (GetLoggedInId() != null) {
-          this.loggedIn = true;
-      }
-  }
+    mounted() {
+        if (GetLoggedInId() != null) {
+            this.$store.commit("loggedInState", true);
+        }
+    }
 
-  Logout() {
-      this.loggedIn = false;
-      this.$router.push({ name: "/" });
-      Logout();
-  }
+    Logout() {
+        this.$store.commit("loggedInState", false);
+        this.$router.push({ name: "Home" });
+        Logout();
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/main.scss";
+.arbejdsopgave-btn {
+    background: #fff;
+    margin-right: 20px;
+    color: #333;
 
-.search-bar-div {
-  padding-right: 50px;
-  padding-left: 50px;
-  width: 90%;
+    svg {
+        margin-top: -2px;
+        width: 20px;
+        fill: #333;
+        height: 20px;
+        margin-right: 10px;
+    }
 }
-.opret-arbejdsopgaver-button {
+.search-bar {
+    width: 40%;
 }
-.login-div {
-  padding-left: 40px;
+.brand {
+    flex: 0 0 180px;
+    margin: 0px;
+    padding: 0px;
 }
 .header {
-  position: fixed; /* fixing the position takes it out of html flow - knows
-                   nothing about where to locate itself except by browser
-                   coordinates */
-  left: 0; /* top left corner should start at leftmost spot */
-  top: 0; /* top left corner should start at topmost spot */
-  width: 100vw; /* take up the full browser width */
-  z-index: 1020; /* high z index so other content scrolls underneath */
-  height: 100px; /* define height for content */
-  background-color: $primary;
-
+    position: fixed;
+    height: 65px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1020;
+    background: $primary;
+}
+</style>
+<style lang="scss">
+.header .dropdown-menu.show {
+    left: -100px;
+}
+.icon-only button {
+    background: none!important;
+    border: none!important;
+    outline: none!important;
+    box-shadow: none!important;
 }
 </style>
