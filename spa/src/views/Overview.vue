@@ -12,8 +12,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { GetTasks } from "../api/task";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { GetTasks, GetTasksByCategory } from "../api/task";
 import { Task } from "../types/task";
 import Tile from "@/components/Tile.vue";
 
@@ -23,9 +23,19 @@ import Tile from "@/components/Tile.vue";
     }
 })
 export default class Overview extends Vue {
+    chosenCategory = Number(this.$route.params.categoryId);
     tasks = Array<Task>();
 
-    mounted() {
+    checkCategory() {
+        this.tasks = Array<Task>();
+        if (this.chosenCategory === 0) {
+            this.GetAllTasks();
+        } else {
+            this.GetAllTasksByCategory(this.chosenCategory);
+        }
+    }
+
+    GetAllTasks() {
         GetTasks().then(response => {
             if (response.status === 200) {
                 this.tasks = response.data;
@@ -33,6 +43,26 @@ export default class Overview extends Vue {
         }).catch(() => {
             console.log("Error getting tasks");
         });
+    }
+
+    GetAllTasksByCategory(id: number) {
+        GetTasksByCategory(id).then(response => {
+            if (response.status === 200) {
+                this.tasks = response.data;
+            }
+        }).catch(() => {
+            console.log("Error getting tasks by category");
+        });
+    }
+
+    mounted() {
+        this.checkCategory();
+    }
+
+    @Watch("$route.params", { immediate: true, deep: true })
+    onUrlChange() {
+        this.chosenCategory = Number(this.$route.params.categoryId);
+        this.checkCategory();
     }
 }
 </script>

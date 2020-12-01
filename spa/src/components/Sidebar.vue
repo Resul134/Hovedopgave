@@ -3,18 +3,16 @@
     <div>
         <h3>Kategorier</h3>
         <b-list-group class="group">
-            <router-link to="/overview">
-                <b-list-group-item class="item hvr-sweep-to-right" v-for="(category, idx) in categories" :key="idx" @click="filterCategory(category.id)" href="" v-bind:active="category.active">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" v-bind:d="category.svg"/>
-                    </svg>
-                    {{ category.name }}
-                </b-list-group-item>
-            </router-link>
+            <b-list-group-item class="item hvr-sweep-to-right" v-for="(category, idx) in categories" :key="idx" @click="filterCategory(category.id)" href="" v-bind:active="category.active">
+                <svg width="1.5em" height="1.5em" viewBox="0 0 16 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" v-bind:d="category.svg"/>
+                </svg>
+                {{ category.name }}
+            </b-list-group-item>
         </b-list-group>
         <h3 class="region">Region</h3>
         <b-list-group class="group">
-            <router-link to="/overview">
+            <router-link to="/overview" >
                 <b-list-group-item class="item hvr-sweep-to-right" v-for="(region, idx) in regions" :key="idx" @click="filterRegion(region.id)" href="" v-bind:active="region.active">
                     {{ region.name }}
                 </b-list-group-item>
@@ -55,7 +53,11 @@ export default class Sidebar extends Vue {
         this.categories[id].active = true;
         this.currentCategory = this.categories[id];
 
-        //  Filtering categories needs to be added here
+        if (this.$route.name === "Overview") {
+            this.$router.push({ params: { categoryId: id.toString() } });
+        } else {
+            this.$router.push({ name: "Overview", params: { categoryId: id.toString() } });
+        }
     }
 
     filterRegion(id: number) {

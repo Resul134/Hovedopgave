@@ -46,7 +46,7 @@ const routes: Array<RouteConfig> = [
         beforeEnter: ifAuthenticated
     },
     {
-        path: "/overview",
+        path: "/overview/:categoryId",
         name: "Overview",
         component: Overview
     }
