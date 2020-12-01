@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="padding-top: 70px;">
     <TopHeader/>
     <Sidebar />
     <div class="router-view">
