@@ -28,6 +28,14 @@ namespace RestAPI.Controllers
             return mngCategory.GetCategoryFromId(id);
         }
 
+        // GET api/<CategoriesController>/udendørs
+        [HttpGet("name/{name}")]
+        public Category Get(string name)
+        {
+            ManageCategory mngCategory = new ManageCategory();
+            return mngCategory.GetCategoryFromName(name);
+        }
+
         // POST api/<CategoriesController>
         [HttpPost]
         public void Post([FromBody] Category value)

@@ -3,18 +3,22 @@
     <div>
         <h3>Kategorier</h3>
         <b-list-group class="group">
-            <b-list-group-item class="item hvr-sweep-to-right" v-for="(category, idx) in categories" :key="idx" @click="filterCategory(category.id)" href="" v-bind:active="category.active">
-                <svg width="1.5em" height="1.5em" viewBox="0 0 16 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" v-bind:d="category.svg"/>
-                </svg>
-                {{ category.name }}
-            </b-list-group-item>
+            <router-link to="/overview">
+                <b-list-group-item class="item hvr-sweep-to-right" v-for="(category, idx) in categories" :key="idx" @click="filterCategory(category.id)" href="" v-bind:active="category.active">
+                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" v-bind:d="category.svg"/>
+                    </svg>
+                    {{ category.name }}
+                </b-list-group-item>
+            </router-link>
         </b-list-group>
         <h3 class="region">Region</h3>
         <b-list-group class="group">
-            <b-list-group-item class="item hvr-sweep-to-right" v-for="(region, idx) in regions" :key="idx" @click="filterRegion(region.id)" href="" v-bind:active="region.active">
-                {{ region.name }}
-            </b-list-group-item>
+            <router-link to="/overview">
+                <b-list-group-item class="item hvr-sweep-to-right" v-for="(region, idx) in regions" :key="idx" @click="filterRegion(region.id)" href="" v-bind:active="region.active">
+                    {{ region.name }}
+                </b-list-group-item>
+            </router-link>
         </b-list-group>
     </div>
 </div>
@@ -26,6 +30,7 @@ import { Component, Vue } from "vue-property-decorator";
 @Component
 export default class Sidebar extends Vue {
     categories = [
+        { id: 0, name: "Alle", active: false, svg: "" },
         { id: 1, name: "Udendørs", active: false, svg: "M8 0a.5.5 0 0 1 .416.223l3 4.5A.5.5 0 0 1 11 5.5h-.098l2.022 3.235a.5.5 0 0 1-.424.765h-.191l1.638 3.276a.5.5 0 0 1-.447.724h-11a.5.5 0 0 1-.447-.724L3.69 9.5H3.5a.5.5 0 0 1-.424-.765L5.098 5.5H5a.5.5 0 0 1-.416-.777l3-4.5A.5.5 0 0 1 8 0zM5.934 4.5H6a.5.5 0 0 1 .424.765L4.402 8.5H4.5a.5.5 0 0 1 .447.724L3.31 12.5h9.382l-1.638-3.276A.5.5 0 0 1 11.5 8.5h.098L9.576 5.265A.5.5 0 0 1 10 4.5h.066L8 1.401 5.934 4.5z M7 13.5h2V16H7v-2.5z" },
         { id: 2, name: "IT", active: false, svg: "M13.5 3h-11a.5.5 0 0 0-.5.5V11h12V3.5a.5.5 0 0 0-.5-.5zm-11-1A1.5 1.5 0 0 0 1 3.5V12h14V3.5A1.5 1.5 0 0 0 13.5 2h-11z M0 12h16v.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 0 12.5V12z" },
         { id: 3, name: "Korrektur", active: false, svg: "M8.217 11.068c1.216 0 1.948-.869 1.948-2.31v-.702c0-1.44-.727-2.305-1.929-2.305-.742 0-1.328.347-1.499.889h-.063V3.983h-1.29V11h1.27v-.791h.064c.21.532.776.86 1.499.86zm-.43-1.025c-.66 0-1.113-.518-1.113-1.28V8.12c0-.825.42-1.343 1.098-1.343.684 0 1.075.518 1.075 1.416v.45c0 .888-.386 1.401-1.06 1.401zm-5.583 1.035c.767 0 1.201-.356 1.406-.737h.059V11h1.216V7.519c0-1.314-.947-1.783-2.11-1.783C1.355 5.736.75 6.42.69 7.27h1.216c.064-.323.313-.552.84-.552.527 0 .864.249.864.771v.464H2.346C1.145 7.953.5 8.568.5 9.496c0 .977.693 1.582 1.704 1.582zm.42-.947c-.44 0-.845-.235-.845-.718 0-.395.269-.684.84-.684h.991v.538c0 .503-.444.864-.986.864zm8.897.567c-.577-.4-.9-1.088-.9-1.983v-.65c0-1.42.894-2.338 2.305-2.338 1.352 0 2.119.82 2.139 1.806h-1.187c-.04-.351-.283-.776-.918-.776-.674 0-1.045.517-1.045 1.328v.625c0 .468.121.834.343 1.067l-.737.92z M14.469 9.414a.75.75 0 0 1 .117 1.055l-4 5a.75.75 0 0 1-1.116.061l-2.5-2.5a.75.75 0 1 1 1.06-1.06l1.908 1.907 3.476-4.346a.75.75 0 0 1 1.055-.117z" },
@@ -36,19 +41,19 @@ export default class Sidebar extends Vue {
     currentCategory = this.categories[0];
 
     regions = [
-        { id: 1, name: "Sjælland", active: false },
-        { id: 2, name: "Nordjylland", active: false },
-        { id: 3, name: "Syddanmark", active: false },
-        { id: 4, name: "Hovedstaden", active: false },
-        { id: 5, name: "Midtjylland", active: false }]
+        { id: 0, name: "Sjælland", active: false },
+        { id: 1, name: "Nordjylland", active: false },
+        { id: 2, name: "Syddanmark", active: false },
+        { id: 3, name: "Hovedstaden", active: false },
+        { id: 4, name: "Midtjylland", active: false }]
 
     currentRegion = this.regions[0];
 
     filterCategory(id: number) {
         this.currentCategory.active = false;
 
-        this.categories[id - 1].active = true;
-        this.currentCategory = this.categories[id - 1];
+        this.categories[id].active = true;
+        this.currentCategory = this.categories[id];
 
         //  Filtering categories needs to be added here
     }
@@ -56,8 +61,8 @@ export default class Sidebar extends Vue {
     filterRegion(id: number) {
         this.currentRegion.active = false;
 
-        this.regions[id - 1].active = true;
-        this.currentRegion = this.regions[id - 1];
+        this.regions[id].active = true;
+        this.currentRegion = this.regions[id];
 
         //  Filtering regions needs to be added here
     }
@@ -87,12 +92,12 @@ h3 {
 .group {
     margin: 0;
     padding: 0;
-    width: 100%;
 }
 
 .item {
     border-radius: 0;
     border-right: 0;
+    width: 100%;
 }
 .hvr-sweep-to-right {
     cursor: pointer;
