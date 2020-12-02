@@ -134,9 +134,12 @@ namespace RestAPI.DBUtil
             bool queryCategory = false;
             bool queryRegion = false;
             bool queryPrice = false;
-            if (qtask.DateStart == new System.DateTime() && qtask.DateEnd == new System.DateTime())
+            if (qtask.DateStart == new System.DateTime())
             {
                 qtask.DateStart = new System.DateTime(1793, 1, 1);
+            }
+            if (qtask.DateEnd == new System.DateTime())
+            {
                 qtask.DateEnd = new System.DateTime(3000, 1, 1);
             }
             List<Task> taskList = new List<Task>();
