@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace RestAPI.DBUtil
 {
@@ -11,6 +13,17 @@ namespace RestAPI.DBUtil
     {
         private static ConnectionString connst = new ConnectionString();
         private string connectionString = connst.ConnectionStr;
+        private const string salt = "DqFWwSUo1lXwHNwbV3cz6QRC2XdO6uK3";
+
+
+        public string hashingGenerator(string password)
+        {
+            SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider();
+
+            byte[] passwordByte = Encoding.ASCII.GetBytes(password + salt);
+            byte[] encryptedByte = sha1.ComputeHash(passwordByte);
+            return Convert.ToBase64String(encryptedByte);
+        }
 
         public bool CreateUser(User user)
         {
@@ -28,7 +41,7 @@ namespace RestAPI.DBUtil
                     command.Parameters.AddWithValue("@Phone", user.Phone);
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@Username", user.Username);
-                    command.Parameters.AddWithValue("@Password", user.Password);
+                    command.Parameters.AddWithValue("@Password", hashingGenerator(user.Password));
                     command.Parameters.AddWithValue("@Rating", user.Rating);
                     command.Parameters.AddWithValue("@Suspended", user.Suspended);
 
@@ -45,6 +58,8 @@ namespace RestAPI.DBUtil
             return noRows == 1;
         }
 
+
+        
         public bool deleteUser(int id)
         {
             string queryString = "DELETE FROM [User] WHERE ID=@id";
@@ -155,7 +170,7 @@ namespace RestAPI.DBUtil
                 command.Connection.Open();
 
                 command.Parameters.AddWithValue("@Username", username);
-                command.Parameters.AddWithValue("@Password", password);
+                command.Parameters.AddWithValue("@Password", hashingGenerator(password));
 
                 SqlDataReader reader = command.ExecuteReader();
                 try
@@ -199,7 +214,7 @@ namespace RestAPI.DBUtil
                     command.Parameters.AddWithValue("@Phone", user.Phone);
                     command.Parameters.AddWithValue("@Email", user.Email);
                     command.Parameters.AddWithValue("@Username", user.Username);
-                    command.Parameters.AddWithValue("@Password", user.Password);
+                    command.Parameters.AddWithValue("@Password", hashingGenerator(user.Password));
                     command.Parameters.AddWithValue("@Rating", user.Rating);
                     command.Parameters.AddWithValue("@Suspended", user.Suspended);
                     
