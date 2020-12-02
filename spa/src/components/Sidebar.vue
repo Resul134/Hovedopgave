@@ -17,18 +17,19 @@
             </b-list-group-item>
         </b-list-group>
         <h3>Pris</h3>
-        <div>
-            <label>Fra</label>
-            <b-form-input v-model="minPrice" placeholder="Pris"></b-form-input>
-            <label>Til</label>
-            <b-form-input v-model="maxPrice" placeholder="Pris"></b-form-input>
+        <label class="from">Fra</label>
+        <label class="to">Til</label>
+        <div class="price">
+            <b-form-input class="price" v-model="minPrice" placeholder="Pris"></b-form-input>
+            <b-form-input class="price" v-model="maxPrice" placeholder="Pris"></b-form-input>
         </div>
         <h3>Dato</h3>
-        <div>
+        <div class="date">
             <label>Fra</label>
-            <b-form-datepicker class="mb-2" v-model="dateStart"></b-form-datepicker>
+            <b-form-input type="date" v-model="dateStart"></b-form-input>
             <label>Til</label>
-            <b-form-datepicker class="mb-2" v-model="dateEnd"></b-form-datepicker>
+            <b-form-input type="date" v-model="dateEnd"></b-form-input>
+            <br>
         </div>
     </div>
 </div>
@@ -38,6 +39,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Region } from "../types/region";
 import { Category } from "../types/category";
+import { Query } from "../types/query";
 
 @Component
 export default class Sidebar extends Vue {
@@ -60,103 +62,88 @@ export default class Sidebar extends Vue {
         { id: 4, name: "Midtjylland", active: false }]
 
     currentRegion = {} as Region;
-    dateStart = "";
-    dateEnd = "";
+    dateStart = "2010-10-05";
+    dateEnd = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
     minPrice = 0;
     maxPrice = 10000;
+    queries = Array<Query>();
 
-    @Watch("minPrice") t() {
-        if (this.$route.name === "Overview") {
-            this.$router.push({ params: { minPrice: this.minPrice.toString(), maxPrice: this.maxPrice.toString() } });
-        } else {
-            this.$router.push(
-                { name: "Overview", params: { minPrice: this.minPrice.toString(), maxPrice: this.maxPrice.toString() } });
-        }
+    @Watch("minPrice") e() {
+        this.NewQuery("minPrice", this.minPrice.toString());
+        this.NewQuery("maxPrice", this.maxPrice.toString());
+        this.ReplaceRoute(this.queries);
     }
 
     @Watch("maxPrice") f() {
-        if (this.$route.name === "Overview") {
-            this.$router.push({ params: { maxPrice: this.maxPrice.toString(), minPrice: this.minPrice.toString() } });
-        } else {
-            this.$router.push(
-                { name: "Overview", params: { maxPrice: this.maxPrice.toString(), minPrice: this.minPrice.toString() } });
-        }
+        this.NewQuery("minPrice", this.minPrice.toString());
+        this.NewQuery("maxPrice", this.maxPrice.toString());
+        this.ReplaceRoute(this.queries);
     }
 
     @Watch("dateStart") g() {
-        if (this.$route.name === "Overview") {
-            this.$router.push({ params: { minDate: this.dateStart.toString() } });
-        } else {
-            this.$router.push(
-                { name: "Overview", params: { minDate: this.dateStart.toString() } });
-        }
+        this.NewQuery("minDate", this.dateStart);
+        this.NewQuery("maxDate", this.dateEnd);
+        this.ReplaceRoute(this.queries);
     }
 
     @Watch("dateEnd") h() {
-        if (this.$route.name === "Overview") {
-            this.$router.push({ params: { maxDate: this.dateEnd.toString() } });
-        } else {
-            this.$router.push(
-                { name: "Overview", params: { maxDate: this.dateEnd.toString() } });
-        }
+        this.NewQuery("minDate", this.dateStart);
+        this.NewQuery("maxDate", this.dateEnd);
+        this.ReplaceRoute(this.queries);
+    }
+
+    NewQuery(name: string, value: string) {
+        const newQuery = {} as Query;
+        newQuery.name = name;
+        newQuery.value = value;
+        this.queries = this.DeleteFromQueryList(this.queries, name);
+        this.queries.push(newQuery);
     }
 
     filterCategory(id: number) {
         if (this.currentCategory) {
             this.currentCategory.active = false;
         }
-        this.categories[id].active = true;
-        this.currentCategory = this.categories[id];
-
-        if (this.$route.name === "Overview") {
-            this.$router.push({ params: { categoryId: this.currentCategory.id.toString() } });
+        if (this.currentCategory.id !== this.categories[id].id) {
+            this.categories[id].active = true;
+            this.currentCategory = this.categories[id];
+            this.NewQuery("categoryId", this.currentCategory.id.toString());
         } else {
-            this.$router.push(
-                { name: "Overview", params: { categoryId: this.currentCategory.id.toString() } });
+            this.currentCategory = {} as Category;
+            this.queries = this.DeleteFromQueryList(this.queries, "categoryId");
         }
+        this.ReplaceRoute(this.queries);
     }
 
     filterRegion(id: number) {
         if (this.currentRegion) {
             this.currentRegion.active = false;
         }
-
-        this.regions[id].active = true;
-        this.currentRegion = this.regions[id];
-        if (this.$route.name === "Overview") {
-            this.$router.push({ params: { region: this.currentRegion.name.toString() } });
+        if (this.currentRegion.id !== this.regions[id].id) {
+            this.regions[id].active = true;
+            this.currentRegion = this.regions[id];
+            this.NewQuery("region", this.currentRegion.name);
         } else {
-            this.$router.push(
-                { name: "Overview", params: { region: this.currentRegion.name.toString() } });
+            this.currentRegion = {} as Region;
+            this.queries = this.DeleteFromQueryList(this.queries, "region");
         }
+        this.ReplaceRoute(this.queries);
     }
 
-    FilterRoute() {
+    DeleteFromQueryList(array: Array<Query>, name: string) {
+        for (let i = array.length - 1; i >= 0; i--) {
+            if (array[i].name === name) {
+                array.splice(i, 1);
+            }
+        }
+        return array;
+    }
+
+    ReplaceRoute(parameters: Array<Query>) {
         if (this.$route.name === "Overview") {
-            this.$router.push(
-                {
-                    params: {
-                        categoryId: this.currentCategory.id.toString(),
-                        region: this.currentRegion.name,
-                        minPrice: this.minPrice.toString(),
-                        maxPrice: this.maxPrice.toString(),
-                        minDate: this.dateStart.toString(),
-                        maxDate: this.dateEnd.toString()
-                    }
-                });
+            this.$router.replace({ query: { payload: JSON.stringify(parameters) } });
         } else {
-            this.$router.push(
-                {
-                    name: "Overview",
-                    params: {
-                        categoryId: this.currentCategory.id.toString(),
-                        region: this.currentRegion.name,
-                        minPrice: this.minPrice.toString(),
-                        maxPrice: this.maxPrice.toString(),
-                        minDate: this.dateStart.toString(),
-                        maxDate: this.dateEnd.toString()
-                    }
-                });
+            this.$router.replace({ name: "Overview", query: { payload: JSON.stringify(parameters) } });
         }
     }
 }
@@ -168,8 +155,22 @@ export default class Sidebar extends Vue {
 h3 {
     margin: 10px 0 10px 10px;
 }
-.region {
-    margin: 40px 0 10px 10px;
+.price {
+    margin: 0 2%;
+    display: flex;
+    flex-wrap: wrap;
+    input {
+        width: 45%;
+    }
+}
+.date {
+    margin: 0 5%;
+}
+.to {
+    margin: 0 30%;
+}
+.from {
+    margin: 0 5%;
 }
 
 .sidebar {
@@ -179,7 +180,6 @@ h3 {
     height: calc(100% - 65px);
     box-shadow: 5px 0px 5px whitesmoke;
     top: 65px;
-    padding-top: 20px;
     overflow: auto;
 }
 

@@ -13,8 +13,9 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { GetTasks, GetTasksByCategory, GetTasksByFilter } from "../api/task";
+import { GetTasksByFilter } from "../api/task";
 import { Task } from "../types/task";
+import { Query } from "../types/query";
 import Tile from "@/components/Tile.vue";
 
 @Component({
@@ -26,16 +27,8 @@ export default class Overview extends Vue {
     chosenCategory = Number(this.$route.params.categoryId);
     tasks = Array<Task>();
 
-    checkCategory() {
-        this.tasks = Array<Task>();
-        if (this.chosenCategory === 0) {
-            this.GetAllTasks();
-        } else {
-            this.GetAllTasksByCategory(this.chosenCategory);
-        }
-    }
-
     GetFilterMatchingTasks(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string) {
+        this.tasks = Array<Task>();
         GetTasksByFilter(categoryId, region, minPrice, maxPrice, minDate, maxDate).then(response => {
             if (response.status === 200) {
                 this.tasks = response.data;
@@ -45,34 +38,39 @@ export default class Overview extends Vue {
         });
     }
 
-    GetAllTasks() {
-        GetTasks().then(response => {
-            if (response.status === 200) {
-                this.tasks = response.data;
-            }
-        }).catch(() => {
-            console.log("Error getting tasks");
-        });
-    }
-
-    GetAllTasksByCategory(id: number) {
-        GetTasksByCategory(id).then(response => {
-            if (response.status === 200) {
-                this.tasks = response.data;
-            }
-        }).catch(() => {
-            console.log("Error getting tasks by category");
-        });
-    }
-
-    mounted() {
-        this.checkCategory();
-    }
-
-    @Watch("$route.params", { immediate: true, deep: true })
+    @Watch("$route.query", { immediate: true, deep: true })
     onUrlChange() {
-        const params = this.$route.params;
-        this.GetFilterMatchingTasks(params.categoryId, params.region, params.minPrice, params.maxPrice, params.minDate, params.maxDate);
+        let queries = Array<Query>();
+        let categoryId = "";
+        let region = "";
+        let minPrice = "";
+        let maxPrice = "";
+        let minDate = "";
+        let maxDate = "";
+        queries = JSON.parse(String(this.$route.query.payload));
+        queries.forEach(element => {
+            switch (element.name) {
+            case "categoryId":
+                categoryId = element.value;
+                break;
+            case "region":
+                region = element.value;
+                break;
+            case "minPrice":
+                minPrice = element.value;
+                break;
+            case "maxPrice":
+                maxPrice = element.value;
+                break;
+            case "minDate":
+                minDate = element.value;
+                break;
+            case "maxDate":
+                maxDate = element.value;
+                break;
+            }
+        });
+        this.GetFilterMatchingTasks(categoryId, region, minPrice.toString(), maxPrice.toString(), minDate, maxDate);
     }
 }
 </script>

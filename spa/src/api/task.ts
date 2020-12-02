@@ -22,6 +22,6 @@ export function GetTasksByFilter(categoryId?: string, region?: string, minPrice?
     if (minDate && maxDate) {
         apiString += `dateStart=${minDate}&dateEnd=${maxDate}`;
     }
-    console.log(apiString);
+    //  console.log(apiString);
     return axios.get(apiString);
 }
