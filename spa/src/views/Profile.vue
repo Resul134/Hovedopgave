@@ -55,7 +55,7 @@
                   </div>
                   </div>
               </b-col>
-              <b-col></b-col>
+              <b-col cols="3"></b-col>
           </b-row>
       </div>
   </div>
