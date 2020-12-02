@@ -46,7 +46,7 @@ const routes: Array<RouteConfig> = [
         beforeEnter: ifAuthenticated
     },
     {
-        path: "/overview/:categoryId",
+        path: "/overview/kategori=:categoryId?&region=:region?&pris=:minPrice?&:maxPrice?&dato=:minDate?&:maxDate?",
         name: "Overview",
         component: Overview
     }

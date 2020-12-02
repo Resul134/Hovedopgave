@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { GetTasks, GetTasksByCategory } from "../api/task";
+import { GetTasks, GetTasksByCategory, GetTasksByFilter } from "../api/task";
 import { Task } from "../types/task";
 import Tile from "@/components/Tile.vue";
 
@@ -33,6 +33,16 @@ export default class Overview extends Vue {
         } else {
             this.GetAllTasksByCategory(this.chosenCategory);
         }
+    }
+
+    GetFilterMatchingTasks(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string) {
+        GetTasksByFilter(categoryId, region, minPrice, maxPrice, minDate, maxDate).then(response => {
+            if (response.status === 200) {
+                this.tasks = response.data;
+            }
+        }).catch(() => {
+            console.log("Error getting tasks");
+        });
     }
 
     GetAllTasks() {
@@ -61,8 +71,8 @@ export default class Overview extends Vue {
 
     @Watch("$route.params", { immediate: true, deep: true })
     onUrlChange() {
-        this.chosenCategory = Number(this.$route.params.categoryId);
-        this.checkCategory();
+        const params = this.$route.params;
+        this.GetFilterMatchingTasks(params.categoryId, params.region, params.minPrice, params.maxPrice, params.minDate, params.maxDate);
     }
 }
 </script>

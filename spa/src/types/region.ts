@@ -1,6 +1,5 @@
-export interface Category {
+export interface Region {
     id: number;
     name: string;
     active: boolean;
-    svg: string;
 }

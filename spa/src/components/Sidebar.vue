@@ -12,18 +12,32 @@
         </b-list-group>
         <h3 class="region">Region</h3>
         <b-list-group class="group">
-            <router-link to="/overview" >
-                <b-list-group-item class="item hvr-sweep-to-right" v-for="(region, idx) in regions" :key="idx" @click="filterRegion(region.id)" href="" v-bind:active="region.active">
-                    {{ region.name }}
-                </b-list-group-item>
-            </router-link>
+            <b-list-group-item class="item hvr-sweep-to-right" v-for="(region, idx) in regions" :key="idx" @click="filterRegion(region.id)" href="" v-bind:active="region.active">
+                {{ region.name }}
+            </b-list-group-item>
         </b-list-group>
+        <h3>Pris</h3>
+        <div>
+            <label>Fra</label>
+            <b-form-input v-model="minPrice" placeholder="Pris"></b-form-input>
+            <label>Til</label>
+            <b-form-input v-model="maxPrice" placeholder="Pris"></b-form-input>
+        </div>
+        <h3>Dato</h3>
+        <div>
+            <label>Fra</label>
+            <b-form-datepicker class="mb-2" v-model="dateStart"></b-form-datepicker>
+            <label>Til</label>
+            <b-form-datepicker class="mb-2" v-model="dateEnd"></b-form-datepicker>
+        </div>
     </div>
 </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { Region } from "../types/region";
+import { Category } from "../types/category";
 
 @Component
 export default class Sidebar extends Vue {
@@ -36,7 +50,7 @@ export default class Sidebar extends Vue {
         { id: 5, name: "Frivilig", active: false, svg: "M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" },
         { id: 6, name: "Skolehjælp", active: false, svg: "M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" }]
 
-    currentCategory = this.categories[0];
+    currentCategory = {} as Category;
 
     regions = [
         { id: 0, name: "Sjælland", active: false },
@@ -45,28 +59,105 @@ export default class Sidebar extends Vue {
         { id: 3, name: "Hovedstaden", active: false },
         { id: 4, name: "Midtjylland", active: false }]
 
-    currentRegion = this.regions[0];
+    currentRegion = {} as Region;
+    dateStart = "";
+    dateEnd = "";
+    minPrice = 0;
+    maxPrice = 10000;
+
+    @Watch("minPrice") t() {
+        if (this.$route.name === "Overview") {
+            this.$router.push({ params: { minPrice: this.minPrice.toString(), maxPrice: this.maxPrice.toString() } });
+        } else {
+            this.$router.push(
+                { name: "Overview", params: { minPrice: this.minPrice.toString(), maxPrice: this.maxPrice.toString() } });
+        }
+    }
+
+    @Watch("maxPrice") f() {
+        if (this.$route.name === "Overview") {
+            this.$router.push({ params: { maxPrice: this.maxPrice.toString(), minPrice: this.minPrice.toString() } });
+        } else {
+            this.$router.push(
+                { name: "Overview", params: { maxPrice: this.maxPrice.toString(), minPrice: this.minPrice.toString() } });
+        }
+    }
+
+    @Watch("dateStart") g() {
+        if (this.$route.name === "Overview") {
+            this.$router.push({ params: { minDate: this.dateStart.toString() } });
+        } else {
+            this.$router.push(
+                { name: "Overview", params: { minDate: this.dateStart.toString() } });
+        }
+    }
+
+    @Watch("dateEnd") h() {
+        if (this.$route.name === "Overview") {
+            this.$router.push({ params: { maxDate: this.dateEnd.toString() } });
+        } else {
+            this.$router.push(
+                { name: "Overview", params: { maxDate: this.dateEnd.toString() } });
+        }
+    }
 
     filterCategory(id: number) {
-        this.currentCategory.active = false;
-
+        if (this.currentCategory) {
+            this.currentCategory.active = false;
+        }
         this.categories[id].active = true;
         this.currentCategory = this.categories[id];
 
         if (this.$route.name === "Overview") {
-            this.$router.push({ params: { categoryId: id.toString() } });
+            this.$router.push({ params: { categoryId: this.currentCategory.id.toString() } });
         } else {
-            this.$router.push({ name: "Overview", params: { categoryId: id.toString() } });
+            this.$router.push(
+                { name: "Overview", params: { categoryId: this.currentCategory.id.toString() } });
         }
     }
 
     filterRegion(id: number) {
-        this.currentRegion.active = false;
+        if (this.currentRegion) {
+            this.currentRegion.active = false;
+        }
 
         this.regions[id].active = true;
         this.currentRegion = this.regions[id];
+        if (this.$route.name === "Overview") {
+            this.$router.push({ params: { region: this.currentRegion.name.toString() } });
+        } else {
+            this.$router.push(
+                { name: "Overview", params: { region: this.currentRegion.name.toString() } });
+        }
+    }
 
-        //  Filtering regions needs to be added here
+    FilterRoute() {
+        if (this.$route.name === "Overview") {
+            this.$router.push(
+                {
+                    params: {
+                        categoryId: this.currentCategory.id.toString(),
+                        region: this.currentRegion.name,
+                        minPrice: this.minPrice.toString(),
+                        maxPrice: this.maxPrice.toString(),
+                        minDate: this.dateStart.toString(),
+                        maxDate: this.dateEnd.toString()
+                    }
+                });
+        } else {
+            this.$router.push(
+                {
+                    name: "Overview",
+                    params: {
+                        categoryId: this.currentCategory.id.toString(),
+                        region: this.currentRegion.name,
+                        minPrice: this.minPrice.toString(),
+                        maxPrice: this.maxPrice.toString(),
+                        minDate: this.dateStart.toString(),
+                        maxDate: this.dateEnd.toString()
+                    }
+                });
+        }
     }
 }
 </script>
@@ -85,10 +176,11 @@ h3 {
     background: white;
     position: fixed;
     width: $sidebar-width;
-    height: 100%;
+    height: calc(100% - 65px);
     box-shadow: 5px 0px 5px whitesmoke;
     top: 65px;
     padding-top: 20px;
+    overflow: auto;
 }
 
 .group {
