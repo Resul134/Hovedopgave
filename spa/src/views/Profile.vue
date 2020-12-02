@@ -2,35 +2,29 @@
   <div>
       <h1>Profil</h1>
       <div id="userInfo" class="user-info">
-          <div style="display: flex;">
-            <b-alert v-if="tommefelter" variant="danger" show>Alle felter skal fyldes ud!</b-alert>
-            <b-alert v-if="!error" variant="danger" show>Oplysninger blev ikke opdateret - Server fejl.</b-alert>
-            <b-alert v-if="edited" variant="success" show>Dine oplysninger er blevet opdateret!</b-alert>
-          </div>
           <b-row>
               <b-col>
                   <div class="profile">
                       <h4 style="text-align:center;">Profil information</h4>
                     <div class="content-flex">
-                      <b>Brugernavn: </b>
+                      <b>Username: </b>
                       <b-form-input v-model="userUsername" :state="userNameState()"></b-form-input>
                   </div>
                   <div class="content-flex">
-                      <b>Kodeord: </b>
+                      <b>Password: </b>
                       <b-form-input v-model="userPassword" type="password" id="input-live-password" :state="passwordState()"></b-form-input>
-                        <b-form-invalid-feedback id="input-live-password" tooltip>Kodeord skal være mindst 8 karakterer</b-form-invalid-feedback>
                   </div>
                   <div class="content-flex">
-                      <b>Gentag kodeord: </b>
-                      <b-form-input v-model="userPasswordRepeat" type="password" id="input-live-password-repeat" :state="passwordRepeatState()"></b-form-input>
+                      <b>Password repeat: </b>
+                      <b-form-input v-model="userPasswordRepeat" type="password" id="input-live-password" :state="passwordRepeatState()"></b-form-input>
                   </div>
                     <div class="content-flex">
                       <b>Fornavn:</b>
-                        <b-form-input v-model="userFirstName" :state="forNavnState()"></b-form-input>
+                          <b-form-input v-model="userFirstName" :state="forNavnState()"></b-form-input>
                   </div>
                   <div class="content-flex">
                       <b>Efternavn:</b>
-                        <b-form-input v-model="userLastName" :state="efterNavnState()"></b-form-input>
+                          <b-form-input v-model="userLastName" :state="efterNavnState()"></b-form-input>
                   </div>
                   <div class="content-flex">
                       <b>Fødselsdato:</b>
@@ -43,19 +37,18 @@
                   <div class="content-flex">
                       <b>Telefon: </b>
                       <b-form-input v-model="userPhone" :state="phoneState()" id="input-live-phone"></b-form-input>
-                       <b-form-invalid-feedback id="input-live-phone" tooltip>Telefon skal være bestående af 8 tal.</b-form-invalid-feedback>
                   </div>
                   <div class="content-flex">
                       <b>Email: </b>
                       <b-form-input v-model="userEmail" :state="emailState()"></b-form-input>
                   </div>
-                  <div class="button-flex">
+                  <div class="content-flex">
                       <b-button variant="danger" @click="deleteProfil">Slet konto</b-button>
                       <b-button @click="RedigerProfil">Bekræft</b-button>
                   </div>
                   </div>
               </b-col>
-              <b-col cols="3"></b-col>
+              <b-col></b-col>
           </b-row>
       </div>
   </div>
@@ -78,9 +71,6 @@ export default class Profile extends Vue {
     userPhone = "";
     userEmail = "";
     userPasswordRepeat = "";
-    edited = false;
-    error = false;
-    tommefelter = false;
     // LogOut() {
     //     Logout();
     //     this.$router.push({ name: "Login" });
@@ -143,23 +133,15 @@ export default class Profile extends Vue {
 
     RedigerProfil() {
         if (this.userPassword === "" || this.userEmail === "" || this.userUsername === "" || this.userPassword === "" || this.userPhone.length < 8 || this.userFirstName === "" || this.userLastName === "") {
-            this.tommefelter = true;
-            this.edited = false;
-            this.error = false;
+            alert("Der gik noget galt! Der må ikke være tomme felter");
         } else {
             if (confirm("Vil du bekræfte ændringerne?")) {
                 RedigerBruger(GetLoggedInId(), this.userFirstName, this.userLastName, this.userBirthday, this.userGender, parseInt(this.userPhone), this.userEmail, this.userUsername, this.userPassword).then(response => {
                     if (response.status === 200) {
-                        this.edited = true;
-                        this.tommefelter = false;
-                        this.error = false;
                         console.log("Ændring succesfuld. Status kode = " + response.status);
                     }
                 }).catch(() => {
                     console.log("Noget gik galt");
-                    this.error = true;
-                    this.tommefelter = false;
-                    this.edited = false;
                 });
             }
         }
@@ -187,15 +169,9 @@ export default class Profile extends Vue {
 .content-flex{
     display: flex;
     justify-content: space-between;
-    border-radius: 0px;
+    border-radius: 5px;
     border-bottom: 1px solid black;
-    padding: 7px;
-}
-
-.button-flex{
-    display: flex;
-    justify-content: space-between;
-    padding: 7px;
+    margin-top: 5px;
 }
 
 .input-flex{
@@ -207,7 +183,7 @@ input{
 }
 
 .profile{
-    border-radius: 0px;
+    border-radius: 7px;
     padding: 10px;
     background: $light;
 }
