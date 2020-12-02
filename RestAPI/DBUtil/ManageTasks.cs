@@ -125,7 +125,85 @@ namespace RestAPI.DBUtil
                     reader.Close();
                 }
             }
+            return taskList;
 
+        }
+
+        public List<Task> GetTasksByFilter(FilterTask qtask)
+        {
+            bool queryCategory = false;
+            bool queryRegion = false;
+            bool queryPrice = false;
+            if (qtask.DateStart == new System.DateTime() && qtask.DateEnd == new System.DateTime())
+            {
+                qtask.DateStart = new System.DateTime(1793, 1, 1);
+                qtask.DateEnd = new System.DateTime(3000, 1, 1);
+            }
+            List<Task> taskList = new List<Task>();
+            string queryString = "SELECT * From Task WHERE ";
+            if (qtask.CategoryId != 0)
+            {
+                queryString += "CategoryID=@CATID AND ";
+                queryCategory = true;
+            }
+            if (qtask.Region != null)
+            {
+                queryString += "Region=@REGION AND ";
+                queryRegion = true;
+            }
+            if (qtask.PriceHigh != 0 && qtask.PriceHigh > qtask.PriceLow)
+            {
+                queryString += "Price BETWEEN @PRICELOW AND @PRICEHIGH AND ";
+                queryPrice = true;
+            }
+            queryString += "Date BETWEEN @DATESTART AND @DATEEND";
+
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                if (queryCategory)
+                {
+                    command.Parameters.AddWithValue("@CATID", qtask.CategoryId);
+                }
+                if (queryRegion)
+                {
+                    command.Parameters.AddWithValue("@REGION", qtask.Region);
+                }
+                if (queryPrice)
+                {
+                    command.Parameters.AddWithValue("@PRICELOW", qtask.PriceLow);
+                    command.Parameters.AddWithValue("@PRICEHIGH", qtask.PriceHigh);
+                }
+                command.Parameters.AddWithValue("@DATESTART", qtask.DateStart);
+                command.Parameters.AddWithValue("@DATEEND", qtask.DateEnd);
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        Task task = new Task();
+                        task.Id = reader.GetInt32(0);
+                        task.UserId = reader.GetInt32(1);
+                        task.CategoryId = reader.GetInt32(2);
+                        task.Date = reader.GetDateTime(3);
+                        task.Title = reader.GetString(4);
+                        task.Price = reader.GetDouble(5);
+                        task.Description = reader.GetString(6);
+                        task.Status = reader.GetString(7);
+                        task.Promoted = reader.GetBoolean(8);
+                        task.Region = reader.GetString(9);
+                        task.PromotedEnd = reader.GetDateTime(10);
+                        task.PageViews = reader.GetInt32(11);
+                        taskList.Add(task);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
             return taskList;
 
         }

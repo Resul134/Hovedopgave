@@ -45,6 +45,15 @@ namespace RestAPI.Controllers
             return mngTasks.GetTaskFromId(id);
         }
 
+        // GET api/tasks/filter?xxxx
+        [HttpGet]
+        [Route("filter")]
+        public List<Task> FilterTasks([FromQuery] FilterTask qtask)
+        {
+            ManageTasks mngTasks = new ManageTasks();
+            return mngTasks.GetTasksByFilter(qtask);
+        }
+
         // POST api/tasks
         [HttpPost]
         public void Post([FromBody] Task task)
