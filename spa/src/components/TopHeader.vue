@@ -119,7 +119,7 @@ export default class TopHeader extends Vue {
     width: 40%;
 }
 .brand {
-    flex: 0 0 180px;
+    flex: 0 0 210px;
     margin: 0px;
     padding: 0px;
 }
