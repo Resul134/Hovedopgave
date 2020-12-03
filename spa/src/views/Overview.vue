@@ -27,9 +27,9 @@ export default class Overview extends Vue {
     chosenCategory = Number(this.$route.params.categoryId);
     tasks = Array<Task>();
 
-    GetFilterMatchingTasks(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string) {
+    GetFilterMatchingTasks(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string, search: string) {
         this.tasks = Array<Task>();
-        GetTasksByFilter(categoryId, region, minPrice, maxPrice, minDate, maxDate).then(response => {
+        GetTasksByFilter(categoryId, region, minPrice, maxPrice, minDate, maxDate, search).then(response => {
             if (response.status === 200) {
                 this.tasks = response.data;
             }
@@ -47,6 +47,7 @@ export default class Overview extends Vue {
         let maxPrice = "";
         let minDate = "";
         let maxDate = "";
+        let search = "";
         queries = JSON.parse(String(this.$route.query.payload));
         queries.forEach(element => {
             switch (element.name) {
@@ -68,9 +69,12 @@ export default class Overview extends Vue {
             case "maxDate":
                 maxDate = element.value;
                 break;
+            case "search":
+                search = element.value;
+                break;
             }
         });
-        this.GetFilterMatchingTasks(categoryId, region, minPrice.toString(), maxPrice.toString(), minDate, maxDate);
+        this.GetFilterMatchingTasks(categoryId, region, minPrice.toString(), maxPrice.toString(), minDate, maxDate, search);
     }
 }
 </script>

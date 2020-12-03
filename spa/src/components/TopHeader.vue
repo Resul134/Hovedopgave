@@ -37,14 +37,26 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { GetLoggedInId, Logout } from "../api/user";
+import { Query } from "../types/query";
 
 @Component
 export default class TopHeader extends Vue {
     loggedIn = false;
     searchBarInput = "";
+    queries = Array<Query>();
 
     @Watch("$store.state.loggedIn") t() {
         this.loggedIn = this.$store.state.loggedIn;
+    }
+
+    @Watch("searchBarInput") f() {
+        if (this.searchBarInput !== "") {
+            this.NewQuery("search", this.searchBarInput);
+        } else {
+            this.queries = this.DeleteFromQueryList(this.queries, "search");
+            this.$store.commit("queriesState", this.queries);
+        }
+        this.ReplaceRoute(this.queries);
     }
 
     mounted() {
@@ -57,6 +69,33 @@ export default class TopHeader extends Vue {
         this.$store.commit("loggedInState", false);
         this.$router.push({ name: "Home" });
         Logout();
+    }
+
+    NewQuery(name: string, value: string) {
+        const newQuery = {} as Query;
+        newQuery.name = name;
+        newQuery.value = value;
+        this.queries = this.$store.state.queries;
+        this.queries = this.DeleteFromQueryList(this.queries, name);
+        this.queries.push(newQuery);
+        this.$store.commit("queriesState", this.queries);
+    }
+
+    DeleteFromQueryList(array: Array<Query>, name: string) {
+        for (let i = array.length - 1; i >= 0; i--) {
+            if (array[i].name === name) {
+                array.splice(i, 1);
+            }
+        }
+        return array;
+    }
+
+    ReplaceRoute(parameters: Array<Query>) {
+        if (this.$route.name === "Overview") {
+            this.$router.replace({ query: { payload: JSON.stringify(parameters) } });
+        } else {
+            this.$router.replace({ name: "Overview", query: { payload: JSON.stringify(parameters) } });
+        }
     }
 }
 </script>

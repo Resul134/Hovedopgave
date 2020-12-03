@@ -134,6 +134,7 @@ namespace RestAPI.DBUtil
             bool queryCategory = false;
             bool queryRegion = false;
             bool queryPrice = false;
+            bool querySearch = false;
             if (qtask.DateStart == new System.DateTime())
             {
                 qtask.DateStart = new System.DateTime(1793, 1, 1);
@@ -159,6 +160,11 @@ namespace RestAPI.DBUtil
                 queryString += "Price BETWEEN @PRICELOW AND @PRICEHIGH AND ";
                 queryPrice = true;
             }
+            if (qtask.Search != null)
+            {
+                queryString += "Title LIKE '%' + @TITLE + '%' AND ";
+                querySearch = true;
+            }
             queryString += "Date BETWEEN @DATESTART AND @DATEEND";
 
 
@@ -177,6 +183,10 @@ namespace RestAPI.DBUtil
                 {
                     command.Parameters.AddWithValue("@PRICELOW", qtask.PriceLow);
                     command.Parameters.AddWithValue("@PRICEHIGH", qtask.PriceHigh);
+                }
+                if (querySearch)
+                {
+                    command.Parameters.AddWithValue("@TITLE", qtask.Search);
                 }
                 command.Parameters.AddWithValue("@DATESTART", qtask.DateStart);
                 command.Parameters.AddWithValue("@DATEEND", qtask.DateEnd);

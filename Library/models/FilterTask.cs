@@ -14,6 +14,7 @@ namespace Library.models
         public double PriceLow { get; set; }
         public double PriceHigh { get; set; }
 
+        public string Search { get; set; }
         public FilterTask()
         {
 
@@ -21,7 +22,7 @@ namespace Library.models
 
         public override string ToString()
         {
-            return $"{nameof(CategoryId)}: {CategoryId}, {nameof(Region)}: {Region}, {nameof(DateStart)}: {DateStart}, {nameof(DateEnd)}: {DateEnd}, {nameof(PriceLow)}: {PriceLow}, {nameof(PriceHigh)}: {PriceHigh}";
+            return $"{nameof(CategoryId)}: {CategoryId}, {nameof(Region)}: {Region}, {nameof(DateStart)}: {DateStart}, {nameof(DateEnd)}: {DateEnd}, {nameof(PriceLow)}: {PriceLow}, {nameof(PriceHigh)}: {PriceHigh}, {nameof(Search)}: {Search}";
         }
     }
 }

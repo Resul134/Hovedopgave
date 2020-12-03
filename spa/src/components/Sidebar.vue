@@ -96,8 +96,10 @@ export default class Sidebar extends Vue {
         const newQuery = {} as Query;
         newQuery.name = name;
         newQuery.value = value;
+        this.queries = this.$store.state.queries;
         this.queries = this.DeleteFromQueryList(this.queries, name);
         this.queries.push(newQuery);
+        this.$store.commit("queriesState", this.queries);
     }
 
     filterCategory(id: number) {

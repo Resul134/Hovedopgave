@@ -8,7 +8,7 @@ export async function GetTasks() {
 export function GetTasksByCategory(id: number) {
     return axios.get(`${apiEndPoint}/tasks/category/${id}`);
 }
-export function GetTasksByFilter(categoryId?: string, region?: string, minPrice?: string, maxPrice?: string, minDate?: string, maxDate?: string) {
+export function GetTasksByFilter(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string, search: string) {
     let apiString = `${apiEndPoint}/tasks/filter?`;
     if (categoryId) {
         apiString += `categoryId=${categoryId}&`;
@@ -18,6 +18,9 @@ export function GetTasksByFilter(categoryId?: string, region?: string, minPrice?
     }
     if (minPrice && maxPrice) {
         apiString += `priceLow=${minPrice}&priceHigh=${maxPrice}&`;
+    }
+    if (search) {
+        apiString += `search=${search}&`;
     }
     if (minDate && maxDate) {
         apiString += `dateStart=${minDate}&dateEnd=${maxDate}`;
