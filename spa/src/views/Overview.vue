@@ -12,9 +12,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
-import { GetTasks } from "../api/task";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { GetTasksByFilter } from "../api/task";
 import { Task } from "../types/task";
+import { Query } from "../types/query";
 import Tile from "@/components/Tile.vue";
 
 @Component({
@@ -23,16 +24,57 @@ import Tile from "@/components/Tile.vue";
     }
 })
 export default class Overview extends Vue {
+    chosenCategory = Number(this.$route.params.categoryId);
     tasks = Array<Task>();
 
-    mounted() {
-        GetTasks().then(response => {
+    GetFilterMatchingTasks(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string, search: string) {
+        this.tasks = Array<Task>();
+        GetTasksByFilter(categoryId, region, minPrice, maxPrice, minDate, maxDate, search).then(response => {
             if (response.status === 200) {
                 this.tasks = response.data;
             }
         }).catch(() => {
             console.log("Error getting tasks");
         });
+    }
+
+    @Watch("$route.query", { immediate: true, deep: true })
+    onUrlChange() {
+        let queries = Array<Query>();
+        let categoryId = "";
+        let region = "";
+        let minPrice = "";
+        let maxPrice = "";
+        let minDate = "";
+        let maxDate = "";
+        let search = "";
+        queries = JSON.parse(String(this.$route.query.payload));
+        queries.forEach(element => {
+            switch (element.name) {
+            case "categoryId":
+                categoryId = element.value;
+                break;
+            case "region":
+                region = element.value;
+                break;
+            case "minPrice":
+                minPrice = element.value;
+                break;
+            case "maxPrice":
+                maxPrice = element.value;
+                break;
+            case "minDate":
+                minDate = element.value;
+                break;
+            case "maxDate":
+                maxDate = element.value;
+                break;
+            case "search":
+                search = element.value;
+                break;
+            }
+        });
+        this.GetFilterMatchingTasks(categoryId, region, minPrice.toString(), maxPrice.toString(), minDate, maxDate, search);
     }
 }
 </script>

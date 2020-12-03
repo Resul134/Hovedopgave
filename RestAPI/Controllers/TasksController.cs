@@ -28,12 +28,30 @@ namespace RestAPI.Controllers
             return mngTasks.GetTasksFromTitle(title);
         }
 
+        // GET api/tasks/category/{categoryId}
+        [HttpGet]
+        [Route("category/{categoryId}")]
+        public List<Task> GetByCategory(int categoryId)
+        {
+            ManageTasks mngTasks = new ManageTasks();
+            return mngTasks.GetTasksFromCategory(categoryId);
+        }
+
         // GET api/tasks/5
         [HttpGet("{id}")]
         public Task Get(int id)
         {
             ManageTasks mngTasks = new ManageTasks();
             return mngTasks.GetTaskFromId(id);
+        }
+
+        // GET api/tasks/filter?xxxx
+        [HttpGet]
+        [Route("filter")]
+        public List<Task> FilterTasks([FromQuery] FilterTask qtask)
+        {
+            ManageTasks mngTasks = new ManageTasks();
+            return mngTasks.GetTasksByFilter(qtask);
         }
 
         // POST api/tasks

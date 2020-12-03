@@ -3,29 +3,43 @@
     <div>
         <h3>Kategorier</h3>
         <b-list-group class="group">
-            <router-link to="/overview">
-                <b-list-group-item class="item hvr-sweep-to-right" v-for="(category, idx) in categories" :key="idx" @click="filterCategory(category.id)" href="" v-bind:active="category.active">
-                    <svg width="1.5em" height="1.5em" viewBox="0 0 16 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" v-bind:d="category.svg"/>
-                    </svg>
-                    {{ category.name }}
-                </b-list-group-item>
-            </router-link>
+            <b-list-group-item class="item hvr-sweep-to-right" v-for="(category, idx) in categories" :key="idx" @click="filterCategory(category.id)" href="" v-bind:active="category.active">
+                <svg width="1.5em" height="1.5em" viewBox="0 0 16 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" v-bind:d="category.svg"/>
+                </svg>
+                {{ category.name }}
+            </b-list-group-item>
         </b-list-group>
         <h3 class="region">Region</h3>
         <b-list-group class="group">
-            <router-link to="/overview">
-                <b-list-group-item class="item hvr-sweep-to-right" v-for="(region, idx) in regions" :key="idx" @click="filterRegion(region.id)" href="" v-bind:active="region.active">
-                    {{ region.name }}
-                </b-list-group-item>
-            </router-link>
+            <b-list-group-item class="item hvr-sweep-to-right" v-for="(region, idx) in regions" :key="idx" @click="filterRegion(region.id)" href="" v-bind:active="region.active">
+                {{ region.name }}
+            </b-list-group-item>
         </b-list-group>
+        <h3>Pris</h3>
+        <label class="from">Fra</label>
+        <label class="to">Til</label>
+        <div class="price">
+            <b-form-input class="price" v-model="minPrice" placeholder="Pris"></b-form-input>
+            <b-form-input class="price" v-model="maxPrice" placeholder="Pris"></b-form-input>
+        </div>
+        <h3>Dato</h3>
+        <div class="date">
+            <label>Fra</label>
+            <b-form-input type="date" v-model="dateStart"></b-form-input>
+            <label>Til</label>
+            <b-form-input type="date" v-model="dateEnd"></b-form-input>
+            <br>
+        </div>
     </div>
 </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
+import { Region } from "../types/region";
+import { Category } from "../types/category";
+import { Query } from "../types/query";
 
 @Component
 export default class Sidebar extends Vue {
@@ -38,7 +52,7 @@ export default class Sidebar extends Vue {
         { id: 5, name: "Frivilig", active: false, svg: "M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" },
         { id: 6, name: "Skolehjælp", active: false, svg: "M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5L13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175l-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" }]
 
-    currentCategory = this.categories[0];
+    currentCategory = {} as Category;
 
     regions = [
         { id: 0, name: "Sjælland", active: false },
@@ -47,24 +61,92 @@ export default class Sidebar extends Vue {
         { id: 3, name: "Hovedstaden", active: false },
         { id: 4, name: "Midtjylland", active: false }]
 
-    currentRegion = this.regions[0];
+    currentRegion = {} as Region;
+    dateStart = "2010-10-05";
+    dateEnd = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
+    minPrice = 0;
+    maxPrice = 10000;
+    queries = Array<Query>();
+
+    @Watch("minPrice") e() {
+        this.NewQuery("minPrice", this.minPrice.toString());
+        this.NewQuery("maxPrice", this.maxPrice.toString());
+        this.ReplaceRoute(this.queries);
+    }
+
+    @Watch("maxPrice") f() {
+        this.NewQuery("minPrice", this.minPrice.toString());
+        this.NewQuery("maxPrice", this.maxPrice.toString());
+        this.ReplaceRoute(this.queries);
+    }
+
+    @Watch("dateStart") g() {
+        this.NewQuery("minDate", this.dateStart);
+        this.NewQuery("maxDate", this.dateEnd);
+        this.ReplaceRoute(this.queries);
+    }
+
+    @Watch("dateEnd") h() {
+        this.NewQuery("minDate", this.dateStart);
+        this.NewQuery("maxDate", this.dateEnd);
+        this.ReplaceRoute(this.queries);
+    }
+
+    NewQuery(name: string, value: string) {
+        const newQuery = {} as Query;
+        newQuery.name = name;
+        newQuery.value = value;
+        this.queries = this.$store.state.queries;
+        this.queries = this.DeleteFromQueryList(this.queries, name);
+        this.queries.push(newQuery);
+        this.$store.commit("queriesState", this.queries);
+    }
 
     filterCategory(id: number) {
-        this.currentCategory.active = false;
-
-        this.categories[id].active = true;
-        this.currentCategory = this.categories[id];
-
-        //  Filtering categories needs to be added here
+        if (this.currentCategory) {
+            this.currentCategory.active = false;
+        }
+        if (this.currentCategory.id !== this.categories[id].id) {
+            this.categories[id].active = true;
+            this.currentCategory = this.categories[id];
+            this.NewQuery("categoryId", this.currentCategory.id.toString());
+        } else {
+            this.currentCategory = {} as Category;
+            this.queries = this.DeleteFromQueryList(this.queries, "categoryId");
+        }
+        this.ReplaceRoute(this.queries);
     }
 
     filterRegion(id: number) {
-        this.currentRegion.active = false;
+        if (this.currentRegion) {
+            this.currentRegion.active = false;
+        }
+        if (this.currentRegion.id !== this.regions[id].id) {
+            this.regions[id].active = true;
+            this.currentRegion = this.regions[id];
+            this.NewQuery("region", this.currentRegion.name);
+        } else {
+            this.currentRegion = {} as Region;
+            this.queries = this.DeleteFromQueryList(this.queries, "region");
+        }
+        this.ReplaceRoute(this.queries);
+    }
 
-        this.regions[id].active = true;
-        this.currentRegion = this.regions[id];
+    DeleteFromQueryList(array: Array<Query>, name: string) {
+        for (let i = array.length - 1; i >= 0; i--) {
+            if (array[i].name === name) {
+                array.splice(i, 1);
+            }
+        }
+        return array;
+    }
 
-        //  Filtering regions needs to be added here
+    ReplaceRoute(parameters: Array<Query>) {
+        if (this.$route.name === "Overview") {
+            this.$router.replace({ query: { payload: JSON.stringify(parameters) } });
+        } else {
+            this.$router.replace({ name: "Overview", query: { payload: JSON.stringify(parameters) } });
+        }
     }
 }
 </script>
@@ -75,18 +157,32 @@ export default class Sidebar extends Vue {
 h3 {
     margin: 10px 0 10px 10px;
 }
-.region {
-    margin: 40px 0 10px 10px;
+.price {
+    margin: 0 2%;
+    display: flex;
+    flex-wrap: wrap;
+    input {
+        width: 45%;
+    }
+}
+.date {
+    margin: 0 5%;
+}
+.to {
+    margin: 0 30%;
+}
+.from {
+    margin: 0 5%;
 }
 
 .sidebar {
     background: white;
     position: fixed;
     width: $sidebar-width;
-    height: 100%;
+    height: calc(100% - 65px);
     box-shadow: 5px 0px 5px whitesmoke;
     top: 65px;
-    padding-top: 20px;
+    overflow: auto;
 }
 
 .group {
