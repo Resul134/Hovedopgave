@@ -17,8 +17,8 @@
                   </div>
                   <div class="content-flex">
                       <b>Kodeord: </b>
-                      <b-form-input v-model="userPassword" id="input-live-password" :state="passwordState()"></b-form-input>
-                        <b-form-invalid-feedback id="input-live-password" tooltip>Kodeord skal være mindst 8 karakterer</b-form-invalid-feedback>
+                      <b-form-input v-model="userPassword" id="input-live-password"></b-form-input>
+                        <!-- <b-form-invalid-feedback id="input-live-password" tooltip>Kodeord skal være mindst 8 karakterer</b-form-invalid-feedback> -->
                   </div>
                   <div class="content-flex">
                       <b>Gentag kodeord: </b>
@@ -92,11 +92,11 @@ export default class Profile extends Vue {
         }
     }
 
-    passwordState() {
-        if (this.userPassword.length ! < 8) {
-            return false;
-        }
-    }
+    // passwordState() {
+    //     if (this.userPassword.length ! < 8) {
+    //         return false;
+    //     }
+    // }
 
     passwordRepeatState() {
         if (this.userPassword === this.userPasswordRepeat) {
@@ -142,7 +142,7 @@ export default class Profile extends Vue {
     }
 
     RedigerProfil() {
-        if (this.userPassword === "" || this.userEmail === "" || this.userUsername === "" || this.userPassword === "" || this.userPhone.length < 8 || this.userFirstName === "" || this.userLastName === "") {
+        if (this.userEmail === "" || this.userUsername === "" || this.userPassword === "" || this.userPhone.length < 8 || this.userFirstName === "" || this.userLastName === "") {
             this.tommefelter = true;
             this.edited = false;
             this.error = false;
@@ -169,7 +169,6 @@ export default class Profile extends Vue {
         GetBrugerById(GetLoggedInId()).then(response => {
             this.user = response.data;
             this.userUsername = response.data.username;
-            this.userPassword = response.data.password;
             this.userFirstName = response.data.firstName;
             this.userLastName = response.data.lastName;
             this.userBirthday = response.data.birthday;

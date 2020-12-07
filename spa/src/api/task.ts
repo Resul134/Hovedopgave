@@ -8,6 +8,22 @@ export async function GetTasks() {
 export function GetTasksByCategory(id: number) {
     return axios.get(`${apiEndPoint}/tasks/category/${id}`);
 }
+
+export function CreateTask(UserID: number, CategoryID: number, DateCreated: Date, Title: string, Price: number, Description: string, Promoted: boolean, Region: string, promotedEnd: Date) {
+    return axios.post(`${apiEndPoint}/tasks`, {
+        UserID: UserID,
+        CategoryID: CategoryID,
+        Date: DateCreated,
+        Title: Title,
+        Price: Price,
+        Description: Description,
+        Status: "Ledig",
+        Promoted: Promoted,
+        Region: Region,
+        PromotedEnd: promotedEnd,
+        PageViews: 0
+    });
+}
 export function GetTasksByFilter(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string, search: string) {
     let apiString = `${apiEndPoint}/tasks/filter?`;
     if (categoryId) {
