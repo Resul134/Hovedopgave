@@ -51,7 +51,7 @@ export default class Home extends Vue {
     optionsPromoted = [{ value: true, text: "Promovereret" }, { value: false, text: "Ikke promovereret" }];
     title = "";
     categorySelected = 0;
-    categories = Array<Category>(); 
+    categories = Array<Category>();
     price = 0;
     description = "";
     promoted = false;
