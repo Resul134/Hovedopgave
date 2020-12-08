@@ -5,6 +5,9 @@ export async function GetTasks() {
     return axios.get(`${apiEndPoint}/tasks`, {
     });
 }
+export function GetTaskById(id: number) {
+    return axios.get(`${apiEndPoint}/tasks/${id}`);
+}
 export function GetTasksByCategory(id: number) {
     return axios.get(`${apiEndPoint}/tasks/category/${id}`);
 }
