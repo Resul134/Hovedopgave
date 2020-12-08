@@ -1,68 +1,61 @@
 <template>
-  <div>
-      <h1>Profil</h1>
-      <div id="userInfo" class="user-info">
-          <div style="display: flex;">
-            <b-alert v-if="tommefelter" variant="danger" show>Alle felter skal fyldes ud!</b-alert>
-            <b-alert v-if="error" variant="danger" show>Oplysninger blev ikke opdateret - Server fejl.</b-alert>
-            <b-alert v-if="edited" variant="success" show>Dine oplysninger er blevet opdateret!</b-alert>
-          </div>
-          <b-row>
-              <b-col>
-                  <div class="profile">
-                      <h4 style="text-align:center;">Profil information</h4>
-                    <div class="content-flex">
-                      <b>Brugernavn: </b>
-                      <b-form-input v-model="userUsername" :state="userNameState()"></b-form-input>
-                  </div>
-                  <div class="content-flex">
-                      <b>Kodeord: </b>
-                      <b-form-input v-model="userPassword" id="input-live-password"></b-form-input>
-                        <!-- <b-form-invalid-feedback id="input-live-password" tooltip>Kodeord skal være mindst 8 karakterer</b-form-invalid-feedback> -->
-                  </div>
-                  <div class="content-flex">
-                      <b>Gentag kodeord: </b>
-                      <b-form-input v-model="userPasswordRepeat" id="input-live-password" :state="passwordRepeatState()"></b-form-input>
-                  </div>
-                    <div class="content-flex">
-                      <b>Fornavn:</b>
-                          <b-form-input v-model="userFirstName" :state="forNavnState()"></b-form-input>
-                  </div>
-                  <div class="content-flex">
-                      <b>Efternavn:</b>
-                          <b-form-input v-model="userLastName" :state="efterNavnState()"></b-form-input>
-                  </div>
-                  <div class="content-flex">
-                      <b>Fødselsdato:</b>
-                      <p>{{ userBirthday | formatDate }}</p>
-                  </div>
-                  <div class="content-flex">
-                      <b>Køn: </b>
-                      <p>{{ userGender }}</p>
-                  </div>
-                  <div class="content-flex">
-                      <b>Telefon: </b>
-                      <b-form-input v-model="userPhone" :state="phoneState()" id="input-live-phone"></b-form-input>
-                    <b-form-invalid-feedback id="input-live-phone" tooltip>Telefon nummer skal være bestående af 8 tal.</b-form-invalid-feedback>
-                  </div>
-                  <div class="content-flex">
-                      <b>Email: </b>
-                      <b-form-input v-model="userEmail" :state="emailState()"></b-form-input>
-                  </div>
-                  <div class="button-flex">
-                      <b-button variant="danger" @click="deleteProfil">Slet konto</b-button>
-                      <b-button @click="RedigerProfil">Bekræft</b-button>
-                  </div>
-                  </div>
-              </b-col>
-              <b-col cols="3"></b-col>
-          </b-row>
-      </div>
+  <div class="rediger">
+         <h1>Profil</h1>
+    <b-alert v-if="tommefelter" variant="danger" show>Alle felter skal fyldes ud!</b-alert>
+    <b-alert v-if="error" variant="danger" show>Oplysninger blev ikke opdateret - Server fejl.</b-alert>
+    <b-alert v-if="edited" variant="success" show>Dine oplysninger er blevet opdateret!</b-alert>
+    <div class="flex">
+        <div>
+            <p>Brugernavn</p>
+            <b-form-input v-model="userUsername" :state="userNameState()"></b-form-input>
+        </div>
+        <div>
+            <p>Kodeord</p>
+            <b-form-input v-model="userPassword" id="input-live-password" :state="passwordState()"></b-form-input>
+            <b-form-invalid-feedback id="input-live-password">Kodeord skal være mindst 8 karakterer</b-form-invalid-feedback>
+        </div>
+    </div>
+    <div class="flex">
+        <div>
+            <p>Gentag kodeord</p>
+            <b-form-input v-model="userPasswordRepeat" :state="passwordRepeatState()"></b-form-input>
+        </div>
+        <div>
+            <p>Fornavn</p>
+            <b-form-input v-model="userFirstName"></b-form-input>
+        </div>
+    </div>
+    <div class="flex">
+        <div>
+            <p>Efternavn</p>
+            <b-form-input v-model="userLastName"></b-form-input>
+        </div>
+        <div>
+            <p>Fødselsdato</p>
+            <b-form disabled class="custom-form">{{ userBirthday | formatDate }}</b-form>
+        </div>
+    </div>
+    <div class="flex">
+        <div>
+            <p>Køn</p>
+            <b-form class="custom-form">{{ userGender }}</b-form>
+        </div>
+        <div>
+            <p>Telefon</p>
+            <b-form-input v-model="userPhone" :state="phoneState()"></b-form-input>
+        </div>
+    </div>
+    <p>Email</p>
+    <b-form-input v-model="userEmail"></b-form-input>
+    <div class="d-flex mt-4">
+        <b-button variant="danger" @click="deleteProfil()">Slet konto</b-button>
+        <b-button @click="RedigerProfil()" class="ml-auto" variant="primary">Opret</b-button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { GetLoggedInId, GetBrugerById, DeleteBrugerById, RedigerBruger, Logout } from "../api/user";
 import { User } from "../types/user";
 
@@ -77,6 +70,7 @@ export default class Profile extends Vue {
     userGender = "";
     userPhone = "";
     userEmail = "";
+    currentUserPassword = "";
     userPasswordRepeat = "";
     edited = false;
     error = false;
@@ -92,15 +86,18 @@ export default class Profile extends Vue {
         }
     }
 
-    // passwordState() {
-    //     if (this.userPassword.length ! < 8) {
-    //         return false;
-    //     }
-    // }
+    passwordState() {
+        if (this.userPassword.length ! < 8) {
+            return false;
+        }
+    }
 
     passwordRepeatState() {
-        if (this.userPassword === this.userPasswordRepeat) {
+        if (this.userPassword === "" && this.userPassword.length < 1) {
+        } else if (this.userPassword === this.userPasswordRepeat) {
             return true;
+        } else if (this.userPasswordRepeat !== this.userPassword && this.userPassword.length > 0) {
+            return false;
         }
     }
 
@@ -142,7 +139,7 @@ export default class Profile extends Vue {
     }
 
     RedigerProfil() {
-        if (this.userEmail === "" || this.userUsername === "" || this.userPassword === "" || this.userPhone.length < 8 || this.userFirstName === "" || this.userLastName === "") {
+        if (this.userEmail === "" || this.userUsername === "" || this.userPhone.length < 8 || this.userFirstName === "" || this.userLastName === "" || this.userPassword.length < 8) {
             this.tommefelter = true;
             this.edited = false;
             this.error = false;
@@ -171,10 +168,10 @@ export default class Profile extends Vue {
             this.userUsername = response.data.username;
             this.userFirstName = response.data.firstName;
             this.userLastName = response.data.lastName;
-            this.userBirthday = response.data.birthday;
             this.userGender = response.data.gender;
             this.userPhone = response.data.phone;
             this.userEmail = response.data.email;
+            this.userBirthday = response.data.birthday;
         });
     }
 }
@@ -200,14 +197,54 @@ export default class Profile extends Vue {
     display: flex;
     justify-content: flex-end;
 }
-input{
-    width: 50%;
-}
 
 .profile{
     border-radius: 7px;
     padding: 10px;
     background: $light;
 }
+.custom-form{
+    background-color:white;
+    height: calc(1.5em + 0.75rem + 2px);
+    border-radius:0.25rem;
+    border: 1px solid #ced4da;
+    line-height: 1.5;
+    background-clip: padding-box;
+    background-color: #fff;
+    color: #495057;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+}
 
+.flex {
+    display: flex;
+
+    div {
+        width: 50%;
+
+        &:first-of-type {
+            margin-right: 5%;
+        }
+    }
+}
+.rediger {
+    width: 700px;
+    max-width: 92%;
+    margin: 0 auto;
+    background: $light;
+    padding:40px;
+    border-radius: 12px;
+}
+p {
+    margin-bottom: 0px;
+    font-weight: bold;
+}
+h1 {
+    margin-bottom: 35px;
+    font-weight: bold;
+}
+input[type="text"], #birthday__outer_ {
+    margin-bottom: 20px;
+}
 </style>
