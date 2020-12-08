@@ -49,7 +49,7 @@
     <b-form-input v-model="userEmail"></b-form-input>
     <div class="d-flex mt-4">
         <b-button variant="danger" @click="deleteProfil()">Slet konto</b-button>
-        <b-button @click="RedigerProfil()" class="ml-auto" variant="primary">Opret</b-button>
+        <b-button @click="RedigerProfil()" class="ml-auto" variant="primary">Bekræft</b-button>
     </div>
   </div>
 </template>
