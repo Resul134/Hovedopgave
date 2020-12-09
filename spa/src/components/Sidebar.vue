@@ -17,12 +17,7 @@
             </b-list-group-item>
         </b-list-group>
         <h3>Pris</h3>
-        <label class="from">Fra</label>
-        <label class="to">Til</label>
-        <div class="price">
-            <b-form-input class="price" v-model="minPrice" placeholder="Pris"></b-form-input>
-            <b-form-input class="price" v-model="maxPrice" placeholder="Pris"></b-form-input>
-        </div>
+        <RangeSlider minValue="0" maxValue="10000" fromValue="200" toValue="4000" />
         <h3>Dato</h3>
         <div class="date">
             <label>Fra</label>
@@ -41,8 +36,13 @@ import { Region } from "../types/region";
 import { Category } from "../types/category";
 import { Query } from "../types/query";
 import { GetCategories } from "../api/category";
+import RangeSlider from "@/components/RangeSlider.vue";
 
-@Component
+@Component({
+    components: {
+        RangeSlider
+    }
+})
 export default class Sidebar extends Vue {
     categories = [] as Category[];
     currentCategory = {} as Category;
