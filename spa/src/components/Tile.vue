@@ -100,10 +100,11 @@ button {
     padding: 0;
     border-radius: 5px;
     box-shadow: 5px 0px 5px whitesmoke;
-    transition: .15s;
+    transition: .1s;
 }
 button:hover {
-    box-shadow: 5px 5px 10px $gray;
+    box-shadow: 5px 5px 10px rgba(0,0,0,.15);
+    transform: scale(1.05);
 }
 h4 {
     font-weight: 600;

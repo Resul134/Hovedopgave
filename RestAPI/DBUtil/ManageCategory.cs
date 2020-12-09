@@ -14,13 +14,14 @@ namespace RestAPI.DBUtil
 
         public bool CreateCategory(Category item)
         {
-            string queryString = "INSERT INTO Category (Name) VALUES (@Name)";
+            string queryString = "INSERT INTO Category (Name, Svg) VALUES (@Name, @Svg)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
 
                 command.Parameters.AddWithValue("@Name", item.Name);
+                command.Parameters.AddWithValue("@Svg", item.Svg);
                 connection.Open();
 
                 command.ExecuteNonQuery();
@@ -62,6 +63,7 @@ namespace RestAPI.DBUtil
                         Category category = new Category();
                         category.ID = reader.GetInt32(0);
                         category.Name = reader.GetString(1);
+                        category.Svg = reader.GetString(2);
                         CategoryList.Add(category);
                     }
                 }
@@ -92,6 +94,7 @@ namespace RestAPI.DBUtil
                     {
                         category.ID = reader.GetInt32(0);
                         category.Name = reader.GetString(1);
+                        category.Svg = reader.GetString(2);
                     }
                 }
                 finally
@@ -122,6 +125,7 @@ namespace RestAPI.DBUtil
                     {
                         category.ID = reader.GetInt32(0);
                         category.Name = reader.GetString(1);
+                        category.Svg = reader.GetString(2);
                     }
                 }
                 finally
@@ -135,13 +139,14 @@ namespace RestAPI.DBUtil
 
         public bool UpdateCategory(Category item, int id)
         {
-            string queryString = "UPDATE Category SET Name = @Name WHERE ID = @ID";
+            string queryString = "UPDATE Category SET Name = @Name, Svg = @Svg WHERE ID = @ID";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
                 command.Parameters.AddWithValue("@ID", id);
                 command.Parameters.AddWithValue("@Name", item.Name);
+                command.Parameters.AddWithValue("@Svg", item.Svg);
 
                 connection.Open();
 
