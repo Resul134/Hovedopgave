@@ -8,5 +8,6 @@ namespace Library.models
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public string Svg { get; set; }
     }
 }

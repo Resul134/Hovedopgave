@@ -26,11 +26,16 @@
             <b-form-select :options="regionsField" v-model="region"></b-form-select>
         </div>
     </div>
-            <p class="mt-3">Promover</p>
-            <b-form-select id="input-live-promoted" v-model="promoted" :options="optionsPromoted"></b-form-select>
-        <p class="mt-3">Beskrivelse</p>
-        <b-textarea v-model="description" rows="5"></b-textarea>
-    <!-- <b-alert v-if="promoted" variant="success" show style="padding-top: 5px;"> Din opgave er promovereret: {{ promoverPris }}</b-alert> -->
+    <p class="mt-3">Promover</p>
+    <b-form-select id="input-live-promoted" v-model="promoted" :options="optionsPromoted"></b-form-select>
+    <template v-if="promoted">
+        <p class="mt-3">Hvornår skal promoveringen slutte?</p>
+        <b-form-datepicker v-model="promotedEnd" :min="min" :max="max" locale="en"></b-form-datepicker>
+        <span>Din promovering koster <span style="color: #007bff; font-weight: bold">{{ promoteDays * 25 }}</span> kr og varer {{ promoteDays }} dag<template v-if="promoteDays > 1">e</template>.</span>
+    </template>
+    <p class="mt-3">Beskrivelse</p>
+    <b-textarea v-model="description" rows="5"></b-textarea>
+
     <div class="d-flex mt-4">
         <b-button @click="OpretTask()" class="ml-auto" variant="primary">Opret</b-button>
     </div>
@@ -42,17 +47,19 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { CreateTask } from "../api/task";
 import { GetCategories } from "../api/category";
 import { Category } from "../types/category";
+import { GetLoggedInId } from "../api/user";
 import moment from "moment";
-import { GetBrugerById, GetLoggedInId } from "../api/user";
 
 @Component
 export default class Home extends Vue {
     regionsField =
-        [{ value: "Sjælland", text: "Sjælland" },
+        [
+            { value: "Sjælland", text: "Sjælland" },
             { value: "Jylland", text: "Jylland" },
             { value: "Hovedstaden", text: "Hovedstaden" },
             { value: "Midtjylland", text: "Midtjylland" },
-            { value: "Syddanmark", text: "Syddanmark" }]
+            { value: "Syddanmark", text: "Syddanmark" }
+        ]
 
     optionsPromoted = [{ value: true, text: "Promovereret" }, { value: false, text: "Ikke promovereret" }];
     title = "";
@@ -62,23 +69,28 @@ export default class Home extends Vue {
     description = "";
     promoted = false;
     region = "Hovedstaden";
-    dateCreated = moment();
-    promotedEnd = moment().add(7, "d");
-    promoverPris = 0;
+    dateCreated = moment().format("YYYY-MM-DD");
+    promotedEnd = moment().add(1, "days").format("YYYY-MM-DD");
+    max = moment().add(14, "days").format("YYYY-MM-DD");
+    min = moment().add(1, "days").format("YYYY-MM-DD");
     created = false;
     error = false;
     tommefelter = false;
+    promoteDays = 0;
 
     @Watch("categorySelected")
     OnCategoryChanged() {
         console.log(this.categorySelected);
     }
 
+    @Watch("promotedEnd", { immediate: true }) e() {
+        this.promoteDays = moment(this.promotedEnd).diff(this.dateCreated, "days");
+    }
+
     mounted() {
         GetCategories().then(response => {
             this.categories = response.data;
             this.categorySelected = response.data[0].id;
-            console.log(response.data);
         }).catch(() => {
             console.log("Error");
         });
@@ -90,8 +102,7 @@ export default class Home extends Vue {
             this.error = false;
             this.created = false;
         } else {
-            CreateTask(GetLoggedInId(), this.categorySelected, this.dateCreated.toDate(), this.title, this.price, this.description, this.promoted, this.region, this.promotedEnd.toDate()).then(response => {
-                console.log(response.status);
+            CreateTask(GetLoggedInId(), this.categorySelected, this.dateCreated, this.title, this.price, this.description, this.promoted, this.region, this.promotedEnd).then(() => {
                 this.created = true;
                 this.error = false;
                 this.tommefelter = false;
