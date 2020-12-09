@@ -6,6 +6,7 @@ import About from "../views/About.vue";
 import Login from "../views/Login.vue";
 import Profile from "../views/Profile.vue";
 import Overview from "../views/Overview.vue";
+import SeeMore from "../views/SeeMore.vue";
 import ArbejdsOpgave from "../views/ArbejdsOpgave.vue";
 
 Vue.use(VueRouter);
@@ -50,6 +51,11 @@ const routes: Array<RouteConfig> = [
         path: "/overview",
         name: "Overview",
         component: Overview
+    },
+    {
+        path: "/seeMore",
+        name: "SeeMore",
+        component: SeeMore
     },
     {
         path: "/arbejdsopgave",
