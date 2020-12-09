@@ -11,7 +11,8 @@ Vue.use(BootstrapVue);
 
 Vue.filter("formatDate", function (value: string) {
     if (value) {
-        return moment(String(value)).format("MMMM DD - YYYY");
+        moment().locale();
+        return moment(String(value)).format("LL");
     }
 });
 
