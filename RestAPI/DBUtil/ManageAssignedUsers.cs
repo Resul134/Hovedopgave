@@ -110,6 +110,39 @@ namespace RestAPI.DBUtil
             return AssignedUsers;
         }
 
+        public AssignedUser GetMatch(int task, int user)
+        {
+            AssignedUser assignedUser = new AssignedUser();
+            string queryString = "SELECT * FROM AssignedUser WHERE TaskID = @TASK AND UserID = @USER";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                connection.Open();
+
+                command.Parameters.AddWithValue("@TASK", task);
+                command.Parameters.AddWithValue("@USER", user);
+
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        assignedUser.ID = reader.GetInt32(0);
+                        assignedUser.TaskID = reader.GetInt32(1);
+                        assignedUser.UserID = reader.GetInt32(2);
+                        assignedUser.Accepted = reader.GetBoolean(3);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+
+                return assignedUser;
+            }
+        }
+
         public bool UpdateAssignedUsers(AssignedUser item, int id)
         {
             string queryString = "UPDATE AssignedUser SET TaskID = @TaskID, UserID = @UserID, Accepted = @Accepted WHERE ID = @ID";

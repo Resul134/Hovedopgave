@@ -28,12 +28,21 @@ namespace RestAPI.Controllers
             return manageAssignedUser.GetAssignedUsersFromId(id);
         }
 
+        // GET api/<AssignedUserController>/taskid/5/userid/2
+        [HttpGet]
+        [Route("task/{taskId}/user/{userId}")]
+        public AssignedUser Get(int taskId, int userId)
+        {
+            ManageAssignedUsers mngAssignedUsers = new ManageAssignedUsers();
+            return mngAssignedUsers.GetMatch(taskId, userId);
+        }
+
         // POST api/<AssignedUserController>
         [HttpPost]
-        public void Post([FromBody] AssignedUser value)
+        public bool Post([FromBody] AssignedUser value)
         {
             ManageAssignedUsers manageAssignedUser = new ManageAssignedUsers();
-            manageAssignedUser.createAssignedUsers(value);
+            return manageAssignedUser.createAssignedUsers(value);
         }
 
         // PUT api/<AssignedUserController>/5
@@ -46,10 +55,10 @@ namespace RestAPI.Controllers
 
         // DELETE api/<AssignedUserController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public bool Delete(int id)
         {
             ManageAssignedUsers manageAssignedUser = new ManageAssignedUsers();
-            manageAssignedUser.deleteAssignedUsers(id);
+            return manageAssignedUser.deleteAssignedUsers(id);
         }
     }
 }
