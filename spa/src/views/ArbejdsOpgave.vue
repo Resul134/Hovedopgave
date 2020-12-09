@@ -23,7 +23,7 @@
         </div>
         <div>
             <p>Region</p>
-            <b-form-select :options="optionsField" v-model="region"></b-form-select>
+            <b-form-select :options="regionsField" v-model="region"></b-form-select>
         </div>
     </div>
             <p class="mt-3">Promover</p>
@@ -47,7 +47,13 @@ import { GetBrugerById, GetLoggedInId } from "../api/user";
 
 @Component
 export default class Home extends Vue {
-    optionsField = ["Region Sjælland", "Region Hovedstaden", "Region Syddanmark", "Region Midtjylland", "Region Nordjylland"];
+    regionsField =
+        [{ value: "Sjælland", text: "Sjælland" },
+            { value: "Jylland", text: "Jylland" },
+            { value: "Hovedstaden", text: "Hovedstaden" },
+            { value: "Midtjylland", text: "Midtjylland" },
+            { value: "Syddanmark", text: "Syddanmark" }]
+
     optionsPromoted = [{ value: true, text: "Promovereret" }, { value: false, text: "Ikke promovereret" }];
     title = "";
     categorySelected = 0;
@@ -55,7 +61,7 @@ export default class Home extends Vue {
     price = 0;
     description = "";
     promoted = false;
-    region = "Region Hovedstaden";
+    region = "Hovedstaden";
     dateCreated = moment();
     promotedEnd = moment().add(7, "d");
     promoverPris = 0;

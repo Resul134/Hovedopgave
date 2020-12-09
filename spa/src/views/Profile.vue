@@ -87,7 +87,9 @@ export default class Profile extends Vue {
     }
 
     passwordState() {
-        if (this.userPassword.length ! < 8) {
+        if (this.userPassword === "") {
+
+        } else if (this.userPassword.length ! < 8) {
             return false;
         }
     }
