@@ -31,8 +31,6 @@ export default class Overview extends Vue {
         this.$store.commit("userID", userID);
         this.$store.commit("taskID", taskID);
         this.$router.push({ name: "SeeMore" });
-        console.log(taskID);
-        console.log(userID);
     }
 
     GetFilterMatchingTasks(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string, search: string) {

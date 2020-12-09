@@ -12,7 +12,7 @@ export function GetTasksByCategory(id: number) {
     return axios.get(`${apiEndPoint}/tasks/category/${id}`);
 }
 
-export function CreateTask(UserID: number, CategoryID: number, DateCreated: Date, Title: string, Price: number, Description: string, Promoted: boolean, Region: string, promotedEnd: Date) {
+export function CreateTask(UserID: number, CategoryID: number, DateCreated: string, Title: string, Price: number, Description: string, Promoted: boolean, Region: string, promotedEnd: string) {
     return axios.post(`${apiEndPoint}/tasks`, {
         UserID: UserID,
         CategoryID: CategoryID,
