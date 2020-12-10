@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <h1>Opret bruger</h1>
-    <b-alert v-if="created" variant="success" show>Din bruger blev oprettet! Gå til <a href ="#">Log ind</a></b-alert>
+    <b-alert v-if="created" variant="success" show>Din bruger blev oprettet! Gå til <a href="#/login">Log ind</a></b-alert>
     <b-alert v-if="error" variant="danger" show>Der skete en fejl.</b-alert>
     <div class="flex">
         <div>

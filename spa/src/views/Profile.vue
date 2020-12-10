@@ -55,6 +55,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { GetLoggedInId, GetBrugerById, DeleteBrugerById, RedigerBruger, Logout } from "../api/user";
+import { RemoveAssignedUser } from "../api/assignedUser";
 import { DeleteAllTaskByUserID } from "../api/task";
 import { User } from "../types/user";
 
@@ -135,6 +136,10 @@ export default class Profile extends Vue {
             }).then(() => {
                 DeleteAllTaskByUserID(GetLoggedInId()).then(response => {
                     console.log("Opgaver bundet til kontoen er slettet. Status code: " + response.status);
+                });
+            }).then(() => {
+                RemoveAssignedUser(GetLoggedInId()).then(response => {
+                    console.log("Assigned user removed: " + response.status);
                     Logout();
                 });
             }).catch(() => {
