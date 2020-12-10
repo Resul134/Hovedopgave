@@ -12,7 +12,7 @@ export function GetTasksByCategory(id: number) {
     return axios.get(`${apiEndPoint}/tasks/category/${id}`);
 }
 export function DeleteAllTaskByUserID(id: number) {
-    return axios.delete(`${apiEndPoint}tasks/deleteTaskByID/${id}`);
+    return axios.delete(`${apiEndPoint}/tasks/deleteTaskByID/${id}`);
 }
 
 export function CreateTask(UserID: number, CategoryID: number, DateCreated: string, Title: string, Price: number, Description: string, Promoted: boolean, Region: string, promotedEnd: string) {
