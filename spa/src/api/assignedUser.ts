@@ -10,7 +10,7 @@ export function GetAssignedUserMatch(taskID: number, userID: number) {
 }
 
 export function RemoveAssignedUser(userid: number) {
-    return axios.delete(`${apiEndPoint}/assignedUsers/task/RemoveAssignedUser/${userid}`);
+    return axios.delete(`${apiEndPoint}/assignedusers/task/RemoveAssignedUser/${userid}`);
 }
 
 export function OpretAssignedUser(taskID: number, userID: number, accepted: boolean) {
