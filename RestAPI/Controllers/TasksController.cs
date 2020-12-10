@@ -77,5 +77,13 @@ namespace RestAPI.Controllers
             ManageTasks mngTasks = new ManageTasks();
             mngTasks.deleteTask(id);
         }
+        // DEL api/tasks/deleteTaskByID/2
+        [HttpDelete]
+        [Route("deleteTaskByID/{userid}")]
+        public void DeleteAllTasksByID(int userid)
+        {
+            ManageTasks mngTasks = new ManageTasks();
+            mngTasks.deleteAllTasksByUserID(userid);
+        }
     }
 }

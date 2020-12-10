@@ -4,37 +4,35 @@
     <b-alert v-if="tommefelter" variant="danger" show>Alle felter skal fyldes ud!</b-alert>
     <b-alert v-if="error" variant="danger" show>Oplysninger blev ikke opdateret - Server fejl.</b-alert>
     <b-alert v-if="edited" variant="success" show>Dine oplysninger er blevet opdateret!</b-alert>
-    <div class="flex">
-        <div>
+    <div>
             <p>Brugernavn</p>
             <b-form-input v-model="userUsername" :state="userNameState()"></b-form-input>
         </div>
+    <div class="flex">
         <div>
             <p>Kodeord</p>
             <b-form-input v-model="userPassword" id="input-live-password" :state="passwordState()"></b-form-input>
             <b-form-invalid-feedback id="input-live-password">Kodeord skal være mindst 8 karakterer</b-form-invalid-feedback>
         </div>
-    </div>
-    <div class="flex">
         <div>
             <p>Gentag kodeord</p>
             <b-form-input v-model="userPasswordRepeat" :state="passwordRepeatState()"></b-form-input>
         </div>
+    </div>
+    <div class="flex">
         <div>
             <p>Fornavn</p>
             <b-form-input v-model="userFirstName"></b-form-input>
         </div>
-    </div>
-    <div class="flex">
         <div>
             <p>Efternavn</p>
             <b-form-input v-model="userLastName"></b-form-input>
         </div>
-        <div>
+    </div>
+    <div style="padding-bottom: 15px;">
             <p>Fødselsdato</p>
             <b-form disabled class="custom-form">{{ userBirthday | formatDate }}</b-form>
         </div>
-    </div>
     <div class="flex">
         <div>
             <p>Køn</p>
@@ -57,6 +55,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { GetLoggedInId, GetBrugerById, DeleteBrugerById, RedigerBruger, Logout } from "../api/user";
+import { DeleteAllTaskByUserID } from "../api/task";
 import { User } from "../types/user";
 
 @Component
@@ -133,9 +132,16 @@ export default class Profile extends Vue {
                 console.log("Din konto er slettet. Status kode = " + response.status);
                 this.$store.commit("loggedInState", false);
                 this.$router.push({ name: "Home" });
-                Logout();
+            }).then(() => {
+                DeleteAllTaskByUserID(GetLoggedInId()).then(response => {
+                    console.log("Opgaver bundet til kontoen er slettet. Status code: " + response.status);
+                    Logout();
+                });
             }).catch(() => {
-                console.log("Couldn't get user ID");
+                this.error = true;
+                this.tommefelter = false;
+                this.edited = false;
+                console.log("Couldn't complete the action.");
             });
         }
     }
