@@ -327,6 +327,29 @@ namespace RestAPI.DBUtil
             }
         }
 
+        public bool deleteAllTasksByUserID(int userID)
+        {
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+
+                try
+                {
+                    SqlCommand command = new SqlCommand("DELETE FROM Task WHERE UserID=@userID", connection);
+                    command.Parameters.AddWithValue("@userID", userID);
+                    command.Connection.Open();
+                    command.ExecuteNonQuery();
+                    command.Connection.Close();
+                }
+                catch (SqlException)
+                {
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public bool deleteTask(int id)
         {
 

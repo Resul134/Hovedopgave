@@ -12,6 +12,8 @@ namespace RestAPI.DBUtil
 
         AssignedUser GetAssignedUsersFromId(int id);
 
+        bool RemoveAssignedUser(int userid);
+
         bool CreateAssignedUsers(AssignedUser item);
 
         bool UpdateAssignedUsers(AssignedUser item, int id);

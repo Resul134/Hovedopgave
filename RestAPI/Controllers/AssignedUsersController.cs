@@ -60,5 +60,13 @@ namespace RestAPI.Controllers
             ManageAssignedUsers manageAssignedUser = new ManageAssignedUsers();
             return manageAssignedUser.deleteAssignedUsers(id);
         }
+
+        [HttpDelete]
+        [Route("task/RemoveAssignedUser/{userid}")]
+        public bool DeleteAssignedUserID(int userid)
+        {
+            ManageAssignedUsers manageAssignedUser = new ManageAssignedUsers();
+            return manageAssignedUser.RemoveAssignedUser(userid);
+        }
     }
 }

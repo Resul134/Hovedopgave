@@ -143,6 +143,23 @@ namespace RestAPI.DBUtil
             }
         }
 
+        public bool RemoveAssignedUser(int userid)
+        {
+            string queryString = "DELETE FROM AssignedUser WHERE UserID = @userID";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@userID", userid);
+
+                connection.Open();
+
+                command.ExecuteNonQuery();
+                connection.Close();
+                return true;
+            }
+        }
+
         public bool UpdateAssignedUsers(AssignedUser item, int id)
         {
             string queryString = "UPDATE AssignedUser SET TaskID = @TaskID, UserID = @UserID, Accepted = @Accepted WHERE ID = @ID";
