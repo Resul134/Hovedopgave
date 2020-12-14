@@ -42,7 +42,7 @@ const routes: Array<RouteConfig> = [
         component: Login
     },
     {
-        path: "/profile",
+        path: "/profile/:user?",
         name: "Profile",
         component: Profile,
         beforeEnter: ifAuthenticated

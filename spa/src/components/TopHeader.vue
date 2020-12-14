@@ -28,7 +28,7 @@
                             <b-dropdown-item to="/register">Register</b-dropdown-item>
                         </template>
                         <template v-else>
-                            <b-dropdown-item to="/profile">Profile</b-dropdown-item>
+                            <b-dropdown-item @click="Profile">Profile</b-dropdown-item>
                             <b-dropdown-item @click="Logout">Logout</b-dropdown-item>
                         </template>
                     </b-dropdown>
@@ -70,6 +70,10 @@ export default class TopHeader extends Vue {
         this.$store.commit("loggedInState", false);
         this.$router.push({ name: "Home" });
         Logout();
+    }
+
+    Profile() {
+        this.$router.push({ name: "Profile" });
     }
 
     NewQuery(name: string, value: string) {
