@@ -39,7 +39,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { Region } from "../types/region";
 import { Category } from "../types/category";
-import { Query } from "../types/query";
+import { Dictionary } from "../types/dict";
 import { GetCategories } from "../api/category";
 
 @Component
@@ -59,7 +59,7 @@ export default class Sidebar extends Vue {
     dateEnd = `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, "0")}-${String(new Date().getDate()).padStart(2, "0")}`;
     minPrice = 0;
     maxPrice = 10000;
-    queries = Array<Query>();
+    queries = {} as Dictionary<string>;
 
     mounted() {
         GetCategories().then(response => {
@@ -98,12 +98,7 @@ export default class Sidebar extends Vue {
     }
 
     NewQuery(name: string, value: string) {
-        const newQuery = {} as Query;
-        newQuery.name = name;
-        newQuery.value = value;
-        this.queries = this.$store.state.queries;
-        this.queries = this.DeleteFromQueryList(this.queries, name);
-        this.queries.push(newQuery);
+        this.queries[name] = value;
         this.$store.commit("queriesState", this.queries);
     }
 
@@ -117,7 +112,7 @@ export default class Sidebar extends Vue {
             this.NewQuery("categoryId", this.currentCategory.id.toString());
         } else {
             this.currentCategory = {} as Category;
-            this.queries = this.DeleteFromQueryList(this.queries, "categoryId");
+            this.DeleteFromQueryList("categoryId");
         }
         this.ReplaceRoute(this.queries);
     }
@@ -132,25 +127,20 @@ export default class Sidebar extends Vue {
             this.NewQuery("region", this.currentRegion.name);
         } else {
             this.currentRegion = {} as Region;
-            this.queries = this.DeleteFromQueryList(this.queries, "region");
+            this.DeleteFromQueryList("region");
         }
         this.ReplaceRoute(this.queries);
     }
 
-    DeleteFromQueryList(array: Array<Query>, name: string) {
-        for (let i = array.length - 1; i >= 0; i--) {
-            if (array[i].name === name) {
-                array.splice(i, 1);
-            }
-        }
-        return array;
+    DeleteFromQueryList(name: string) {
+        delete this.queries[name];
     }
 
-    ReplaceRoute(parameters: Array<Query>) {
+    ReplaceRoute(parameters: Dictionary<string>) {
         if (this.$route.name === "Overview") {
-            this.$router.replace({ query: { payload: JSON.stringify(parameters) } });
+            this.$router.replace({ query: parameters });
         } else {
-            this.$router.replace({ name: "Overview", query: { payload: JSON.stringify(parameters) } });
+            this.$router.replace({ name: "Overview", query: parameters });
         }
     }
 }
