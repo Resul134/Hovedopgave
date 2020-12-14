@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-row>
-            <b-col>
+            <b-col cols="9">
                 <div class="seeMore">
                     <p class="tag">{{ price }} kr</p>
                     <h1 class="title">{{title}}</h1>
@@ -163,6 +163,10 @@ svg {
     padding: 25px;
     position: relative;
     background: $light;
+
+    p {
+        overflow-wrap: break-word;
+    }
 }
 
 .tag {

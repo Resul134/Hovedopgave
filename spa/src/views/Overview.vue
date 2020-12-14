@@ -95,6 +95,7 @@ export default class Overview extends Vue {
     width: 24.25%;
     margin-right: 1%;
     margin-bottom: 1%;
+    overflow-wrap: break-word;
 }
 
 .task:nth-child(4n) {
