@@ -63,7 +63,6 @@ export default class MyTasks extends Vue {
                 console.log("Bruger opdateret: " + response.status);
             }).then(() => {
                 RemoveUsersWhenAccepted(this.$store.state.AssignedTaskID).then(response => {
-                    this.$forceUpdate();
                     console.log("All other users where removed: " + response.status);
                 });
             }).catch((err) => {
