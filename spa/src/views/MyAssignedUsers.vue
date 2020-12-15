@@ -6,8 +6,8 @@
                 <div>
                     <div>
                         <h4>Navn: <b-button @click="goToProfile(getUser.id)" class="goto">{{ getUser[idx].firstName + " " + getUser[idx].lastName }}</b-button></h4>
-                        <h4 v-if="!assignedUser.accepted" class="notaccepted">Afventer</h4>
-                        <h4 v-if="assignedUser.accepted" class="accepted">Accepteret</h4>
+                        <h4 v-if="!assignedUser.accepted" class="notaccepted">Ikke godkendt</h4>
+                        <h4 v-if="assignedUser.accepted" class="accepted">Godkendt</h4>
                     </div>
                     <b-button v-if="!assignedUser.accepted" variant="success" class="buttons" @click="AcceptUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, true)">Accepter</b-button>
                     <b-button variant="danger" class="buttons" @click="DelAssignedUser(assignedUser.id)">Afslag</b-button>
