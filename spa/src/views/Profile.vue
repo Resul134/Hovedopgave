@@ -80,7 +80,7 @@ export default class Profile extends Vue {
     //     this.$router.push({ name: "Login" });
     // }
 
-    @Watch("$route.param", { immediate: true, deep: true })
+    @Watch("$route.query", { immediate: true, deep: true })
     OnParamChange() {
         this.Setup();
     }
@@ -182,8 +182,8 @@ export default class Profile extends Vue {
 
     Setup() {
         let id = 0;
-        if (this.$route.params.user) {
-            id = Number(this.$route.params.user);
+        if (this.$route.query.user) {
+            id = Number(this.$route.query.user);
         } else {
             id = GetLoggedInId();
         }
