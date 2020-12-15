@@ -2,7 +2,7 @@
     <div>
         <h1>Mine arbejdsopgaver</h1>
         <div v-if="!tasks.length">
-            Nothing here
+            Du har ikke oprettet nogle arbejdsopgaver!
         </div>
         <div class="overview" v-else>
             <div @click="AssignedUsers(task.id)" class="task" v-for="(task, idx) in tasks" :key="idx">
