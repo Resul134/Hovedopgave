@@ -39,6 +39,10 @@
             <b-form-input type="password" v-model="passwordRepeat"></b-form-input>
         </div>
     </div>
+    <p>Beskrivelse</p>
+    <div>
+        <b-textarea v-model="description" rows="5"></b-textarea>
+    </div>
     <div class="d-flex mt-4">
         <b-button @click="Opret()" class="ml-auto" variant="primary">Opret</b-button>
     </div>
@@ -61,6 +65,7 @@ export default class Home extends Vue {
     username = "";
     password = "";
     passwordRepeat = "";
+    description = "";
 
     created = false;
     error = false;
@@ -71,7 +76,7 @@ export default class Home extends Vue {
                 this.error = true;
                 return;
             }
-            OpretBruger(this.firstName, this.lastName, this.birthday, this.selectedGender, parseInt(this.phone), this.email, this.username, this.password).then(response => {
+            OpretBruger(this.firstName, this.lastName, this.birthday, this.selectedGender, parseInt(this.phone), this.email, this.username, this.password, this.description).then(response => {
                 if (response.status === 200) {
                     this.firstName = "";
                     this.lastName = "";
@@ -82,6 +87,7 @@ export default class Home extends Vue {
                     this.username = "";
                     this.password = "";
                     this.passwordRepeat = "";
+                    this.description = "";
 
                     this.error = false;
                     this.created = true;
@@ -108,6 +114,9 @@ export default class Home extends Vue {
             margin-right: 5%;
         }
     }
+}
+.boxHeight{
+    height: 200px;
 }
 .register {
     width: 700px;

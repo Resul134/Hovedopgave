@@ -1,7 +1,7 @@
 import axios from "axios";
 import apiEndPoint from "../api/apiEndPoint";
 
-export function OpretBruger(FirstName: string, LastName: string, Birthday: Date, Gender: string, Phone: number, Email: string, Username: string, Password: string) {
+export function OpretBruger(FirstName: string, LastName: string, Birthday: Date, Gender: string, Phone: number, Email: string, Username: string, Password: string, Description: string) {
     return axios.post(`${apiEndPoint}/users`, {
         FirstName: FirstName,
         LastName: LastName,
@@ -12,11 +12,12 @@ export function OpretBruger(FirstName: string, LastName: string, Birthday: Date,
         Username: Username,
         Password: Password,
         Rating: 0,
-        Suspended: false
+        Suspended: false,
+        Description: Description
     });
 }
 
-export function RedigerBruger(id: number, FirstName: string, LastName: string, Birthday: Date, Gender: string, Phone: number, Email: string, Username: string, Password: string) {
+export function RedigerBruger(id: number, FirstName: string, LastName: string, Birthday: Date, Gender: string, Phone: number, Email: string, Username: string, Password: string, Description: string) {
     return axios.put(`${apiEndPoint}/users/${id}`, {
         FirstName: FirstName,
         LastName: LastName,
@@ -27,7 +28,8 @@ export function RedigerBruger(id: number, FirstName: string, LastName: string, B
         Username: Username,
         Password: Password,
         Rating: 0,
-        Suspended: false
+        Suspended: false,
+        Description: Description
     });
 }
 
