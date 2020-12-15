@@ -149,7 +149,7 @@ export default class SeeMore extends Vue {
     }
 
     seeProfile(id: number) {
-        this.$router.push({ name: "Profile", query: { user: id.toString() } });
+        this.$router.push({ name: "Profiles", query: { user: id.toString() } });
     }
 }
 </script>

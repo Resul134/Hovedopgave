@@ -28,6 +28,15 @@ namespace RestAPI.Controllers
                 return qualification.GetQualificationFromId(id);
             }
 
+            // Get api/<QualificationsController>/user/5
+            [HttpGet]
+            [Route("user/{userId}")]
+            public IEnumerable<Qualification> GetByUserId(int userId)
+            {
+                ManageQualification mngQualification = new ManageQualification();
+                return mngQualification.GetQualificationsByUserId(userId);
+            }
+
             // POST api/<QualificationsController>
             [HttpPost]
             public void Post([FromBody] Qualification value)
