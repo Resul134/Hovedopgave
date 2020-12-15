@@ -45,6 +45,10 @@
     </div>
     <p>Email</p>
     <b-form-input v-model="userEmail"></b-form-input>
+    <p>Beskrivelse</p>
+    <div>
+        <b-textarea v-model="description" :state="descriptionState()" rows="5"></b-textarea>
+    </div>
     <div class="d-flex mt-4">
         <b-button variant="danger" @click="deleteProfil()">Slet konto</b-button>
         <b-button @click="RedigerProfil()" class="ml-auto" variant="primary">Bekræft</b-button>
@@ -72,6 +76,7 @@ export default class Profile extends Vue {
     userEmail = "";
     currentUserPassword = "";
     userPasswordRepeat = "";
+    description = "";
     edited = false;
     error = false;
     tommefelter = false;
@@ -127,6 +132,12 @@ export default class Profile extends Vue {
         }
     }
 
+    descriptionState() {
+        if (this.description === "") {
+            return false;
+        }
+    }
+
     deleteProfil() {
         if (confirm("Er du sikker? Handlingen kan ikke trækkes tilbage.")) {
             DeleteBrugerById(GetLoggedInId()).then(response => {
@@ -152,13 +163,13 @@ export default class Profile extends Vue {
     }
 
     RedigerProfil() {
-        if (this.userEmail === "" || this.userUsername === "" || this.userPhone.length < 8 || this.userFirstName === "" || this.userLastName === "" || this.userPassword.length < 8) {
+        if (this.userEmail === "" || this.userUsername === "" || this.userPhone.length < 8 || this.userFirstName === "" || this.userLastName === "" || this.userPassword.length < 8 || this.description === "") {
             this.tommefelter = true;
             this.edited = false;
             this.error = false;
         } else {
             if (confirm("Vil du bekræfte ændringerne?")) {
-                RedigerBruger(GetLoggedInId(), this.userFirstName, this.userLastName, this.userBirthday, this.userGender, parseInt(this.userPhone), this.userEmail, this.userUsername, this.userPassword).then(response => {
+                RedigerBruger(GetLoggedInId(), this.userFirstName, this.userLastName, this.userBirthday, this.userGender, parseInt(this.userPhone), this.userEmail, this.userUsername, this.userPassword, this.description).then(response => {
                     if (response.status === 200) {
                         this.edited = true;
                         this.tommefelter = false;
@@ -185,6 +196,7 @@ export default class Profile extends Vue {
             this.userPhone = response.data.phone;
             this.userEmail = response.data.email;
             this.userBirthday = response.data.birthday;
+            this.description = response.data.description;
         });
     }
 }
@@ -240,6 +252,9 @@ export default class Profile extends Vue {
             margin-right: 5%;
         }
     }
+}
+.boxHeight{
+    height: 200px;
 }
 .rediger {
     width: 700px;
