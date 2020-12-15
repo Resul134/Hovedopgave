@@ -129,6 +129,45 @@ namespace RestAPI.DBUtil
 
         }
 
+        public List<Task> GetMyTasksFromUserID(int userID)
+        {
+            List<Task> taskList = new List<Task>();
+            string queryString = "SELECT * FROM Task WHERE UserID=@UserID";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@UserID", userID);
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        Task task = new Task();
+                        task.Id = reader.GetInt32(0);
+                        task.UserId = reader.GetInt32(1);
+                        task.CategoryId = reader.GetInt32(2);
+                        task.Date = reader.GetDateTime(3);
+                        task.Title = reader.GetString(4);
+                        task.Price = reader.GetDouble(5);
+                        task.Description = reader.GetString(6);
+                        task.Status = reader.GetString(7);
+                        task.Promoted = reader.GetBoolean(8);
+                        task.Region = reader.GetString(9);
+                        task.PromotedEnd = reader.GetDateTime(10);
+                        task.PageViews = reader.GetInt32(11);
+                        taskList.Add(task);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            return taskList;
+        }
+
         public List<Task> GetTasksByFilter(FilterTask qtask)
         {
             bool queryCategory = false;

@@ -32,6 +32,36 @@ namespace RestAPI.DBUtil
             }
         }
 
+        public List<AssignedUser> getAllAssignedUsersMyTask(int taskID)
+        {
+            List<AssignedUser> assignedUsersList = new List<AssignedUser>();
+            string queryString = "SELECT * FROM AssignedUser WHERE TaskID=@ID";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+                command.Parameters.AddWithValue("@ID", taskID);
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        AssignedUser assignedUsers = new AssignedUser();
+                        assignedUsers.ID = reader.GetInt32(0);
+                        assignedUsers.TaskID = reader.GetInt32(1);
+                        assignedUsers.UserID = reader.GetInt32(2);
+                        assignedUsers.Accepted = reader.GetBoolean(3);
+                        assignedUsersList.Add(assignedUsers);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            return assignedUsersList;
+        }
+
         public bool deleteAssignedUsers(int id)
         {
             string queryString = "DELETE FROM AssignedUser WHERE ID = @ID";
@@ -140,6 +170,23 @@ namespace RestAPI.DBUtil
                 }
 
                 return assignedUser;
+            }
+        }
+
+        public bool RemoveAssignedUsers_If_Denied(int taskid)
+        {
+            string queryString = "DELETE FROM AssignedUser WHERE TaskID = @taskID AND Accepted = 0";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@taskID", taskid);
+
+                connection.Open();
+
+                command.ExecuteNonQuery();
+                connection.Close();
+                return true;
             }
         }
 

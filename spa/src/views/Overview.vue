@@ -37,7 +37,7 @@ export default class Overview extends Vue {
         this.tasks = Array<Task>();
         GetTasksByFilter(categoryId, region, minPrice, maxPrice, minDate, maxDate, search).then(response => {
             if (response.status === 200) {
-                this.tasks = response.data;
+                this.tasks = response.data.sort((x: any, y: any) => y.promoted - x.promoted);
             }
         }).catch(() => {
             console.log("Error getting tasks");

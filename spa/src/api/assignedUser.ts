@@ -5,6 +5,10 @@ export function GetAssignedUserById(id: number) {
     return axios.get(`${apiEndPoint}/assignedusers/${id}`);
 }
 
+export function GetAssignedUsersOnMyTask(taskID: number) {
+    return axios.get(`${apiEndPoint}assignedusers/AssignedUsersMyTask/${taskID}`);
+}
+
 export function GetAssignedUserMatch(taskID: number, userID: number) {
     return axios.get(`${apiEndPoint}/assignedusers/task/${taskID}/user/${userID}`);
 }
@@ -15,6 +19,18 @@ export function RemoveAssignedUser(userid: number) {
 
 export function OpretAssignedUser(taskID: number, userID: number, accepted: boolean) {
     return axios.post(`${apiEndPoint}/assignedusers`, {
+        TaskID: taskID,
+        UserID: userID,
+        Accepted: accepted
+    });
+}
+
+export function RemoveUsersWhenAccepted(taskid: number) {
+    return axios.delete(`${apiEndPoint}/assignedusers/deniedUsers/${taskid}`);
+}
+
+export function UpdateAssignedUser(id: number, taskID: number, userID: number, accepted: boolean) {
+    return axios.put(`${apiEndPoint}/assignedusers/${id}`, {
         TaskID: taskID,
         UserID: userID,
         Accepted: accepted

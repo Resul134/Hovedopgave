@@ -10,6 +10,10 @@ namespace RestAPI.DBUtil
     {
         List<AssignedUser> getAllAssignedUsers();
 
+        List<AssignedUser> getAllAssignedUsersMyTask(int taskID);
+
+        bool RemoveAssignedUsers_If_Denied(int taskid);
+
         AssignedUser GetAssignedUsersFromId(int id);
 
         bool RemoveAssignedUser(int userid);

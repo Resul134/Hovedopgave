@@ -19,6 +19,14 @@ namespace RestAPI.Controllers
             return mngTasks.GetAllTasks();
         }
 
+        [HttpGet]
+        [Route("MyTasks/{userID}")]
+        public List<Task> GetMyTasks(int userID)
+        {
+            ManageTasks mngTasks = new ManageTasks();
+            return mngTasks.GetMyTasksFromUserID(userID);
+        }
+
         // GET api/tasks/title/{titel name}
         [HttpGet]
         [Route("title/{title}")]
