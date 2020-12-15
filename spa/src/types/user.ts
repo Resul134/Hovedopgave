@@ -10,4 +10,5 @@ export interface User {
     password: string;
     rating: number;
     suspended: boolean;
+    description: string;
 }

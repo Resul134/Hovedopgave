@@ -17,6 +17,7 @@ namespace Library.models
         public string Password { get; set; }
         public double Rating { get; set; }
         public bool Suspended { get; set; }
+        public string Description { get; set; }
 
         public User()
         {
@@ -24,7 +25,7 @@ namespace Library.models
 
         public override string ToString()
         {
-            return $"{nameof(ID)}: {ID}, {nameof(FirstName)}: {FirstName}, {nameof(LastName)}: {LastName}, {nameof(Birthday)}: {Birthday}, {nameof(Gender)}: {Gender}, {nameof(Phone)}: {Phone}, {nameof(Email)}: {Email}, {nameof(Username)}: {Username}, {nameof(Password)}: {Password}, {nameof(Rating)}: {Rating}, {nameof(Suspended)}: {Suspended}";
+            return $"{nameof(ID)}: {ID}, {nameof(FirstName)}: {FirstName}, {nameof(LastName)}: {LastName}, {nameof(Birthday)}: {Birthday}, {nameof(Gender)}: {Gender}, {nameof(Phone)}: {Phone}, {nameof(Email)}: {Email}, {nameof(Username)}: {Username}, {nameof(Password)}: {Password}, {nameof(Rating)}: {Rating}, {nameof(Suspended)}: {Suspended}, {nameof(Password)}: {Password}, {nameof(Rating)}: {Rating}, {nameof(Description)}: {Description}";
         }
     }
 }
