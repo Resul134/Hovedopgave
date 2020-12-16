@@ -9,8 +9,17 @@
                 </div>
                 <div class="d-flex" style="flex-direction: column">
                     <h1 class="mt-4">Kommentarer</h1>
-                    <b-textarea placeholder="Skriv her.." rows="10"></b-textarea>
-                    <button class="btn btn-primary mt-3 ml-auto">Skriv kommentar</button>
+                    <b-textarea v-model="comment" placeholder="Skriv her.." rows="4"></b-textarea>
+                    <button @click="kommenter()" class="btn btn-primary mt-3 ml-auto">Skriv kommentar</button>
+                    <div class="comments" v-if="allowLoad">
+                        <div :key="comment.date" v-for="comment in comments" class="comment" :class="{ active : comment.userID === task.userId }">
+                        <div class="d-flex"><strong>{{ comment.firstName }} {{ comment.lastName }}</strong><p class="ml-auto">{{ mom(new Date(comment.date)).format("DD-MM-YYYY") }} kl. {{ mom(new Date(comment.date)).add(1, "hours").format("HH:mm") }}</p></div>
+                        <p>{{ comment.message }}</p>
+                    </div>
+                    </div>
+                    <div v-else>
+                        Der er ingen kommentarer på opslaget.
+                    </div>
                 </div>
             </b-col>
 
@@ -64,6 +73,9 @@ import { GetAssignedUserMatch, OpretAssignedUser, DeleteAssignedUser } from "../
 import { Task } from "../types/task";
 import { User } from "../types/user";
 import { AssignedUser } from "../types/assignedUser";
+import { OpretComment, GetCommentsForTask } from "../api/comments";
+import Comment from "../types/comments";
+import moment from "moment";
 
 @Component
 export default class SeeMore extends Vue {
@@ -74,7 +86,6 @@ export default class SeeMore extends Vue {
     description = "";
     region = "";
     status = "";
-    userID = 3;
 
     user = {} as User;
     firstName = "";
@@ -85,6 +96,17 @@ export default class SeeMore extends Vue {
     assignedUser = {} as AssignedUser;
     signedUp = false;
     isTaskCreator = false;
+
+    // Comments
+    comment = "";
+    comments = [] as Comment[];
+    allowLoad = false;
+
+    // Methods
+
+    mom(date: Date) {
+        return moment(date);
+    }
 
     mounted() {
         if (this.$store.state.taskID === null) {
@@ -98,6 +120,8 @@ export default class SeeMore extends Vue {
                 this.title = response.data.title;
                 this.price = response.data.price;
                 this.description = response.data.description;
+
+                this.loadKommentarer();
             });
             GetBrugerById(this.$store.state.userID).then(response => {
                 this.firstName = response.data.firstName;
@@ -147,11 +171,55 @@ export default class SeeMore extends Vue {
     routeLogin() {
         this.$router.push({ name: "Login" });
     }
+
+    loadKommentarer() {
+        this.allowLoad = false;
+        GetCommentsForTask(this.task.id).then(response => {
+            this.comments = response.data.reverse();
+            this.comment = "";
+
+            let count = 0;
+
+            this.comments.forEach(element => {
+                GetBrugerById(element.userID).then(response => {
+                    count++;
+                    element.firstName = response.data.firstName;
+                    element.lastName = response.data.lastName;
+
+                    if (count === this.comments.length) this.allowLoad = true;
+                });
+            });
+        });
+    }
+
+    kommenter() {
+        if (this.comment === "") return;
+        OpretComment(this.task.id, GetLoggedInId(), new Date(), this.comment).then(() => {
+            this.loadKommentarer();
+        });
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/main.scss";
+
+.comments {
+    margin-top: 35px;
+
+    .comment {
+        background: $light;
+        margin-bottom: 10px;
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 4px solid #555;
+
+        &.active{
+            border-left: 4px solid $primary;
+        }
+    }
+}
+
 svg {
     margin-top: -3px;
     font-size: 120%;
