@@ -176,7 +176,7 @@ export default class SeeMore extends Vue {
     seeProfile(id: number) {
         this.$router.push({ name: "Profiles", query: { user: id.toString() } });
     }
-    
+
     loadKommentarer() {
         this.allowLoad = false;
         GetCommentsForTask(this.task.id).then(response => {
