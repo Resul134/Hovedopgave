@@ -10,7 +10,7 @@
                         <h4 v-if="assignedUser.accepted" class="accepted">Godkendt</h4>
                     </div>
                     <b-button v-if="!assignedUser.accepted" variant="success" class="buttons" @click="AcceptUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, true)">Accepter</b-button>
-                    <b-button v-if="assignedUser.accepted" variant="danger" class="buttons" @click="DelAssignedUser(assignedUser.id)">Afslag</b-button>
+                    <b-button v-if="assignedUser.accepted" variant="danger" class="buttons" @click="RegretAssignedUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, false)">Fortryd</b-button>
                 </div>
         </div>
     </div>
@@ -54,10 +54,10 @@ export default class MyTasks extends Vue {
         });
     }
 
-    DelAssignedUser(id: number) {
+    RegretAssignedUser(id: number, taskID: number, userID: number, accepted: boolean) {
         if (confirm("Er du sikker?")) {
-            DeleteAssignedUser(id).then(response => {
-                console.log("User removed: " + response.status);
+            UpdateAssignedUser(id, taskID, userID, accepted).then(response => {
+                console.log("Fortryd bruger");
                 this.getAllUsers();
             }).catch(() => {
                 console.log("Couldn't remove user");
