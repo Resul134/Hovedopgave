@@ -30,6 +30,15 @@ namespace RestAPI.Controllers
             return mngUser.Login(username, password);
         }
 
+        // Get user by username
+        [HttpGet]
+        [Route("byName/{username}")]
+        public User Get(string username)
+        {
+            ManageUsers mngUser = new ManageUsers();
+            return mngUser.GetUserFromUsername(username);
+        }
+
 
         // GET: api/Users/5
         [HttpGet("{id}")]

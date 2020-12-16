@@ -49,6 +49,17 @@
     <div>
         <b-textarea v-model="description" :state="descriptionState()" rows="5"></b-textarea>
     </div>
+    <p>Kompetencer</p>
+    <div class="flex">
+        <b-form-input> type="text" v-model="skill"</b-form-input>
+        <b-button @click="addSkill()" class="ml-auto, btn btn-secondary btn-sm, buttonStyle">Tilføj</b-button>
+        </div>
+        <ul>
+        <li v-for="(qualification, idx) in userQualifications" :key="idx">
+        {{ qualification.skill }}
+        <b-button @click="deleteSkill(qualification.id)" class="ml-auto, btn btn-secondary btn-sm" variant="danger">X</b-button>
+        </li>
+        </ul>
     <div class="d-flex mt-4">
         <b-button variant="danger" @click="deleteProfil()">Slet konto</b-button>
         <b-button @click="RedigerProfil()" class="ml-auto" variant="primary">Bekræft</b-button>
@@ -62,6 +73,8 @@ import { GetLoggedInId, GetBrugerById, DeleteBrugerById, RedigerBruger, Logout }
 import { RemoveAssignedUser } from "../api/assignedUser";
 import { DeleteAllTaskByUserID } from "../api/task";
 import { User } from "../types/user";
+import { Qualification } from "../types/qualification";
+import { GetQualificationsByUserId, DeleteQualificationById, OpretQualification } from "../api/qualification";
 
 @Component
 export default class Profile extends Vue {
@@ -77,6 +90,11 @@ export default class Profile extends Vue {
     currentUserPassword = "";
     userPasswordRepeat = "";
     description = "";
+    skill = "";
+    userID = 13;
+
+    userQualifications = Array<Qualification>();
+
     edited = false;
     error = false;
     tommefelter = false;
@@ -88,6 +106,19 @@ export default class Profile extends Vue {
     @Watch("$route.query", { immediate: true, deep: true })
     OnParamChange() {
         this.Setup();
+    }
+
+    addSkill() {
+        OpretQualification(this.user.id, this.skill).then(response => {
+            this.GetQualifications(this.user.id);
+            this.skill = "";
+        });
+    }
+
+    deleteSkill(id: number) {
+        DeleteQualificationById(id).then(response => {
+            this.GetQualifications(this.user.id);
+        });
     }
 
     phoneState() {
@@ -167,6 +198,12 @@ export default class Profile extends Vue {
         }
     }
 
+    GetQualifications(id: number) {
+        GetQualificationsByUserId(id).then(response => {
+            this.userQualifications = response.data;
+        });
+    }
+
     RedigerProfil() {
         if (this.userEmail === "" || this.userUsername === "" || this.userPhone.length < 8 || this.userFirstName === "" || this.userLastName === "" || this.userPassword.length < 8 || this.description === "") {
             this.tommefelter = true;
@@ -209,6 +246,7 @@ export default class Profile extends Vue {
             this.userBirthday = response.data.birthday;
             this.description = response.data.description;
         });
+        this.GetQualifications(id);
     }
 
     mounted() {
@@ -225,6 +263,32 @@ export default class Profile extends Vue {
     justify-content: space-between;
     border-bottom: 1px solid black;
     padding: 7px;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    margin-bottom: 6rem;
+}
+
+li {
+    background-color:darkgray;
+    margin-right: 15px;
+    padding: 6px;
+    border-radius: 7px;
+}
+.btn-sm, .btn-group-sm > .btn {
+    font-size: 0.975rem;
+    line-height: 1;
+    font-size: 0.6rem;
+}
+textarea{
+    margin-bottom: 20px;
+}
+
+.buttonStyle {
+    margin-left: 10px;
+    height: 40px;
 }
 
 .button-flex{

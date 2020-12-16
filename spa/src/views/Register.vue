@@ -43,6 +43,14 @@
     <div>
         <b-textarea v-model="description" rows="5"></b-textarea>
     </div>
+    <p>Kompetencer</p>
+    <div class="flex">
+    <b-form-input v-model="skill"></b-form-input>
+    <b-button @click="addSkill()" class="ml-auto, btn btn-secondary btn-sm, buttonStyle">Tilføj</b-button>
+    </div>
+    <ul>
+    <li v-for="(skill, index) in skillList" :key="skill">{{ skill }} <b-button @click="deleteSkill(index)" class="ml-auto, btn btn-secondary btn-sm" variant="danger">X</b-button></li>
+    </ul>
     <div class="d-flex mt-4">
         <b-button @click="Opret()" class="ml-auto" variant="primary">Opret</b-button>
     </div>
@@ -51,7 +59,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { OpretBruger } from "../api/user";
+import { OpretBruger, GetUserByUsername } from "../api/user";
+import { OpretQualification } from "../api/qualification";
 
 @Component
 export default class Home extends Vue {
@@ -67,8 +76,23 @@ export default class Home extends Vue {
     passwordRepeat = "";
     description = "";
 
+    skillList = [];
+    userID = null;
+    skill = "";
+
     created = false;
     error = false;
+
+    addSkill() {
+        if (this.skill !== "") {
+            this.skillList.push(this.skill);
+        }
+        this.skill = "";
+    }
+
+    deleteSkill(currentIndex) {
+        this.skillList.splice(currentIndex, 1);
+    }
 
     Opret() {
         if (this.password === this.passwordRepeat) {
@@ -78,6 +102,23 @@ export default class Home extends Vue {
             }
             OpretBruger(this.firstName, this.lastName, this.birthday, this.selectedGender, parseInt(this.phone), this.email, this.username, this.password, this.description).then(response => {
                 if (response.status === 200) {
+                    GetUserByUsername(this.username).then(response => {
+                        console.log("username:" + this.username);
+                        console.log(response.data);
+                        this.userID = response.data.id;
+                        console.log(this.userID);
+                        this.skillList.forEach((skill, index) => {
+                            OpretQualification(this.userID, this.skillList[index]).then(response => {
+                                if (response.status === 200) {
+                                    this.error = false;
+                                    this.created = true;
+                                }
+                            }).catch(() => {
+                                this.error = true;
+                            });
+                        });
+                        this.skillList = [];
+                    });
                     this.firstName = "";
                     this.lastName = "";
                     this.email = "";
@@ -88,7 +129,6 @@ export default class Home extends Vue {
                     this.password = "";
                     this.passwordRepeat = "";
                     this.description = "";
-
                     this.error = false;
                     this.created = true;
                 }
@@ -125,6 +165,31 @@ export default class Home extends Vue {
     background: $light;
     padding:40px;
     border-radius: 12px;
+}
+ul {
+    display: flex;
+    list-style: none;
+    margin-bottom: 6rem;
+}
+
+li {
+    background-color:darkgray;
+    margin-right: 15px;
+    padding: 6px;
+    border-radius: 7px;
+}
+.btn-sm, .btn-group-sm > .btn {
+    font-size: 0.975rem;
+    line-height: 1;
+    font-size: 0.6rem;
+}
+textarea{
+    margin-bottom: 20px;
+}
+
+.buttonStyle {
+    margin-left: 10px;
+    height: 40px;
 }
 p {
     margin-bottom: 0px;

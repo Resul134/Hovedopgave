@@ -45,6 +45,10 @@ export function GetUserByLogin(username: string, password: string) {
     return axios.get(`${apiEndPoint}/users/login/${username},${password}`);
 }
 
+export function GetUserByUsername(username: string) {
+    return axios.get(`${apiEndPoint}/users/byName/${username}`);
+}
+
 export function GetLoggedInId() {
     return localStorage.getItem("user") as any;
 }
