@@ -51,6 +51,7 @@
                     <p><strong>Region: </strong>{{region}}</p>
                     <p><strong >Status: </strong><span :class="status">{{status}}</span></p>
                 </div>
+                 <b-button class="tilmeldt-button" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
             </b-col>
         </b-row>
     </div>
@@ -163,6 +164,11 @@ svg {
     padding: 25px;
     position: relative;
     background: $light;
+}
+
+.tilmeldt-button {
+    width: 100%;
+    background-color: $primary;
 }
 
 .tag {

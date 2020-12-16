@@ -10,7 +10,7 @@
                         <h4 v-if="assignedUser.accepted" class="accepted">Godkendt</h4>
                     </div>
                     <b-button v-if="!assignedUser.accepted" variant="success" class="buttons" @click="AcceptUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, true)">Accepter</b-button>
-                    <b-button variant="danger" class="buttons" @click="DelAssignedUser(assignedUser.id)">Afslag</b-button>
+                    <b-button v-if="assignedUser.accepted" variant="danger" class="buttons" @click="DelAssignedUser(assignedUser.id)">Afslag</b-button>
                 </div>
         </div>
     </div>
@@ -30,13 +30,24 @@ export default class MyTasks extends Vue {
     status = {} as AssignedUser;
 
     mounted() {
+        this.getAllUsers();
+    }
+
+    getAllUsers() {
         GetAssignedUsersOnMyTask(this.$store.state.AssignedTaskID).then(response => {
             this.AssignedUsers = response.data;
             this.AssignedUsers.forEach(element => {
+                console.log(this.AssignedUsers);
                 GetBrugerById(element.userID).then(response => {
                     this.getUser.push(response.data);
                     console.log(response.data.id);
                 });
+                if (element.accepted) {
+                    console.log(element.accepted);
+                    this.AssignedUsers = this.AssignedUsers.filter((obj: AssignedUser) => {
+                        return obj.accepted;
+                    });
+                }
             });
         }).catch((err) => {
             console.error(err);
@@ -47,6 +58,7 @@ export default class MyTasks extends Vue {
         if (confirm("Er du sikker?")) {
             DeleteAssignedUser(id).then(response => {
                 console.log("User removed: " + response.status);
+                this.getAllUsers();
             }).catch(() => {
                 console.log("Couldn't remove user");
             });
@@ -54,17 +66,14 @@ export default class MyTasks extends Vue {
     }
 
     goToProfile(id: any) {
-        this.$router.push({ name: "Profile", query: { user: id } });
+        this.$router.push({ name: "Profile", query: { user: id.toString() } });
     }
 
     AcceptUser(id: number, taskID: number, userID: number, accepted: boolean) {
         if (confirm("Er du sikker?")) {
             UpdateAssignedUser(id, taskID, userID, accepted).then(response => {
                 console.log("Bruger opdateret: " + response.status);
-            }).then(() => {
-                RemoveUsersWhenAccepted(this.$store.state.AssignedTaskID).then(response => {
-                    console.log("All other users where removed: " + response.status);
-                });
+                this.getAllUsers();
             }).catch((err) => {
                 console.error(err);
             });
