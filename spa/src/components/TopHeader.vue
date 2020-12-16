@@ -1,7 +1,7 @@
 <template>
     <div id="rootDiv">
         <b-navbar type="dark" class="header">
-            <b-navbar-brand class="brand" to="/">Workio</b-navbar-brand>
+            <b-navbar-brand class="brand" to="/"><div class="logo-wrap"><img src="../assets/logo-white.png"></div></b-navbar-brand>
             <b-form class="search-bar" @submit.prevent="submit">
                 <b-form-input
                 placeholder="Søg"
@@ -39,13 +39,13 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { GetLoggedInId, Logout } from "../api/user";
-import { Query } from "../types/query";
+import { Dictionary } from "../types/dict";
 
 @Component
 export default class TopHeader extends Vue {
     loggedIn = false;
     searchBarInput = "";
-    queries = Array<Query>();
+    queries = {} as Dictionary<string>;
 
     @Watch("$store.state.loggedIn") t() {
         this.loggedIn = this.$store.state.loggedIn;
@@ -55,7 +55,7 @@ export default class TopHeader extends Vue {
         if (this.searchBarInput !== "") {
             this.NewQuery("search", this.searchBarInput);
         } else {
-            this.queries = this.DeleteFromQueryList(this.queries, "search");
+            this.DeleteFromQueryList("search");
             this.$store.commit("queriesState", this.queries);
         }
         this.ReplaceRoute(this.queries);
@@ -73,30 +73,24 @@ export default class TopHeader extends Vue {
         Logout();
     }
 
+    Profile() {
+        this.$router.push({ name: "Profile" });
+    }
+
     NewQuery(name: string, value: string) {
-        const newQuery = {} as Query;
-        newQuery.name = name;
-        newQuery.value = value;
-        this.queries = this.$store.state.queries;
-        this.queries = this.DeleteFromQueryList(this.queries, name);
-        this.queries.push(newQuery);
+        this.queries[name] = value;
         this.$store.commit("queriesState", this.queries);
     }
 
-    DeleteFromQueryList(array: Array<Query>, name: string) {
-        for (let i = array.length - 1; i >= 0; i--) {
-            if (array[i].name === name) {
-                array.splice(i, 1);
-            }
-        }
-        return array;
+    DeleteFromQueryList(name: string) {
+        delete this.queries[name];
     }
 
-    ReplaceRoute(parameters: Array<Query>) {
+    ReplaceRoute(parameters: Dictionary<string>) {
         if (this.$route.name === "Overview") {
-            this.$router.replace({ query: { payload: JSON.stringify(parameters) } });
+            this.$router.replace({ query: parameters });
         } else {
-            this.$router.replace({ name: "Overview", query: { payload: JSON.stringify(parameters) } });
+            this.$router.replace({ name: "Overview", query: parameters });
         }
     }
 }
@@ -104,6 +98,18 @@ export default class TopHeader extends Vue {
 
 <style lang="scss" scoped>
 @import "@/assets/main.scss";
+
+.logo-wrap {
+    height: 27px;
+
+    img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        margin: 0 auto;
+    }
+}
+
 .arbejdsopgave-btn {
     background: #fff;
     margin-right: 20px;
@@ -121,9 +127,10 @@ export default class TopHeader extends Vue {
     width: 40%;
 }
 .brand {
-    flex: 0 0 210px;
+    flex: 0 0 calc(210px - 1rem);
     margin: 0px;
     padding: 0px;
+    margin-right: 1rem;
 }
 .header {
     position: fixed;

@@ -20,6 +20,13 @@ namespace RestAPI.Controllers
             return comment.getAllComments();
         }
 
+        [HttpGet("task/{id}")]
+        public IEnumerable<Comment> GetCommentsForTask(int id)
+        {
+            ManageComment comment = new ManageComment();
+            return comment.GetCommentsForTask(id);
+        }
+
         // GET api/<CommentsController>/5
         [HttpGet("{id}")]
         public Comment Get(int id)

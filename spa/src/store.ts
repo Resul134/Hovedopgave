@@ -1,13 +1,12 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { Query } from "@/types/query";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
         loggedIn: false,
-        queries: Array<Query>(),
+        queries: null,
         taskID: null,
         userID: null,
         AssignedTaskID: null
