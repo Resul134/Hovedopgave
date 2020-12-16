@@ -7,6 +7,7 @@ namespace RestAPI.DBUtil
     {
         List<Task> GetAllTasks();
 
+        List<Task> GetMyTasksFromUserID(int userID);
 
         Task GetTaskFromId(int id);
 

@@ -28,7 +28,8 @@
                             <b-dropdown-item to="/register">Register</b-dropdown-item>
                         </template>
                         <template v-else>
-                            <b-dropdown-item @click="Profile">Profile</b-dropdown-item>
+                            <b-dropdown-item to="/profile">Profile</b-dropdown-item>
+                            <b-dropdown-item to="/mytasks">Mine arbejdsopgaver</b-dropdown-item>
                             <b-dropdown-item @click="Logout">Logout</b-dropdown-item>
                         </template>
                     </b-dropdown>

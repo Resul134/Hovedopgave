@@ -4,7 +4,7 @@
             Nothing here
         </div>
         <div class="overview" v-else>
-            <div @click="seeMore(task.id,task.userId)" class="task" v-for="(task, idx) in tasks" :key="idx">
+            <div @click="seeMore(task.id,task.userId, task.id)" class="task" v-for="(task, idx) in tasks" :key="idx">
                 <Tile :title="task.title" :price="task.price" :description="task.description" :categoryId="task.categoryId" :region="task.region" :promoted="task.promoted"/>
             </div>
         </div>
@@ -26,8 +26,9 @@ export default class Overview extends Vue {
     chosenCategory = Number(this.$route.params.categoryId);
     tasks = Array<Task>();
 
-    seeMore(taskID: number, userID: number) {
+    seeMore(taskID: number, userID: number, assignedTaskID: number) {
         this.$store.commit("userID", userID);
+        this.$store.commit("AssignedTaskID", assignedTaskID);
         this.$store.commit("taskID", taskID);
         this.$router.push({ name: "SeeMore" });
     }
@@ -36,7 +37,7 @@ export default class Overview extends Vue {
         this.tasks = Array<Task>();
         GetTasksByFilter(categoryId, region, minPrice, maxPrice, minDate, maxDate, search).then(response => {
             if (response.status === 200) {
-                this.tasks = response.data;
+                this.tasks = response.data.sort((x: any, y: any) => y.promoted - x.promoted);
             }
         }).catch(() => {
             console.log("Error getting tasks");

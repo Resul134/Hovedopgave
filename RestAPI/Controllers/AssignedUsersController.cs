@@ -20,6 +20,14 @@ namespace RestAPI.Controllers
             return manageAssignedUser.getAllAssignedUsers();
         }
 
+        [HttpGet]
+        [Route("AssignedUsersMyTask/{taskID}")]
+        public IEnumerable<AssignedUser> GetAssignedUsersByTaskID(int taskID)
+        {
+            ManageAssignedUsers manageAssignedUser = new ManageAssignedUsers();
+            return manageAssignedUser.getAllAssignedUsersMyTask(taskID);
+        }
+
         // GET api/<AssignedUserController>/5
         [HttpGet("{id}")]
         public AssignedUser Get(int id)
@@ -59,6 +67,13 @@ namespace RestAPI.Controllers
         {
             ManageAssignedUsers manageAssignedUser = new ManageAssignedUsers();
             return manageAssignedUser.deleteAssignedUsers(id);
+        }
+
+        [HttpDelete("deniedUsers/{taskid}")]
+        public bool DeleteDeniedUsers(int taskid)
+        {
+            ManageAssignedUsers manageAssignedUser = new ManageAssignedUsers();
+            return manageAssignedUser.RemoveAssignedUsers_If_Denied(taskid);
         }
 
         [HttpDelete]

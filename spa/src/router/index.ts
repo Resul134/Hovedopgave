@@ -9,6 +9,8 @@ import Profiles from "../views/Profiles.vue";
 import Overview from "../views/Overview.vue";
 import SeeMore from "../views/SeeMore.vue";
 import ArbejdsOpgave from "../views/ArbejdsOpgave.vue";
+import MyTasks from "../views/MyTasks.vue";
+import MyAssignedUsers from "../views/MyAssignedUsers.vue";
 
 Vue.use(VueRouter);
 
@@ -67,6 +69,16 @@ const routes: Array<RouteConfig> = [
         path: "/arbejdsopgave",
         name: "ArbejdsOpgave",
         component: ArbejdsOpgave
+    },
+    {
+        path: "/myTasks",
+        name: "MyTasks",
+        component: MyTasks
+    },
+    {
+        path: "/assignedUsers",
+        name: "AssignedUsers",
+        component: MyAssignedUsers
     }
 ];
 
