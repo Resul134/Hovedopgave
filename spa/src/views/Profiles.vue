@@ -5,19 +5,13 @@
         <b-col cols="7">
             <div class="profile">
                 <b-row>
-                    <b-col cols="3">
-                        <h1>{{ userUsername }}</h1>
+                    <b-col cols="9">
+                        <h1>{{ userFirstName }} {{ userLastName }}</h1>
                     </b-col>
-                    <b-col cols="6"></b-col>
                     <b-col cols="3">
                         <svg xmlns="http://www.w3.org/2000/svg" width="7em" height="7em " fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M10 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6 5c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
                         </svg>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <p class="divider">Navn:<span>{{ userFirstName }} {{ userLastName }}</span></p>
                     </b-col>
                 </b-row>
                 <b-row>
@@ -26,6 +20,14 @@
                     </b-col>
                     <b-col cols="4">
                         <p class="divider">Telefon:<span>{{ userPhone }}</span></p>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col cols="8">
+                        <p class="divider">Fødselsdato:<span>{{ userBirthday }}</span></p>
+                    </b-col>
+                    <b-col cols="4">
+                        <p class="divider">Køn:<span>{{ userGender }}</span></p>
                     </b-col>
                 </b-row>
                 <h5 style="font-weight: bold; padding-bottom: 10px;">Beskrivelse</h5>
@@ -60,6 +62,7 @@ import { GetBrugerById } from "../api/user";
 import { GetQualificationsByUserId } from "../api/qualification";
 import { User } from "../types/user";
 import { Qualification } from "../types/qualification";
+import moment from "moment";
 
 @Component
 export default class Profiles extends Vue {
@@ -68,7 +71,7 @@ export default class Profiles extends Vue {
     userPassword = "";
     userFirstName = "";
     userLastName = "";
-    userBirthday: Date = new Date();
+    userBirthday = "";
     userGender = "";
     userPhone = "";
     userEmail = "";
@@ -95,7 +98,7 @@ export default class Profiles extends Vue {
             this.userGender = response.data.gender;
             this.userPhone = response.data.phone;
             this.userEmail = response.data.email;
-            this.userBirthday = response.data.birthday;
+            this.userBirthday = moment(response.data.birthday).format("d-MM-YYYY");
             this.userDescription = response.data.description;
         });
         GetQualificationsByUserId(id).then(response => {
