@@ -20,6 +20,10 @@ export function RedigerQualification(id: number, UserID: number, Skill: string) 
     });
 }
 
+export function GetQualificationsByUserId(userId: number) {
+    return axios.get(`${apiEndPoint}/qualifications/user/${userId}`);
+}
+
 export function GetQualificationById(id: number) {
     return axios.get(`${apiEndPoint}/qualifications/${id}`);
 }

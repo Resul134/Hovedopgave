@@ -5,6 +5,7 @@ import Register from "../views/Register.vue";
 import About from "../views/About.vue";
 import Login from "../views/Login.vue";
 import Profile from "../views/Profile.vue";
+import Profiles from "../views/Profiles.vue";
 import Overview from "../views/Overview.vue";
 import SeeMore from "../views/SeeMore.vue";
 import ArbejdsOpgave from "../views/ArbejdsOpgave.vue";
@@ -46,6 +47,11 @@ const routes: Array<RouteConfig> = [
         name: "Profile",
         component: Profile,
         beforeEnter: ifAuthenticated
+    },
+    {
+        path: "/profiles",
+        name: "Profiles",
+        component: Profiles
     },
     {
         path: "/overview",

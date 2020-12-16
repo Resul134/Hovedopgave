@@ -73,6 +73,35 @@ namespace RestAPI.DBUtil
             return QualificationList;
         }
 
+        public List<Qualification> GetQualificationsByUserId(int userId)
+        {
+            List<Qualification> QualificationList = new List<Qualification>();
+            string queryString = "SELECT * FROM Qualification WHERE UserID = @UserId";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+                command.Parameters.AddWithValue("@UserId", userId);
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        Qualification qualification = new Qualification();
+                        qualification.ID = reader.GetInt32(0);
+                        qualification.UserID = reader.GetInt32(1);
+                        qualification.Skill = reader.GetString(2);
+                        QualificationList.Add(qualification);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            return QualificationList;
+        }
+
         public Qualification GetQualificationFromId(int id)
         {
             Qualification qualification = new Qualification();

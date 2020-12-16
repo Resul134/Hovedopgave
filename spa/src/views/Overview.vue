@@ -15,7 +15,6 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { GetTasksByFilter } from "../api/task";
 import { Task } from "../types/task";
-import { Query } from "../types/query";
 import Tile from "@/components/Tile.vue";
 
 @Component({
@@ -46,41 +45,14 @@ export default class Overview extends Vue {
 
     @Watch("$route.query", { immediate: true, deep: true })
     onUrlChange() {
-        let queries = Array<Query>();
-        let categoryId = "";
-        let region = "";
-        let minPrice = "";
-        let maxPrice = "";
-        let minDate = "";
-        let maxDate = "";
-        let search = "";
-        queries = JSON.parse(String(this.$route.query.payload));
-        queries.forEach(element => {
-            switch (element.name) {
-            case "categoryId":
-                categoryId = element.value;
-                break;
-            case "region":
-                region = element.value;
-                break;
-            case "minPrice":
-                minPrice = element.value;
-                break;
-            case "maxPrice":
-                maxPrice = element.value;
-                break;
-            case "minDate":
-                minDate = element.value;
-                break;
-            case "maxDate":
-                maxDate = element.value;
-                break;
-            case "search":
-                search = element.value;
-                break;
-            }
-        });
-        this.GetFilterMatchingTasks(categoryId, region, minPrice.toString(), maxPrice.toString(), minDate, maxDate, search);
+        const categoryId = this.$route.query.categoryId !== undefined ? this.$route.query.categoryId : "";
+        const region = this.$route.query.region !== undefined ? this.$route.query.region : "";
+        const minPrice = this.$route.query.minPrice !== undefined ? this.$route.query.minPrice : "";
+        const maxPrice = this.$route.query.maxPrice !== undefined ? this.$route.query.maxPrice : "";
+        const minDate = this.$route.query.minDate !== undefined ? this.$route.query.minDate : "";
+        const maxDate = this.$route.query.maxDate !== undefined ? this.$route.query.maxDate : "";
+        const search = this.$route.query.search !== undefined ? this.$route.query.search : "";
+        this.GetFilterMatchingTasks(categoryId.toString(), region.toString(), minPrice.toString(), maxPrice.toString(), minDate.toString(), maxDate.toString(), search.toString());
     }
 }
 </script>
@@ -95,6 +67,7 @@ export default class Overview extends Vue {
     width: 24.25%;
     margin-right: 1%;
     margin-bottom: 1%;
+    overflow-wrap: break-word;
 }
 
 .task:nth-child(4n) {
