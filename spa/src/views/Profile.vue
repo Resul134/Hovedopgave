@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { GetLoggedInId, GetBrugerById, DeleteBrugerById, RedigerBruger, Logout } from "../api/user";
 import { RemoveAssignedUser } from "../api/assignedUser";
 import { DeleteAllTaskByUserID } from "../api/task";
@@ -84,6 +84,11 @@ export default class Profile extends Vue {
     //     Logout();
     //     this.$router.push({ name: "Login" });
     // }
+
+    @Watch("$route.query", { immediate: true, deep: true })
+    OnParamChange() {
+        this.Setup();
+    }
 
     phoneState() {
         if (this.userPhone.length < 8 || this.userPhone.length > 8) {
@@ -186,8 +191,14 @@ export default class Profile extends Vue {
         }
     }
 
-    mounted() {
-        GetBrugerById(GetLoggedInId()).then(response => {
+    Setup() {
+        let id = 0;
+        if (this.$route.query.user) {
+            id = Number(this.$route.query.user);
+        } else {
+            id = GetLoggedInId();
+        }
+        GetBrugerById(id).then(response => {
             this.user = response.data;
             this.userUsername = response.data.username;
             this.userFirstName = response.data.firstName;
@@ -198,6 +209,10 @@ export default class Profile extends Vue {
             this.userBirthday = response.data.birthday;
             this.description = response.data.description;
         });
+    }
+
+    mounted() {
+        this.Setup();
     }
 }
 </script>

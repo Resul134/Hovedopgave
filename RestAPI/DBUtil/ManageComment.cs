@@ -110,6 +110,38 @@ namespace RestAPI.DBUtil
             return comment;
         }
 
+        public List<Comment> GetCommentsForTask(int TaskID)
+        {
+            List<Comment> CommentList = new List<Comment>();
+            string queryString = "SELECT * FROM Comment WHERE TaskID = @TaskID";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Parameters.AddWithValue("@TaskID", TaskID);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        Comment comment = new Comment();
+                        comment.ID = reader.GetInt32(0);
+                        comment.TaskID = reader.GetInt32(1);
+                        comment.UserID = reader.GetInt32(2);
+                        comment.Date = reader.GetDateTime(3);
+                        comment.Message = reader.GetString(4);
+                        CommentList.Add(comment);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            return CommentList;
+        }
+
         public bool UpdateComment(Comment item, int id)
         {
             string queryString = "UPDATE Comment SET TaskID = @TaskID, UserID = @UserID, Date = @Date, Message = @Message WHERE ID = @ID";

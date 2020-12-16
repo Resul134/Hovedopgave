@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-row>
-            <b-col>
+            <b-col cols="9">
                 <div class="seeMore">
                     <p class="tag">{{ price }} kr</p>
                     <h1 class="title">{{title}}</h1>
@@ -9,8 +9,17 @@
                 </div>
                 <div class="d-flex" style="flex-direction: column">
                     <h1 class="mt-4">Kommentarer</h1>
-                    <b-textarea placeholder="Skriv her.." rows="10"></b-textarea>
-                    <button class="btn btn-primary mt-3 ml-auto">Skriv kommentar</button>
+                    <b-textarea v-model="comment" placeholder="Skriv her.." rows="4"></b-textarea>
+                    <button @click="kommenter()" class="btn btn-primary mt-3 ml-auto">Skriv kommentar</button>
+                    <div class="comments" v-if="allowLoad">
+                        <div :key="comment.date" v-for="comment in comments" class="comment" :class="{ active : comment.userID === task.userId }">
+                        <div class="d-flex"><strong>{{ comment.firstName }} {{ comment.lastName }}</strong><p class="ml-auto">{{ mom(new Date(comment.date)).format("DD-MM-YYYY") }} kl. {{ mom(new Date(comment.date)).add(1, "hours").format("HH:mm") }}</p></div>
+                        <p>{{ comment.message }}</p>
+                    </div>
+                    </div>
+                    <div v-else>
+                        Der er ingen kommentarer på opslaget.
+                    </div>
                 </div>
             </b-col>
 
@@ -26,11 +35,11 @@
                     <p class="font-weight-bold text-center">Arbejdsgiver<p/>
                     <p>
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
-                            <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                            <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
-                        </svg>
-                        {{firstName}} {{ lastName }}
+                                <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
+                                <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+                        </svg>&nbsp;
+                        <a class="name" @click="seeProfile($store.state.userID)">{{ firstName }} {{ lastName }}</a>
                     </p>
                     <p>
                         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-envelope-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -65,6 +74,9 @@ import { GetAssignedUserMatch, OpretAssignedUser, DeleteAssignedUser } from "../
 import { Task } from "../types/task";
 import { User } from "../types/user";
 import { AssignedUser } from "../types/assignedUser";
+import { OpretComment, GetCommentsForTask } from "../api/comments";
+import Comment from "../types/comments";
+import moment from "moment";
 
 @Component
 export default class SeeMore extends Vue {
@@ -75,7 +87,6 @@ export default class SeeMore extends Vue {
     description = "";
     region = "";
     status = "";
-    userID = 3;
 
     user = {} as User;
     firstName = "";
@@ -86,6 +97,17 @@ export default class SeeMore extends Vue {
     assignedUser = {} as AssignedUser;
     signedUp = false;
     isTaskCreator = false;
+
+    // Comments
+    comment = "";
+    comments = [] as Comment[];
+    allowLoad = false;
+
+    // Methods
+
+    mom(date: Date) {
+        return moment(date);
+    }
 
     mounted() {
         if (this.$store.state.taskID === null) {
@@ -99,6 +121,8 @@ export default class SeeMore extends Vue {
                 this.title = response.data.title;
                 this.price = response.data.price;
                 this.description = response.data.description;
+
+                this.loadKommentarer();
             });
             GetBrugerById(this.$store.state.userID).then(response => {
                 this.firstName = response.data.firstName;
@@ -148,11 +172,59 @@ export default class SeeMore extends Vue {
     routeLogin() {
         this.$router.push({ name: "Login" });
     }
+
+    seeProfile(id: number) {
+        this.$router.push({ name: "Profiles", query: { user: id.toString() } });
+    }
+
+    loadKommentarer() {
+        this.allowLoad = false;
+        GetCommentsForTask(this.task.id).then(response => {
+            this.comments = response.data.reverse();
+            this.comment = "";
+
+            let count = 0;
+
+            this.comments.forEach(element => {
+                GetBrugerById(element.userID).then(response => {
+                    count++;
+                    element.firstName = response.data.firstName;
+                    element.lastName = response.data.lastName;
+
+                    if (count === this.comments.length) this.allowLoad = true;
+                });
+            });
+        });
+    }
+
+    kommenter() {
+        if (this.comment === "") return;
+        OpretComment(this.task.id, GetLoggedInId(), new Date(), this.comment).then(() => {
+            this.loadKommentarer();
+        });
+    }
 }
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/main.scss";
+
+.comments {
+    margin-top: 35px;
+
+    .comment {
+        background: $light;
+        margin-bottom: 10px;
+        padding: 12px;
+        border-radius: 6px;
+        border-left: 4px solid #555;
+
+        &.active{
+            border-left: 4px solid $primary;
+        }
+    }
+}
+
 svg {
     margin-top: -3px;
     font-size: 120%;
@@ -164,6 +236,15 @@ svg {
     padding: 25px;
     position: relative;
     background: $light;
+
+    p {
+        overflow-wrap: break-word;
+    }
+}
+
+.name {
+    color: $gray;
+    cursor: pointer;
 }
 
 .tilmeldt-button {
