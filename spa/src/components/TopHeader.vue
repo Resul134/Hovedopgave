@@ -1,7 +1,7 @@
 <template>
     <div id="rootDiv">
         <b-navbar type="dark" class="header">
-            <b-navbar-brand class="brand" to="/">Workio</b-navbar-brand>
+            <b-navbar-brand class="brand" to="/"><div class="logo-wrap"><img src="../assets/logo-white.png"></div></b-navbar-brand>
             <b-form class="search-bar" @submit.prevent="submit">
                 <b-form-input
                 placeholder="Søg"
@@ -97,6 +97,18 @@ export default class TopHeader extends Vue {
 
 <style lang="scss" scoped>
 @import "@/assets/main.scss";
+
+.logo-wrap {
+    height: 27px;
+
+    img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        margin: 0 auto;
+    }
+}
+
 .arbejdsopgave-btn {
     background: #fff;
     margin-right: 20px;
@@ -114,9 +126,10 @@ export default class TopHeader extends Vue {
     width: 40%;
 }
 .brand {
-    flex: 0 0 210px;
+    flex: 0 0 calc(210px - 1rem);
     margin: 0px;
     padding: 0px;
+    margin-right: 1rem;
 }
 .header {
     position: fixed;
