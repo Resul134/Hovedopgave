@@ -5,7 +5,7 @@
             <div v-for="(assignedUser, idx) in AssignedUsers" :key="idx" class="box">
                 <div>
                     <div>
-                        <h4>Navn: <b-button @click="goToProfile(getUser.id)" class="goto">{{ getUser[idx].firstName + " " + getUser[idx].lastName }}</b-button></h4>
+                        <h4>Navn: <b-button @click="goToProfile(assignedUser.userID)" class="goto">{{ getUser[idx].firstName + " " + getUser[idx].lastName }}</b-button></h4>
                         <h4 v-if="!assignedUser.accepted" class="notaccepted">Ikke godkendt</h4>
                         <h4 v-if="assignedUser.accepted" class="accepted">Godkendt</h4>
                     </div>
@@ -66,7 +66,7 @@ export default class MyTasks extends Vue {
     }
 
     goToProfile(id: any) {
-        this.$router.push({ name: "Profile", query: { user: id.toString() } });
+        this.$router.push({ name: "Profiles", query: { user: id.toString() } });
     }
 
     AcceptUser(id: number, taskID: number, userID: number, accepted: boolean) {
