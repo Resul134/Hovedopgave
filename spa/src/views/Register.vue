@@ -76,8 +76,8 @@ export default class Home extends Vue {
     passwordRepeat = "";
     description = "";
 
-    skillList = [];
-    userID = null;
+    skillList = Array<string>();
+    userID = 0;
     skill = "";
 
     created = false;
@@ -90,7 +90,7 @@ export default class Home extends Vue {
         this.skill = "";
     }
 
-    deleteSkill(currentIndex) {
+    deleteSkill(currentIndex: number) {
         this.skillList.splice(currentIndex, 1);
     }
 
