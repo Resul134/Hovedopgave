@@ -38,7 +38,7 @@ export default class MyTasks extends Vue {
             this.AssignedUsers = response.data;
             this.AssignedUsers.forEach(element => {
                 console.log(this.AssignedUsers);
-                GetBrugerById(element.userId).then(response => {
+                GetBrugerById(element.userID).then(response => {
                     this.getUser.push(response.data);
                     console.log(response.data.id);
                 });
@@ -103,6 +103,8 @@ export default class MyTasks extends Vue {
     background: crimson;
     border-radius: 7px;
     color: white;
+    width: 170px;
+    text-align: center;
 }
 .goto{
     margin-top: -7px;
@@ -122,5 +124,7 @@ export default class MyTasks extends Vue {
     background: #28a745;
     color: white;
     border-radius: 7px;
+    width: 170px;
+    text-align: center;
 }
 </style>
