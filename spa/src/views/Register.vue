@@ -103,8 +103,6 @@ export default class Home extends Vue {
             OpretBruger(this.firstName, this.lastName, this.birthday, this.selectedGender, parseInt(this.phone), this.email, this.username, this.password, this.description).then(response => {
                 if (response.status === 200) {
                     GetUserByUsername(this.username).then(response => {
-                        console.log("username:" + this.username);
-                        console.log(response.data);
                         this.userID = response.data.id;
                         console.log(this.userID);
                         this.skillList.forEach((skill, index) => {
