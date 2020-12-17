@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { GetLoggedInId, GetBrugerById, DeleteBrugerById, RedigerBruger, Logout } from "../api/user";
 import { RemoveAssignedUser } from "../api/assignedUser";
 import { DeleteAllTaskByUserID } from "../api/task";
@@ -102,11 +102,6 @@ export default class Profile extends Vue {
     //     Logout();
     //     this.$router.push({ name: "Login" });
     // }
-
-    @Watch("$route.query", { immediate: true, deep: true })
-    OnParamChange() {
-        this.Setup();
-    }
 
     addSkill() {
         OpretQualification(this.user.id, this.skill).then(response => {
@@ -229,13 +224,7 @@ export default class Profile extends Vue {
     }
 
     Setup() {
-        let id = 0;
-        if (this.$route.query.user) {
-            id = Number(this.$route.query.user);
-        } else {
-            id = GetLoggedInId();
-        }
-        GetBrugerById(id).then(response => {
+        GetBrugerById(GetLoggedInId()).then(response => {
             this.user = response.data;
             this.userUsername = response.data.username;
             this.userFirstName = response.data.firstName;
@@ -246,7 +235,7 @@ export default class Profile extends Vue {
             this.userBirthday = response.data.birthday;
             this.description = response.data.description;
         });
-        this.GetQualifications(id);
+        this.GetQualifications(GetLoggedInId());
     }
 
     mounted() {
