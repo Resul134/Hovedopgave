@@ -51,7 +51,7 @@
     </div>
     <p>Kompetencer</p>
     <div class="flex">
-        <b-form-input> type="text" v-model="skill"</b-form-input>
+        <b-form-input type="text" v-model="skill"></b-form-input>
         <b-button @click="addSkill()" class="ml-auto, btn btn-secondary btn-sm, buttonStyle">Tilføj</b-button>
         </div>
         <ul>
@@ -91,7 +91,7 @@ export default class Profile extends Vue {
     userPasswordRepeat = "";
     description = "";
     skill = "";
-    userID = 13;
+    userID = null;
 
     userQualifications = Array<Qualification>();
 
