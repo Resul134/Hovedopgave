@@ -119,7 +119,7 @@ export default class MyTasks extends Vue {
     border-radius: 7px;
 }
 .accepted {
-    background: $primary;
+    background: #28a745;
     color: white;
     border-radius: 7px;
 }
