@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GetAssignedUsersOnMyTask, DeleteAssignedUser, UpdateAssignedUser, RemoveUsersWhenAccepted } from "@/api/assignedUser";
+import { GetAssignedUsersOnMyTask, UpdateAssignedUser } from "@/api/assignedUser";
 import { GetBrugerById } from "@/api/user";
 import { AssignedUser } from "../types/assignedUser";
 import { User } from "../types/user";
@@ -57,7 +57,7 @@ export default class MyTasks extends Vue {
     RegretAssignedUser(id: number, taskID: number, userID: number, accepted: boolean) {
         if (confirm("Er du sikker?")) {
             UpdateAssignedUser(id, taskID, userID, accepted).then(response => {
-                console.log("Fortryd bruger");
+                console.log("Fortryd bruger" + response.status);
                 this.getAllUsers();
             }).catch(() => {
                 console.log("Couldn't remove user");
