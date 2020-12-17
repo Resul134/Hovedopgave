@@ -55,7 +55,7 @@ export default class Home extends Vue {
     regionsField =
         [
             { value: "Sjælland", text: "Sjælland" },
-            { value: "Jylland", text: "Jylland" },
+            { value: "Nordjylland", text: "Jylland" },
             { value: "Hovedstaden", text: "Hovedstaden" },
             { value: "Midtjylland", text: "Midtjylland" },
             { value: "Syddanmark", text: "Syddanmark" }
