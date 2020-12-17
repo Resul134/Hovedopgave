@@ -6,7 +6,7 @@ export async function GetQualifications() {
     });
 }
 
-export function OpretBruger(UserID: number, Skill: string) {
+export function OpretQualification(UserID: number, Skill: string) {
     return axios.post(`${apiEndPoint}/qualifications`, {
         UserID: UserID,
         Skill: Skill
