@@ -17,11 +17,8 @@
             </b-list-group-item>
         </b-list-group>
         <h3>Pris</h3>
-        <label class="from">Fra</label>
-        <label class="to">Til</label>
         <div class="price">
-            <b-form-input class="price" v-model="minPrice" placeholder="Pris"></b-form-input>
-            <b-form-input class="price" v-model="maxPrice" placeholder="Pris"></b-form-input>
+            <RangeSlider minValue="0" maxValue="10000" fromValue="0" toValue="10000" />
         </div>
         <h3>Dato</h3>
         <div class="date">
@@ -37,12 +34,17 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
+import RangeSlider from "../components/RangeSlider.vue";
 import { Region } from "../types/region";
 import { Category } from "../types/category";
 import { Dictionary } from "../types/dict";
 import { GetCategories } from "../api/category";
 
-@Component
+@Component({
+    components: {
+        RangeSlider
+    }
+})
 export default class Sidebar extends Vue {
     categories = [] as Category[];
     currentCategory = {} as Category;
@@ -178,6 +180,7 @@ h3 {
     box-shadow: 5px 0px 5px whitesmoke;
     top: 65px;
     overflow: auto;
+    z-index: 5;
 }
 
 .group {
