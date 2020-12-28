@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GetTaskById } from "../api/task";
+import { GetTaskById, RedigerTask } from "../api/task";
 import { GetBrugerById, GetLoggedInId } from "../api/user";
 import { GetAssignedUserMatch, OpretAssignedUser, DeleteAssignedUser } from "../api/assignedUser";
 import { Task } from "../types/task";
@@ -87,6 +87,11 @@ export default class SeeMore extends Vue {
     description = "";
     region = "";
     status = "";
+    pageViews = null;
+    userID = null;
+    categoryID = null;
+    promoted = null;
+    promotedEnd: Date = new Date();
 
     user = {} as User;
     firstName = "";
@@ -115,14 +120,21 @@ export default class SeeMore extends Vue {
         } else {
             GetTaskById(this.$store.state.taskID).then(response => {
                 this.task = response.data;
+                this.userID = response.data.userID;
+                this.categoryID = response.data.categoryID;
                 this.region = response.data.region;
                 this.status = response.data.status;
                 this.date = response.data.date;
                 this.title = response.data.title;
                 this.price = response.data.price;
                 this.description = response.data.description;
+                this.pageViews = response.data.pageViews;
+                this.promoted = response.data.promoted;
+                this.promotedEnd = response.data.promotedEnd;
 
                 this.loadKommentarer();
+
+                RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
             });
             GetBrugerById(this.$store.state.userID).then(response => {
                 this.firstName = response.data.firstName;
@@ -130,7 +142,6 @@ export default class SeeMore extends Vue {
                 this.userMail = response.data.email;
                 this.userNumber = response.data.phone;
             });
-
             if (this.$store.state.loggedIn) {
                 if (GetLoggedInId() === this.$store.state.userID.toString()) {
                     this.isTaskCreator = true;
