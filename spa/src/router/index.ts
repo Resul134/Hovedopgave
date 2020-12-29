@@ -11,6 +11,7 @@ import SeeMore from "../views/SeeMore.vue";
 import ArbejdsOpgave from "../views/ArbejdsOpgave.vue";
 import MyTasks from "../views/MyTasks.vue";
 import MyAssignedUsers from "../views/MyAssignedUsers.vue";
+import NotFound from "../components/NotFound.vue";
 
 Vue.use(VueRouter);
 
@@ -79,10 +80,16 @@ const routes: Array<RouteConfig> = [
         path: "/assignedUsers",
         name: "AssignedUsers",
         component: MyAssignedUsers
+    },
+    {
+        path: "*",
+        name: "NotFound",
+        component: NotFound
     }
 ];
 
 const router = new VueRouter({
+    mode: "history",
     routes
 });
 
