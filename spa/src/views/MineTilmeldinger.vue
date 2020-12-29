@@ -1,5 +1,4 @@
 <template>
-    <!-- <div v-if="!AssignedUsers.length < 1"><h3 class="nousers"><span>Ingen tilmeldte opgaver!</span></h3></div> -->
     <div>
         <h2 class="accepted">Godkendt</h2>
         <div>
@@ -9,9 +8,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div v-else>
-           <h2>Du har ingen godkendte tilmeldinger</h2>
-        </div> -->
         <h2 class="pending">Afventer afklaring</h2>
         <div>
             <div v-for="(pendingTask, idx) in TasksPending" :key="idx" class="box">
@@ -20,9 +16,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div v-else>
-            <h2>Du har ingen afventende tilmeldinger</h2>
-        </div> -->
         <h2 class="denied">Afvist</h2>
         <div>
             <div v-for="(deniedTask, idx) in TasksDenied" :key="idx" class="task">
@@ -31,9 +24,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div v-else>
-            <h2>Du har ingen afviste tilmeldinger</h2>
-        </div> -->
     </div>
 </template>
 
