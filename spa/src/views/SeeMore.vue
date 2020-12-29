@@ -59,9 +59,9 @@
                     <p><strong>Oprettet: </strong>{{ date | formatDate }}</p>
                     <p><strong>Region: </strong>{{region}}</p>
                     <p><strong >Status: </strong><span :class="status" style="margin-right: 5px;">{{status}}</span>
-                    <b-button variant="primary" class="circleButton" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator"></b-button>
-                    <b-button variant="primary" class="circleButton" style="background-color: #ffab00;" @click="changeYellow()" v-if="isTaskCreator"></b-button>
-                    <b-button variant="primary" class="circleButton" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator"></b-button>
+                    <b-button class="circleButton" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator"></b-button>
+                    <b-button class="circleButton" style="background-color: #ffab00;" @click="changeYellow()" v-if="isTaskCreator"></b-button>
+                    <b-button class="circleButton" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator"></b-button>
                     </p>
                 </div>
                  <b-button variant="primary" class="tilmeldt-button mt-3" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
