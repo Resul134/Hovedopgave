@@ -34,6 +34,23 @@ export function CreateTask(UserID: number, CategoryID: number, DateCreated: stri
         PageViews: 0
     });
 }
+
+export function RedigerTask(id: number, UserID: number, CategoryID: number, DateCreated: string, Title: string, Price: number, Description: string, Status: string, Promoted: boolean, Region: string, promotedEnd: string, pageViews: number) {
+    return axios.put(`${apiEndPoint}/tasks/${id}`, {
+        UserID: UserID,
+        CategoryID: CategoryID,
+        Date: DateCreated,
+        Title: Title,
+        Price: Price,
+        Description: Description,
+        Status: Status,
+        Promoted: Promoted,
+        Region: Region,
+        PromotedEnd: promotedEnd,
+        PageViews: pageViews
+    });
+}
+
 export function GetTasksByFilter(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string, search: string) {
     let apiString = `${apiEndPoint}/tasks/filter?`;
     if (categoryId) {

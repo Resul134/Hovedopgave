@@ -68,7 +68,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GetTaskById } from "../api/task";
+import { GetTaskById, RedigerTask } from "../api/task";
 import { GetBrugerById, GetLoggedInId } from "../api/user";
 import { GetAssignedUserMatch, OpretAssignedUser, DeleteAssignedUser } from "../api/assignedUser";
 import { Task } from "../types/task";
@@ -123,6 +123,8 @@ export default class SeeMore extends Vue {
                 this.description = response.data.description;
 
                 this.loadKommentarer();
+
+                RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
             });
             GetBrugerById(this.$store.state.userID).then(response => {
                 this.firstName = response.data.firstName;
@@ -130,7 +132,6 @@ export default class SeeMore extends Vue {
                 this.userMail = response.data.email;
                 this.userNumber = response.data.phone;
             });
-
             if (this.$store.state.loggedIn) {
                 if (GetLoggedInId() === this.$store.state.userID.toString()) {
                     this.isTaskCreator = true;
