@@ -58,7 +58,11 @@
                     <p class="font-weight-bold text-center">Praktisk<p/>
                     <p><strong>Oprettet: </strong>{{ date | formatDate }}</p>
                     <p><strong>Region: </strong>{{region}}</p>
-                    <p><strong >Status: </strong><span :class="status">{{status}}</span></p>
+                    <p><strong >Status: </strong><span :class="status" style="margin-right: 5px;">{{status}}</span>
+                    <b-button variant="primary" class="circleButton" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator"></b-button>
+                    <b-button variant="primary" class="circleButton" style="background-color: #ffab00;" @click="changeYellow()" v-if="isTaskCreator"></b-button>
+                    <b-button variant="primary" class="circleButton" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator"></b-button>
+                    </p>
                 </div>
                  <b-button variant="primary" class="tilmeldt-button mt-3" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
             </b-col>
@@ -107,6 +111,21 @@ export default class SeeMore extends Vue {
 
     mom(date: Date) {
         return moment(date);
+    }
+
+    changeGreen() {
+        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Ledig", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
+        this.status = "Ledig";
+    }
+
+    changeYellow() {
+        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Aktiv", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
+        this.status = "Aktiv";
+    }
+
+    changeRed() {
+        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Løst", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
+        this.status = "Løst";
     }
 
     mounted() {
@@ -265,6 +284,15 @@ svg {
     top: 0px;
     right: 0px;
     text-align: center;
+}
+
+.circleButton {
+    width: 10px;
+    height: 10px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    margin-right: 3px;
+    border-style: none;
 }
 
 .font-weight-bold {
