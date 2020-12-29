@@ -62,14 +62,6 @@ namespace RestAPI.Controllers
             return mngTasks.GetTasksByFilter(qtask);
         }
 
-        [HttpGet]
-        [Route("GetTaskFromIDAndStatus/{id}/{status}")]
-        public Task GetTaskFromIdAndStatus(int id, string status)
-        {
-            ManageTasks mngTasks = new ManageTasks();
-            return mngTasks.GetTaskByIdAndStatus(id, status);
-        }
-
         // POST api/tasks
         [HttpPost]
         public void Post([FromBody] Task task)

@@ -20,10 +20,6 @@ export function GetTasksByUserID(userID: number) {
     });
 }
 
-export function GetTaskByIDandStatus(id: number, status: string) {
-    return axios.get(`${apiEndPoint}tasks/GetTaskFromIDAndStatus/${id}/${status}`);
-}
-
 export function RedigerTask(id: number, UserID: number, CategoryID: number, DateCreated: string, Title: string, Price: number, Description: string, Status: string, Promoted: boolean, Region: string, promotedEnd: string, pageViews: number) {
     return axios.put(`${apiEndPoint}/tasks/${id}`, {
         UserID: UserID,
