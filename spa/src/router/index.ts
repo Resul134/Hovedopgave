@@ -11,6 +11,7 @@ import SeeMore from "../views/SeeMore.vue";
 import ArbejdsOpgave from "../views/ArbejdsOpgave.vue";
 import MyTasks from "../views/MyTasks.vue";
 import MyAssignedUsers from "../views/MyAssignedUsers.vue";
+import NotFound from "../components/NotFound.vue";
 import MineTilmeldinger from "../views/MineTilmeldinger.vue";
 
 Vue.use(VueRouter);
@@ -82,6 +83,11 @@ const routes: Array<RouteConfig> = [
         component: MyAssignedUsers
     },
     {
+        path: "*",
+        name: "NotFound",
+        component: NotFound
+    },
+    {
         path: "/mineTilmeldinger",
         name: "MineTilmeldinger",
         component: MineTilmeldinger
@@ -89,6 +95,7 @@ const routes: Array<RouteConfig> = [
 ];
 
 const router = new VueRouter({
+    mode: "history",
     routes
 });
 
