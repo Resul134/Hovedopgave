@@ -295,6 +295,11 @@ svg {
     border-style: none;
 }
 
+.circleButton:hover {
+    border-style: solid;
+    border-color: black;
+}
+
 .font-weight-bold {
     border-bottom: 1px solid darken($light, 10);
     padding-bottom: 10px;
