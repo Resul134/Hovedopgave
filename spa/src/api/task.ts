@@ -14,9 +14,14 @@ export function GetTasksByCategory(id: number) {
 export function DeleteAllTaskByUserID(id: number) {
     return axios.delete(`${apiEndPoint}/tasks/deleteTaskByID/${id}`);
 }
-export async function GetTasksByUserID(userID: number) {
+
+export function GetTasksByUserID(userID: number) {
     return axios.get(`${apiEndPoint}tasks/MyTasks/${userID}`, {
     });
+}
+
+export function GetTaskByIDandStatus(id: number, status: string) {
+    return axios.get(`${apiEndPoint}tasks/GetTaskFromIDAndStatus/${id}/${status}`);
 }
 
 export function CreateTask(UserID: number, CategoryID: number, DateCreated: string, Title: string, Price: number, Description: string, Promoted: boolean, Region: string, promotedEnd: string) {
@@ -34,23 +39,6 @@ export function CreateTask(UserID: number, CategoryID: number, DateCreated: stri
         PageViews: 0
     });
 }
-
-export function RedigerTask(id: number, UserID: number, CategoryID: number, DateCreated: string, Title: string, Price: number, Description: string, Status: string, Promoted: boolean, Region: string, promotedEnd: string, pageViews: number) {
-    return axios.put(`${apiEndPoint}/tasks/${id}`, {
-        UserID: UserID,
-        CategoryID: CategoryID,
-        Date: DateCreated,
-        Title: Title,
-        Price: Price,
-        Description: Description,
-        Status: Status,
-        Promoted: Promoted,
-        Region: Region,
-        PromotedEnd: promotedEnd,
-        PageViews: pageViews
-    });
-}
-
 export function GetTasksByFilter(categoryId: string, region: string, minPrice: string, maxPrice: string, minDate: string, maxDate: string, search: string) {
     let apiString = `${apiEndPoint}/tasks/filter?`;
     if (categoryId) {

@@ -11,6 +11,8 @@ namespace RestAPI.DBUtil
 
         Task GetTaskFromId(int id);
 
+        Task GetTaskByIdAndStatus(int id, string status);
+
         List<Task> GetTasksFromTitle(string title);
 
         bool deleteAllTasksByUserID(int userID);

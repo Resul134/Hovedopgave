@@ -17,6 +17,14 @@ export function RemoveAssignedUser(userid: number) {
     return axios.delete(`${apiEndPoint}/assignedusers/task/RemoveAssignedUser/${userid}`);
 }
 
+export async function GetMyAcceptedAssignments(userid: number) {
+    return await axios.get(`${apiEndPoint}/assignedusers/GetAcceptedAssignments/${userid}`);
+}
+
+export async function GetMyDeniedAssignments(userid: number) {
+    return await axios.get(`${apiEndPoint}/assignedusers/GetDeniedAssignments/${userid}`);
+}
+
 export function OpretAssignedUser(taskID: number, userID: number, accepted: boolean) {
     return axios.post(`${apiEndPoint}/assignedusers`, {
         TaskID: taskID,

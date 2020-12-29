@@ -69,6 +69,22 @@ namespace RestAPI.Controllers
             return manageAssignedUser.deleteAssignedUsers(id);
         }
 
+        [HttpGet]
+        [Route("GetAcceptedAssignments/{id}")]
+        public List<AssignedUser> AcceptedAssignments(int id)
+        {
+            ManageAssignedUsers mngAssignedUsers = new ManageAssignedUsers();
+            return mngAssignedUsers.getAcceptedAssignments(id);
+        }
+
+        [HttpGet]
+        [Route("GetDeniedAssignments/{id}")]
+        public List<AssignedUser> DeniedAssignments(int id)
+        {
+            ManageAssignedUsers mngAssignedUsers = new ManageAssignedUsers();
+            return mngAssignedUsers.getDeniedAssignments(id);
+        }
+
         [HttpDelete("deniedUsers/{taskid}")]
         public bool DeleteDeniedUsers(int taskid)
         {

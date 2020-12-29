@@ -79,6 +79,66 @@ namespace RestAPI.DBUtil
             }
         }
 
+        public List<AssignedUser> getAcceptedAssignments(int id)
+        {
+            List<AssignedUser> assignedUsersList = new List<AssignedUser>();
+            string queryString = "SELECT * FROM AssignedUser WHERE UserID = @id AND Accepted = 1";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+                command.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        AssignedUser assignedUsers = new AssignedUser();
+                        assignedUsers.ID = reader.GetInt32(0);
+                        assignedUsers.TaskID = reader.GetInt32(1);
+                        assignedUsers.UserID = reader.GetInt32(2);
+                        assignedUsers.Accepted = reader.GetBoolean(3);
+                        assignedUsersList.Add(assignedUsers);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            return assignedUsersList;
+        }
+
+        public List<AssignedUser> getDeniedAssignments(int id)
+        {
+            List<AssignedUser> assignedUsersList = new List<AssignedUser>();
+            string queryString = "SELECT * FROM AssignedUser WHERE UserID = @id AND Accepted = 0";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+                command.Parameters.AddWithValue("@id", id);
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        AssignedUser assignedUsers = new AssignedUser();
+                        assignedUsers.ID = reader.GetInt32(0);
+                        assignedUsers.TaskID = reader.GetInt32(1);
+                        assignedUsers.UserID = reader.GetInt32(2);
+                        assignedUsers.Accepted = reader.GetBoolean(3);
+                        assignedUsersList.Add(assignedUsers);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            return assignedUsersList;
+        }
+
         public List<AssignedUser> getAllAssignedUsers()
         {
             List<AssignedUser> assignedUsersList = new List<AssignedUser>();
