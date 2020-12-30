@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GetAssignedUsersOnMyTask, DeleteAssignedUser, UpdateAssignedUser, RemoveUsersWhenAccepted } from "@/api/assignedUser";
+import { GetAssignedUsersOnMyTask, UpdateAssignedUser } from "@/api/assignedUser";
 import { GetBrugerById } from "@/api/user";
 import { AssignedUser } from "../types/assignedUser";
 import { User } from "../types/user";
@@ -38,7 +38,7 @@ export default class MyTasks extends Vue {
             this.AssignedUsers = response.data;
             this.AssignedUsers.forEach(element => {
                 console.log(this.AssignedUsers);
-                GetBrugerById(element.userId).then(response => {
+                GetBrugerById(element.userID).then(response => {
                     this.getUser.push(response.data);
                     console.log(response.data.id);
                 });

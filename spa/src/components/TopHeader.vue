@@ -29,6 +29,7 @@
                         </template>
                         <template v-else>
                             <b-dropdown-item to="/profile">Profile</b-dropdown-item>
+                            <b-dropdown-item to="/mineTilmeldinger">Mine tilmeldinger</b-dropdown-item>
                             <b-dropdown-item to="/mytasks">Mine arbejdsopgaver</b-dropdown-item>
                             <b-dropdown-item @click="Logout">Logout</b-dropdown-item>
                         </template>
