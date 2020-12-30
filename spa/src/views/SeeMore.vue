@@ -142,11 +142,11 @@ export default class SeeMore extends Vue {
                 this.loadKommentarer();
 
                 GetBrugerById(this.task.userId).then(response => {
-                this.firstName = response.data.firstName;
-                this.lastName = response.data.lastName;
-                this.userMail = response.data.email;
-                this.userNumber = response.data.phone;
-            });
+                    this.firstName = response.data.firstName;
+                    this.lastName = response.data.lastName;
+                    this.userMail = response.data.email;
+                    this.userNumber = response.data.phone;
+                });
                 if (this.status === "Ledig") {
                     this.isGreen = true;
                 }
@@ -156,7 +156,7 @@ export default class SeeMore extends Vue {
 
                 RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
             });
-            
+
             if (this.$store.state.loggedIn) {
                 if (GetLoggedInId() === this.$store.state.userID.toString()) {
                     this.isTaskCreator = true;
