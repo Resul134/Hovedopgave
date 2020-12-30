@@ -59,9 +59,8 @@
                     <p><strong>Oprettet: </strong>{{ date | formatDate }}</p>
                     <p><strong>Region: </strong>{{region}}</p>
                     <p><strong >Status: </strong><span :class="status" style="margin-right: 5px;">{{status}}</span>
-                    <b-button class="circleButton" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator"></b-button>
-                    <b-button class="circleButton" style="background-color: #ffab00;" @click="changeYellow()" v-if="isTaskCreator"></b-button>
-                    <b-button class="circleButton" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator"></b-button>
+                    <b-button class="circleButton" title="Skift til ledig" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator & (!isGreen || isYellow)"></b-button>
+                    <b-button class="circleButton" title="Skift til løst" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator & (isGreen || isYellow)"></b-button>
                     </p>
                 </div>
                  <b-button variant="primary" class="tilmeldt-button mt-3" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
@@ -91,6 +90,8 @@ export default class SeeMore extends Vue {
     description = "";
     region = "";
     status = "";
+    isGreen = false;
+    isYellow = false;
 
     user = {} as User;
     firstName = "";
@@ -116,16 +117,13 @@ export default class SeeMore extends Vue {
     changeGreen() {
         RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Ledig", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
         this.status = "Ledig";
-    }
-
-    changeYellow() {
-        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Aktiv", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
-        this.status = "Aktiv";
+        this.isGreen = true;
     }
 
     changeRed() {
         RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Løst", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
         this.status = "Løst";
+        this.isGreen = false;
     }
 
     mounted() {
@@ -142,6 +140,14 @@ export default class SeeMore extends Vue {
                 this.description = response.data.description;
 
                 this.loadKommentarer();
+
+                console.log(this.status);
+                if (this.status === "Ledig") {
+                    this.isGreen = true;
+                }
+                if (this.status === "Aktiv") {
+                    this.isYellow = true;
+                }
 
                 RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
             });
