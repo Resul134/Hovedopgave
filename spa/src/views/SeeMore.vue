@@ -58,7 +58,10 @@
                     <p class="font-weight-bold text-center">Praktisk<p/>
                     <p><strong>Oprettet: </strong>{{ date | formatDate }}</p>
                     <p><strong>Region: </strong>{{region}}</p>
-                    <p><strong >Status: </strong><span :class="status">{{status}}</span></p>
+                    <p><strong >Status: </strong><span :class="status" style="margin-right: 5px;">{{status}}</span>
+                    <b-button class="circleButton" title="Skift til ledig" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator & (!isGreen || isYellow)"></b-button>
+                    <b-button class="circleButton" title="Skift til løst" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator & (isGreen || isYellow)"></b-button>
+                    </p>
                 </div>
                  <b-button variant="primary" class="tilmeldt-button mt-3" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
             </b-col>
@@ -87,6 +90,8 @@ export default class SeeMore extends Vue {
     description = "";
     region = "";
     status = "";
+    isGreen = false;
+    isYellow = false;
 
     user = {} as User;
     firstName = "";
@@ -109,6 +114,18 @@ export default class SeeMore extends Vue {
         return moment(date);
     }
 
+    changeGreen() {
+        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Ledig", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
+        this.status = "Ledig";
+        this.isGreen = true;
+    }
+
+    changeRed() {
+        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Løst", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
+        this.status = "Løst";
+        this.isGreen = false;
+    }
+
     mounted() {
         if (this.$store.state.taskID === null) {
             this.$router.push({ name: "About" });
@@ -124,14 +141,22 @@ export default class SeeMore extends Vue {
 
                 this.loadKommentarer();
 
-                RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
-            });
-            GetBrugerById(this.$store.state.userID).then(response => {
+                GetBrugerById(this.task.userId).then(response => {
                 this.firstName = response.data.firstName;
                 this.lastName = response.data.lastName;
                 this.userMail = response.data.email;
                 this.userNumber = response.data.phone;
             });
+                if (this.status === "Ledig") {
+                    this.isGreen = true;
+                }
+                if (this.status === "Aktiv") {
+                    this.isYellow = true;
+                }
+
+                RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
+            });
+            
             if (this.$store.state.loggedIn) {
                 if (GetLoggedInId() === this.$store.state.userID.toString()) {
                     this.isTaskCreator = true;
@@ -265,6 +290,20 @@ svg {
     top: 0px;
     right: 0px;
     text-align: center;
+}
+
+.circleButton {
+    width: 10px;
+    height: 10px;
+    padding: 6px 0px;
+    border-radius: 15px;
+    margin-right: 3px;
+    border-style: none;
+}
+
+.circleButton:hover {
+    border-style: solid;
+    border-color: black;
 }
 
 .font-weight-bold {
