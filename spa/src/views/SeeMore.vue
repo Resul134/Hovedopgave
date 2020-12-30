@@ -87,6 +87,11 @@ export default class SeeMore extends Vue {
     description = "";
     region = "";
     status = "";
+    pageViews = null;
+    userID = null;
+    categoryID = null;
+    promoted = null;
+    promotedEnd: Date = new Date();
 
     user = {} as User;
     firstName = "";
@@ -115,12 +120,17 @@ export default class SeeMore extends Vue {
         } else {
             GetTaskById(this.$store.state.taskID).then(response => {
                 this.task = response.data;
+                this.userID = response.data.userID;
+                this.categoryID = response.data.categoryID;
                 this.region = response.data.region;
                 this.status = response.data.status;
                 this.date = response.data.date;
                 this.title = response.data.title;
                 this.price = response.data.price;
                 this.description = response.data.description;
+                this.pageViews = response.data.pageViews;
+                this.promoted = response.data.promoted;
+                this.promotedEnd = response.data.promotedEnd;
 
                 this.loadKommentarer();
                 GetBrugerById(this.task.userId).then(response => {
