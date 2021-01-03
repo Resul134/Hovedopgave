@@ -118,12 +118,14 @@ export default class SeeMore extends Vue {
         RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Ledig", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
         this.status = "Ledig";
         this.isGreen = true;
+        this.isYellow = false;
     }
 
     changeRed() {
         RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Løst", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
         this.status = "Løst";
         this.isGreen = false;
+        this.isYellow = false;
     }
 
     mounted() {
