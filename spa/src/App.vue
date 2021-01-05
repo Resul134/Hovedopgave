@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="theme">
     <TopHeader/>
     <Sidebar />
     <div class="router-view">
@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import TopHeader from "@/components/TopHeader.vue";
 import Sidebar from "@/components/Sidebar.vue";
 import Footer from "@/components/Footer.vue";
@@ -22,6 +22,18 @@ import Footer from "@/components/Footer.vue";
     }
 })
 export default class App extends Vue {
+    theme = localStorage.getItem("theme");
+
+    mounted() {
+        if (localStorage.getItem("theme") === undefined || localStorage.getItem("theme") === null) {
+            localStorage.setItem("theme", "light");
+            this.theme = localStorage.getItem("theme");
+        }
+    }
+
+    @Watch("$store.state.themeUpdate") t() {
+        this.theme = localStorage.getItem("theme");
+    }
 }
 
 </script>

@@ -9,7 +9,7 @@
                 </div>
                 <div class="d-flex" style="flex-direction: column">
                     <h1 class="mt-4">Kommentarer</h1>
-                    <b-textarea v-model="comment" placeholder="Skriv her.." rows="4"></b-textarea>
+                    <b-textarea class="comment" v-model="comment" placeholder="Skriv her.." rows="4"></b-textarea>
                     <button @click="kommenter()" class="btn btn-primary mt-3 ml-auto">Skriv kommentar</button>
                     <div class="comments" v-if="allowLoad">
                         <div :key="comment.date" v-for="comment in comments" class="comment" :class="{ active : comment.userID === task.userId }">
@@ -17,7 +17,7 @@
                         <p>{{ comment.message }}</p>
                     </div>
                     </div>
-                    <div v-else>
+                    <div v-else class="no-comments">
                         Der er ingen kommentarer på opslaget.
                     </div>
                 </div>
@@ -59,9 +59,9 @@
                     <p><strong>Oprettet: </strong>{{ date | formatDate }}</p>
                     <p><strong>Region: </strong>{{region}}</p>
                     <p><strong >Status: </strong><span :class="status" style="margin-right: 5px;">{{status}}</span>
-                    <b-button class="circleButton" title="Skift til ledig" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator & (!isGreen || isYellow)"></b-button>
-                    <b-button class="circleButton" title="Skift til løst" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator & (isGreen || isYellow)"></b-button>
-                    </p>
+                    <b-button class="circleButton" title="Skift til ledig" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator && (!isGreen || isYellow)"></b-button>
+                    <b-button class="circleButton" title="Skift til løst" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator && (isGreen || isYellow)"></b-button>
+                    <p v-if="isTaskCreator"><strong>Visninger: </strong>{{ task.pageViews }}</p>
                 </div>
                  <b-button variant="primary" class="tilmeldt-button mt-3" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
             </b-col>
@@ -157,6 +157,7 @@ export default class SeeMore extends Vue {
                 }
 
                 RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
+                this.task.pageViews++;
             });
 
             if (this.$store.state.loggedIn) {
@@ -295,9 +296,10 @@ svg {
 }
 
 .circleButton {
-    width: 10px;
-    height: 10px;
-    padding: 6px 0px;
+    padding: 0px;
+    display: inline-block;
+    width: 13px;
+    height: 13px;
     border-radius: 15px;
     margin-right: 3px;
     border-style: none;

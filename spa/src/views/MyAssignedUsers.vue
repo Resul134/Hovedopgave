@@ -1,17 +1,19 @@
 <template>
-    <div v-if="AssignedUsers.length < 1"><h3 class="nousers"><span>Ingen tilmeldte brugere!</span></h3></div>
-    <div v-else>
-        <h2>Tilmeldte brugere</h2>
-            <div v-for="(assignedUser, idx) in AssignedUsers" :key="idx" class="box">
-                <div>
+    <div>
+        <div v-if="!allow"><h3 class="nousers"><span>Ingen tilmeldte brugere!</span></h3></div>
+        <div v-if="AssignedUsers.length > 0 && allow">
+            <h2>Tilmeldte brugere</h2>
+                <div v-for="(assignedUser, idx) in AssignedUsers" :key="idx" class="box">
                     <div>
-                        <h4>Navn: <b-button @click="goToProfile(assignedUser.userID)" class="goto">{{ getUser[idx].firstName + " " + getUser[idx].lastName }}</b-button></h4>
-                        <h4 v-if="!assignedUser.accepted" class="notaccepted">Ikke godkendt</h4>
-                        <h4 v-if="assignedUser.accepted" class="accepted">Godkendt</h4>
+                        <div>
+                            <h4>Navn: <b-button @click="goToProfile(assignedUser.userID)" class="goto">{{ getUser[idx].firstName + " " + getUser[idx].lastName }}</b-button></h4>
+                            <h4 v-if="!assignedUser.accepted" class="notaccepted">Ikke godkendt</h4>
+                            <h4 v-if="assignedUser.accepted" class="accepted">Godkendt</h4>
+                        </div>
+                        <b-button v-if="!assignedUser.accepted" variant="success" class="buttons" @click="AcceptUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, true)">Accepter</b-button>
+                        <b-button v-if="assignedUser.accepted" variant="danger" class="buttons" @click="RegretAssignedUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, false)">Fortryd</b-button>
                     </div>
-                    <b-button v-if="!assignedUser.accepted" variant="success" class="buttons" @click="AcceptUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, true)">Accepter</b-button>
-                    <b-button v-if="assignedUser.accepted" variant="danger" class="buttons" @click="RegretAssignedUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, false)">Fortryd</b-button>
-                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -28,6 +30,7 @@ export default class MyTasks extends Vue {
     AssignedUsers = Array<AssignedUser>();
     getUser = Array<User>();
     status = {} as AssignedUser;
+    allow = false;
 
     mounted() {
         this.getAllUsers();
@@ -36,11 +39,15 @@ export default class MyTasks extends Vue {
     getAllUsers() {
         GetAssignedUsersOnMyTask(this.$store.state.AssignedTaskID).then(response => {
             this.AssignedUsers = response.data;
+            let lidx = 0;
             this.AssignedUsers.forEach(element => {
-                console.log(this.AssignedUsers);
                 GetBrugerById(element.userID).then(response => {
                     this.getUser.push(response.data);
-                    console.log(response.data.id);
+
+                    lidx++;
+                    if (lidx === this.AssignedUsers.length) {
+                        this.allow = true;
+                    }
                 });
                 if (element.accepted) {
                     console.log(element.accepted);

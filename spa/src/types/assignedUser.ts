@@ -1,6 +1,6 @@
 export interface AssignedUser {
     id: number;
-    taskId: number;
-    userId: number;
+    taskID: number;
+    userID: number;
     accepted: boolean;
 }
