@@ -50,6 +50,10 @@
                         </p>
                 </div>
             </div>
+            <div class="profile" style="margin-top: 20px;">
+                <p class="font-weight-bold text-center">Bedømmelser</p>
+                <b-form-rating class="rating" v-model="avgRating" readonly></b-form-rating>
+            </div>
         </b-col>
         <b-col cols="1"></b-col>
     </b-row>
@@ -60,8 +64,10 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { GetBrugerById } from "../api/user";
 import { GetQualificationsByUserId } from "../api/qualification";
+import { GetRatingsByUserId } from "../api/rating";
 import { User } from "../types/user";
 import { Qualification } from "../types/qualification";
+import { Rating } from "../types/rating";
 import moment from "moment";
 
 @Component
@@ -77,6 +83,8 @@ export default class Profiles extends Vue {
     userEmail = "";
     userDescription = "";
     userQualifications = Array<Qualification>();
+    userRatings = Array<Rating>();
+    avgRating = 0;
 
     @Watch("$route.query", { immediate: true, deep: true })
     OnParamChange() {
@@ -104,6 +112,20 @@ export default class Profiles extends Vue {
         GetQualificationsByUserId(id).then(response => {
             this.userQualifications = response.data;
         });
+        GetRatingsByUserId(id).then(response => {
+            this.userRatings = response.data;
+            if (this.userRatings) {
+                this.calcRating();
+            }
+        });
+    }
+
+    calcRating() {
+        let sum = 0;
+        this.userRatings.forEach(rating => {
+            sum += rating.rating;
+        });
+        this.avgRating = sum / this.userRatings.length;
     }
 
     mounted() {
@@ -147,4 +169,15 @@ h1 {
     margin-bottom: 35px;
     font-weight: bold;
 }
+
+.rating {
+    background: none;
+    border: none;
+}
+
+.rating:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 </style>
