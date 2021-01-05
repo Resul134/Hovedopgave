@@ -3,10 +3,24 @@
         <b-row>
             <b-col cols="9">
                 <div class="seeMore">
-                    <p class="tag">{{ price }} kr</p>
-                    <h1 class="title">{{title}}</h1>
-                    <p>{{description}} </p>
+                    <p class="tag" v-if="!rediger">{{ price }} kr</p>
+                    <b-input v-model="prisInput" placeholder="Prisen" v-if="rediger" class="pris">kr</b-input>
+                    <h1 class="title" v-if="!rediger">{{title}}</h1>
+                    <b v-if="rediger">Titel</b>
+                    <b-input placeholder="Titlen" v-model="titleInput" v-if="rediger" class="title"></b-input>
+                    <p v-if="!rediger">{{description}} </p>
+                    <b v-if="rediger">Beskrivelse</b>
+                    <b-textarea v-if="rediger" placeholder="Opgavebeskrivelse" v-model="opgaveBeskrivelseInput"></b-textarea>
+                    <div v-if="rediger">
+                        <b>Kategori</b>
+                        <b-form-select v-model="categorySelected">
+                            <b-select-option v-for="(category, index) in categories" :key="index" :value="category.id">{{ category.name }}</b-select-option>
+                        </b-form-select>
                 </div>
+                </div>
+                <b-button v-if="rediger" class="action-buttons" variant="success" @click="redigerOpgave">Godkend</b-button>
+                <b-button class="action-buttons" v-if="isTaskCreator && !rediger" @click="edit" variant="primary">Rediger</b-button>
+                <b-button variant=primary v-if="rediger" @click="edit">Tilbage</b-button>
                 <div class="d-flex" style="flex-direction: column">
                     <h1 class="mt-4">Kommentarer</h1>
                     <b-textarea class="comment" v-model="comment" placeholder="Skriv her.." rows="4"></b-textarea>
@@ -78,6 +92,7 @@ import { Task } from "../types/task";
 import { User } from "../types/user";
 import { AssignedUser } from "../types/assignedUser";
 import { OpretComment, GetCommentsForTask } from "../api/comments";
+import { GetCategories } from "../api/category";
 import Comment from "../types/comments";
 import moment from "moment";
 
@@ -102,6 +117,12 @@ export default class SeeMore extends Vue {
     assignedUser = {} as AssignedUser;
     signedUp = false;
     isTaskCreator = false;
+    rediger = false;
+    titleInput = "";
+    opgaveBeskrivelseInput = "";
+    prisInput = "";
+    categories = [];
+    categorySelected = 0;
 
     // Comments
     comment = "";
@@ -128,6 +149,17 @@ export default class SeeMore extends Vue {
         this.isYellow = false;
     }
 
+    edit() {
+        this.rediger = !this.rediger;
+    }
+
+    redigerOpgave() {
+        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.categorySelected, this.task.date.toString(), this.titleInput, Number(this.prisInput), this.opgaveBeskrivelseInput, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), this.task.pageViews).then(response => {
+            this.rediger = false;
+            this.getAllElements();
+        });
+    }
+
     mounted() {
         if (this.$store.state.taskID === null) {
             this.$router.push({ name: "About" });
@@ -140,6 +172,9 @@ export default class SeeMore extends Vue {
                 this.title = response.data.title;
                 this.price = response.data.price;
                 this.description = response.data.description;
+                this.titleInput = this.task.title;
+                this.opgaveBeskrivelseInput = this.task.description;
+                this.prisInput = this.task.price.toString();
 
                 this.loadKommentarer();
 
@@ -160,6 +195,14 @@ export default class SeeMore extends Vue {
                 this.task.pageViews++;
             });
 
+            GetCategories().then(response => {
+                this.categories = response.data;
+                this.categorySelected = response.data[0].id;
+                console.log(this.categorySelected);
+            }).catch(() => {
+                console.log("Error");
+            });
+
             if (this.$store.state.loggedIn) {
                 if (GetLoggedInId() === this.$store.state.userID.toString()) {
                     this.isTaskCreator = true;
@@ -168,6 +211,36 @@ export default class SeeMore extends Vue {
                 }
             }
         }
+    }
+
+    getAllElements() {
+        GetTaskById(this.$store.state.taskID).then(response => {
+            this.task = response.data;
+            this.region = response.data.region;
+            this.status = response.data.status;
+            this.date = response.data.date;
+            this.title = response.data.title;
+            this.price = response.data.price;
+            this.description = response.data.description;
+            this.titleInput = this.task.title;
+            this.opgaveBeskrivelseInput = this.task.description;
+            this.prisInput = this.task.price.toString();
+
+            this.loadKommentarer();
+
+            GetBrugerById(this.task.userId).then(response => {
+                this.firstName = response.data.firstName;
+                this.lastName = response.data.lastName;
+                this.userMail = response.data.email;
+                this.userNumber = response.data.phone;
+            });
+            if (this.status === "Ledig") {
+                this.isGreen = true;
+            }
+            if (this.status === "Aktiv") {
+                this.isYellow = true;
+            }
+        });
     }
 
     setup() {
@@ -271,6 +344,10 @@ svg {
     }
 }
 
+.action-buttons {
+    margin: 7px;
+}
+
 .name {
     color: $gray;
     cursor: pointer;
@@ -295,6 +372,26 @@ svg {
     text-align: center;
 }
 
+.pris {
+    background: $primary;
+    font-weight: 700;
+    padding: 5px;
+    padding-left: 10px;
+    color: white;
+    border-radius: 0 7px 0 7px;
+    display: inline-block;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    text-align: center;
+    width: 12%;
+    animation:blinking 1.5s infinite;
+}
+
+@keyframes blinking{
+0%{   color: red;   }
+}
+
 .circleButton {
     padding: 0px;
     display: inline-block;
@@ -303,6 +400,11 @@ svg {
     border-radius: 15px;
     margin-right: 3px;
     border-style: none;
+}
+
+.title {
+    width: 70%;
+    margin-bottom: 10px;
 }
 
 .circleButton:hover {
