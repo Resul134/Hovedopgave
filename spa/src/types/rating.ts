@@ -6,10 +6,3 @@ export interface Rating {
     rating: number;
     message: string;
 }
-
-export interface RatingPlus {
-    name: string;
-    date: Date;
-    rating: number;
-    message: string;
-}
