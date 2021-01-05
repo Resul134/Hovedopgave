@@ -31,6 +31,7 @@
                             <b-dropdown-item to="/profile">Profile</b-dropdown-item>
                             <b-dropdown-item to="/mineTilmeldinger">Mine tilmeldinger</b-dropdown-item>
                             <b-dropdown-item to="/mytasks">Mine arbejdsopgaver</b-dropdown-item>
+                            <b-dropdown-item @click="changeTheme">Skift til <template v-if="theme === 'light'">Mørkt tema</template><template v-else>Lyst tema</template></b-dropdown-item>
                             <b-dropdown-item @click="Logout">Logout</b-dropdown-item>
                         </template>
                     </b-dropdown>
@@ -48,8 +49,18 @@ export default class TopHeader extends Vue {
     searchBarInput = "";
     queries = {} as Dictionary<string>;
 
+    theme = localStorage.getItem("theme");
+
     @Watch("$store.state.loggedIn") t() {
         this.loggedIn = this.$store.state.loggedIn;
+    }
+
+    changeTheme() {
+        if (this.theme === "light") localStorage.setItem("theme", "dark");
+        else localStorage.setItem("theme", "light");
+
+        this.theme = localStorage.getItem("theme");
+        this.$store.commit("themeUpdate");
     }
 
     submit() {
