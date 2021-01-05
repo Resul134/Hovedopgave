@@ -11,16 +11,6 @@
                             <h4 v-if="!assignedUser.accepted" class="notaccepted">Ikke godkendt</h4>
                             <h4 v-if="assignedUser.accepted" class="accepted">Godkendt</h4>
                         </div>
-                        <div v-if="assignedUser.accepted && !alreadyRated">
-                            <h5>Anmeldelse:</h5>
-                            <b-form-rating v-if="!alreadyRated" class="rating" no-border inline v-model="rating"></b-form-rating>
-                            <b-form-rating v-if="alreadyRated" class="rating" inline readonly></b-form-rating>
-                            <b-textarea v-if="!alreadyRated" v-model="message" rows="4"></b-textarea>
-                            <p v-if="alreadyRated">{{ message }}</p>
-                            <div v-if="!alreadyRated" style="text-align: right;">
-                                <b-button variant="primary" style="margin-top: 10px">Anmeld</b-button>
-                            </div>
-                        </div>
                     </div>
                     <b-button v-if="!assignedUser.accepted" variant="success" class="buttons" @click="AcceptUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, true)">Accepter</b-button>
                     <b-button v-if="assignedUser.accepted" variant="danger" class="buttons" @click="RegretAssignedUser(assignedUser.id, assignedUser.taskID, assignedUser.userID, false)">Fortryd</b-button>
@@ -34,8 +24,10 @@
 import { Component, Vue } from "vue-property-decorator";
 import { GetAssignedUsersOnMyTask, UpdateAssignedUser } from "@/api/assignedUser";
 import { GetBrugerById } from "@/api/user";
+import { GetRatingByUserIdAndTaskId, CreateRating } from "@/api/rating";
 import { AssignedUser } from "../types/assignedUser";
 import { User } from "../types/user";
+import moment from "moment";
 
 @Component
 export default class MyTasks extends Vue {
@@ -43,7 +35,6 @@ export default class MyTasks extends Vue {
     getUser = Array<User>();
     status = {} as AssignedUser;
     allow = false;
-    alreadyRated = false;
 
     mounted() {
         this.getAllUsers();
@@ -145,14 +136,5 @@ export default class MyTasks extends Vue {
     background: #28a745;
     color: white;
     border-radius: 7px;
-}
-.rating {
-    padding: 0;
-    background: none;
-    border: none;
-}
-.rating:focus {
-  outline: none;
-  box-shadow: none;
 }
 </style>

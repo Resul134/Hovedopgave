@@ -51,8 +51,16 @@
                 </div>
             </div>
             <div class="profile" style="margin-top: 20px;">
-                <p class="font-weight-bold text-center">Bedømmelser</p>
-                <b-form-rating class="rating" v-model="avgRating" readonly></b-form-rating>
+                <p class="text-center" style="font-weight: bold;">Bedømmelser</p>
+                <b-form-rating class="rating" v-model="avgRating" readonly show-value></b-form-rating>
+                <p class="font-weight-bold"></p>
+                <div class="ratinglist">
+                    <div v-for="(rating, idx) in raters" :key="idx" class="font-weight-bold rating-box">
+                        <p style="margin: 0;">{{ rating.name }}</p>
+                        <b-form-rating class="rating" style="padding-left: 0" v-model="rating.rating" readonly inline></b-form-rating>
+                        <p style="font-weight: normal;">{{ rating.message }}</p>
+                    </div>
+                </div>
             </div>
         </b-col>
         <b-col cols="1"></b-col>
@@ -63,11 +71,14 @@
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { GetBrugerById } from "../api/user";
+import { GetTaskById } from "../api/task";
 import { GetQualificationsByUserId } from "../api/qualification";
 import { GetRatingsByUserId } from "../api/rating";
+import { Task } from "../types/task";
 import { User } from "../types/user";
 import { Qualification } from "../types/qualification";
-import { Rating } from "../types/rating";
+import { Rating, RatingPlus } from "../types/rating";
+import { Dictionary } from "../types/dict";
 import moment from "moment";
 
 @Component
@@ -84,6 +95,7 @@ export default class Profiles extends Vue {
     userDescription = "";
     userQualifications = Array<Qualification>();
     userRatings = Array<Rating>();
+    raters = Array<RatingPlus>();
     avgRating = 0;
 
     @Watch("$route.query", { immediate: true, deep: true })
@@ -116,7 +128,22 @@ export default class Profiles extends Vue {
             this.userRatings = response.data;
             if (this.userRatings) {
                 this.calcRating();
+                this.getNames();
             }
+        });
+    }
+
+    getNames() {
+        this.raters = Array<RatingPlus>();
+        this.userRatings.forEach(rating => {
+            const ratingPlus = {} as RatingPlus;
+            GetBrugerById(rating.userID).then(response => {
+                ratingPlus.name = response.data.firstName + " " + response.data.lastName;
+                ratingPlus.date = rating.date;
+                ratingPlus.rating = rating.rating;
+                ratingPlus.message = rating.message;
+                this.raters.push(ratingPlus);
+            });
         });
     }
 
@@ -126,10 +153,6 @@ export default class Profiles extends Vue {
             sum += rating.rating;
         });
         this.avgRating = sum / this.userRatings.length;
-    }
-
-    mounted() {
-        this.Setup();
     }
 }
 </script>
@@ -169,15 +192,19 @@ h1 {
     margin-bottom: 35px;
     font-weight: bold;
 }
-
+.rating-box:last-child {
+    border-bottom: none;
+}
 .rating {
     background: none;
     border: none;
 }
-
 .rating:focus {
   outline: none;
   box-shadow: none;
 }
-
+.ratinglist {
+    max-height: 300px;
+    overflow: auto;
+}
 </style>
