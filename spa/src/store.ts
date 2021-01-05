@@ -9,7 +9,8 @@ export default new Vuex.Store({
         queries: null,
         taskID: null,
         userID: null,
-        AssignedTaskID: null
+        AssignedTaskID: null,
+        themeUpdate: 0
     },
     mutations: {
         loggedInState(state, payload) {
@@ -26,6 +27,9 @@ export default new Vuex.Store({
         },
         AssignedTaskID(state, payload) {
             state.AssignedTaskID = payload;
+        },
+        themeUpdate(state) {
+            state.themeUpdate++;
         }
     }
 });
