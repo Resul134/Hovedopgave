@@ -204,7 +204,7 @@ export default class SeeMore extends Vue {
 
     mounted() {
         if (this.$store.state.taskID === null) {
-            this.$router.push({ name: "About" });
+            this.$router.push({ name: "Home" });
         } else {
             GetTaskById(this.$store.state.taskID).then(response => {
                 this.task = response.data;
@@ -233,7 +233,7 @@ export default class SeeMore extends Vue {
                     this.isYellow = true;
                 }
 
-                RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
+                RedigerTask(this.task.id, this.task.userId, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
                 this.task.pageViews++;
             });
 
@@ -246,7 +246,7 @@ export default class SeeMore extends Vue {
             });
 
             if (this.$store.state.loggedIn) {
-                if (GetLoggedInId() === this.$store.state.userID.toString()) {
+                if (GetLoggedInId() === this.task.userId) {
                     this.isTaskCreator = true;
                 } else {
                     this.setup();
@@ -268,7 +268,7 @@ export default class SeeMore extends Vue {
     }
 
     getAllElements() {
-        GetTaskById(this.$store.state.taskID).then(response => {
+        GetTaskById(this.task.id).then(response => {
             this.task = response.data;
             this.region = response.data.region;
             this.status = response.data.status;
