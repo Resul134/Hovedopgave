@@ -5,7 +5,7 @@
         <b-col lg="6" sm=12>
             <h1 class="title">Workio</h1>
             <p class="sub">Din markedsplads til arbejdsopgaver.</p>
-            <p class="desc">Om du ønsker at få løst arbejdsopgaver, eller være personen der løser opgaverne, er Workio stedet for dig. Hos Workio sikrer vi os at processen er så nem for begge parter som muligt, hvilket ultimativt giver den bedste arbejdsoplevelse.</p>
+            <p class="desc">Om du ønsker at få løst arbejdsopgaver, eller være personen der løser opgaverne, er Workio stedet for dig. Hos Workio sikrer vi os at processen er så nem for begge parter som muligt, hvilket ultimativt giver den bedste arbejdsoplevelse. Kom godt i gang og lav din nye profil, <a class="her" @click="toRegister()">her</a>.</p>
         </b-col>
         <b-col lg="6" sm=12>
             <img src="../assets/forside.jpg">
@@ -64,6 +64,10 @@ export default class Home extends Vue {
         this.$store.commit("taskID", taskID);
         this.$router.push({ name: "SeeMore" });
     }
+
+    toRegister() {
+        this.$router.push({ name: "Register" });
+    }
 }
 </script>
 
@@ -94,6 +98,11 @@ export default class Home extends Vue {
         margin-top: 65px;
         margin-bottom: 15px;
         font-size: 24px;
+    }
+    a:hover {
+    color: blue;
+    text-decoration: none;
+    cursor: pointer;
     }
 
     .cta {
