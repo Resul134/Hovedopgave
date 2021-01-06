@@ -77,6 +77,7 @@
                     <b-button class="circleButton" title="Skift til ledig" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator && (!isGreen || isYellow)"></b-button>
                     <b-button class="circleButton" title="Skift til løst" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator && (isGreen || isYellow)"></b-button>
                     <b-modal v-model="modalShow" hide-footer title="Giv en bedømmelse">
+                        <b-alert v-if="noInput" variant="danger" show>Udfyld felterne</b-alert>
                         <h3>{{ rateUser.firstName }} {{ rateUser.lastName }}</h3>
                         <b-form-rating class="rating" no-border inline v-model="rating"></b-form-rating>
                         <p style="margin-bottom: 1px;">Besked:</p>
@@ -137,6 +138,7 @@ export default class SeeMore extends Vue {
 
     modalShow = false;
     notChosen = false;
+    noInput = false;
     rateUser = {} as User;
     rating = 0;
     message = "";
@@ -161,9 +163,11 @@ export default class SeeMore extends Vue {
 
     changeRed() {
         if (this.rateUser.id) {
+            this.noInput = false;
             this.modalShow = true;
             this.rating = 0;
             this.message = "";
+            this.setValues();
         } else {
             this.notChosen = true;
         }
@@ -346,9 +350,13 @@ export default class SeeMore extends Vue {
 
     RateUser() {
         CreateRating(this.rateUser.id, this.$store.state.taskID, new Date(), this.rating, this.message);
-        this.modalShow = false;
-        this.rating = 0;
-        this.message = "";
+        if (this.rating === 0 || this.message === "") {
+            this.noInput = true;
+        } else {
+            this.modalShow = false;
+            this.rating = 0;
+            this.message = "";
+        }
     }
 }
 </script>
