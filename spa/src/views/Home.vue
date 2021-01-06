@@ -89,19 +89,6 @@ export default class Home extends Vue {
     .container {
         max-width: 1300px;
     }
-    .task {
-        width: 24.25%;
-        margin-right: 1%;
-        margin-bottom: 1%;
-        overflow-wrap: break-word;
-    }
-    .task:nth-child(4n) {
-        margin-right: 0;
-    }
-    .overview {
-        display: flex;
-        flex-wrap: wrap;
-    }
     h2 {
         color: #212121;
         margin-top: 65px;

@@ -17,7 +17,7 @@ $sidebar-width: 230px;
         color: #fff;
     }
 
-    .profile h5, .profile div {
+    .profile h5, .profile div, .errtext {
         color: #fff;
     }
 
@@ -123,5 +123,64 @@ $sidebar-width: 230px;
         label {
             color: #fff;
         }
+    }
+}
+
+.pagination {
+    margin-top: 40px;
+}
+
+.overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-gap: 15px;
+}
+
+.task {
+    overflow-wrap: break-word;
+    max-width: 450px;
+}
+
+.sidebar {
+    transition: .25s;
+}
+
+.sidebar.open {
+    left: 0!important;
+}
+
+.menu {
+    display: none;
+}
+
+@media only screen and (max-width: 830px) {
+    .sidebar {
+        left: -$sidebar-width;
+    }
+    
+    .menu {
+        display: block;
+    }
+
+    .search-bar {
+        width: 70%!important;
+        margin-left: 10px;
+    }
+
+    .router-view {
+        margin-left: 0px!important;
+    }
+
+    footer {
+        margin-left: 0px!important;
+        width: 100%!important;
+    }
+
+    .brand {
+        display: none;
+    }
+
+    .arbejdsopgave-btn {
+        display: none;
     }
 }

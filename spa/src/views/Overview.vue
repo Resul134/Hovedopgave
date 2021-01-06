@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!tasks.length">
+        <div class="errtext" v-if="!tasks.length">
             Der er ingen arbejdsopgaver der matcher dine kriterier.
         </div>
         <div class="overview" v-else>
@@ -71,21 +71,3 @@ export default class Overview extends Vue {
     }
 }
 </script>
-<style scoped lang="scss">
-@import "../assets/main.scss";
-.overview {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.task {
-    width: 24.25%;
-    margin-right: 1%;
-    margin-bottom: 1%;
-    overflow-wrap: break-word;
-}
-
-.task:nth-child(4n) {
-    margin-right: 0;
-}
-</style>

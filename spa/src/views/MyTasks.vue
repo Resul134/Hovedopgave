@@ -42,20 +42,3 @@ export default class MyTasks extends Vue {
     }
 }
 </script>
-<style lang="scss" scoped>
-@import "../assets/main.scss";
-.overview {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.task {
-    width: 24.25%;
-    margin-right: 1%;
-    margin-bottom: 1%;
-}
-
-.task:nth-child(4n) {
-    margin-right: 0;
-}
-</style>

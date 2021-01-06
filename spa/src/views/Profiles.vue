@@ -1,8 +1,8 @@
 <template>
 <div>
     <b-row>
-        <b-col cols="1"></b-col>
-        <b-col cols="7">
+        <b-col xl=1 md=12></b-col>
+        <b-col md=12 xl=7>
             <div class="profile">
                 <b-row>
                     <b-col cols="9">
@@ -43,7 +43,7 @@
                 </b-row>
             </div>
         </b-col>
-        <b-col cols="3">
+        <b-col  xl=3 md=12 class="mt-3 mt-xl-0">
             <div class="profile">
                 <p class="font-weight-bold text-center">Kompetencer</p>
                 <div class="list">

@@ -1,6 +1,11 @@
 <template>
     <div id="rootDiv">
         <b-navbar type="dark" class="header">
+            <b-button class="menu" variant="light" @click="openMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#000000" class="bi bi-list" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                </svg>
+            </b-button>
             <b-navbar-brand class="brand" to="/"><div class="logo-wrap"><img src="../assets/logo-white.png"></div></b-navbar-brand>
             <b-form class="search-bar" @submit.prevent="submit">
                 <b-form-input
@@ -8,16 +13,9 @@
                 v-model="searchBarInput"
                 ></b-form-input>
             </b-form>
-                    <b-button variant="light" class="ml-auto arbejdsopgave-btn" to="/arbejdsopgave" v-if="loggedIn">
-                    <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                        <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                    </svg>
-                    Opret arbejdsopgave
-                    </b-button>
-                    <p v-if="User.firstName !== null && User.firstName !== undefined" style="margin: 0px; color: #fff;">{{ User.firstName + " " + User.lastName }}</p>
-                    <b-dropdown :class="{ 'ml-auto' : !loggedIn }" offset="500" class="icon-only">
+                    <b-dropdown offset="500" class="icon-only ml-auto">
                         <template #button-content>
+                            <span class="ml-auto" v-if="User.firstName !== null && User.firstName !== undefined" style="margin: 0px; color: #fff;">{{ User.firstName + " " + User.lastName + " " }}</span>
                             <svg width="2.2em" height="2.2em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="white" xmlns="http://www.w3.org/2000/svg">
                             <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
                             <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
@@ -30,9 +28,13 @@
                         </template>
                         <template v-else>
                             <b-dropdown-item :to="'/profiles?user=' + id">Min profil</b-dropdown-item>
+                            <b-dropdown-divider></b-dropdown-divider>
+                            <b-dropdown-item to="/arbejdsopgave">Opret arbejdsopgave</b-dropdown-item>
                             <b-dropdown-item to="/mineTilmeldinger">Mine tilmeldinger</b-dropdown-item>
                             <b-dropdown-item to="/mytasks">Mine arbejdsopgaver</b-dropdown-item>
+                            <b-dropdown-divider></b-dropdown-divider>
                             <b-dropdown-item @click="changeTheme">Skift til <template v-if="theme === 'light'">Mørkt tema</template><template v-else>Lyst tema</template></b-dropdown-item>
+                            <b-dropdown-divider></b-dropdown-divider>
                             <b-dropdown-item @click="Logout">Log ud</b-dropdown-item>
                         </template>
                     </b-dropdown>
@@ -53,6 +55,10 @@ export default class TopHeader extends Vue {
     id = "";
     theme = localStorage.getItem("theme");
     User = {} as User;
+
+    openMenu() {
+        document.getElementsByClassName("sidebar")[0].classList.toggle("open");
+    }
 
     @Watch("$store.state.loggedIn") t() {
         this.loggedIn = this.$store.state.loggedIn;
@@ -128,6 +134,10 @@ export default class TopHeader extends Vue {
         max-height: 100%;
         margin: 0 auto;
     }
+}
+
+.menu svg {
+    fill: #000!important;
 }
 
 .arbejdsopgave-btn {
