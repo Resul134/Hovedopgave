@@ -64,6 +64,7 @@
                     </p>
                 </div>
                  <b-button variant="primary" class="tilmeldt-button mt-3" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
+                 <b-button variant="danger" class="tilmeldt-button mt-3" @click="deleteTask()" v-if="isTaskCreator">Slet Opgave</b-button>
             </b-col>
         </b-row>
     </div>
@@ -71,7 +72,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { GetTaskById, RedigerTask } from "../api/task";
+import { GetTaskById, GetTasksByUserID, RedigerTask, DeleteTaskByID } from "../api/task";
 import { GetBrugerById, GetLoggedInId } from "../api/user";
 import { GetAssignedUserMatch, OpretAssignedUser, DeleteAssignedUser } from "../api/assignedUser";
 import { Task } from "../types/task";
@@ -102,6 +103,7 @@ export default class SeeMore extends Vue {
     assignedUser = {} as AssignedUser;
     signedUp = false;
     isTaskCreator = false;
+    accepted = false;
 
     // Comments
     comment = "";
@@ -126,6 +128,16 @@ export default class SeeMore extends Vue {
         this.status = "Løst";
         this.isGreen = false;
         this.isYellow = false;
+    }
+
+    deleteTask() {
+        this.accepted = confirm("Er du sikker på at slette opgaven?");
+
+        if (this.accepted === true) {
+            DeleteTaskByID(this.task.id);
+            this.$router.push({ name: "MyTasks" });
+            GetTasksByUserID(this.task.userId);
+        }
     }
 
     mounted() {
