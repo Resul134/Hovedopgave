@@ -18,6 +18,12 @@
                             <b-select-option v-for="(category, index) in categories" :key="index" :value="category.id">{{ category.name }}</b-select-option>
                         </b-form-select>
                 </div>
+                 <div v-if="rediger">
+                        <b>Region</b>
+                        <b-form-select v-model="regionSelected">
+                            <b-select-option v-for="(region, index) in regions" :key="index" :value="region.name">{{ region.name }}</b-select-option>
+                        </b-form-select>
+                    </div>
                 </div>
                 <b-button v-if="rediger" class="action-buttons" variant="success" @click="redigerOpgave">Godkend</b-button>
                 <b-button class="action-buttons" v-if="isTaskCreator && !rediger" @click="edit" variant="primary">Rediger</b-button>
@@ -43,12 +49,14 @@
 
             <b-col cols="3">
                 <div v-if="this.$store.state.loggedIn">
-                    <div v-if="!isTaskCreator">
+                    <div v-if="!isTaskCreator && !isLost">
                         <button class="mb-3 btn btn-danger" v-if="signedUp" @click="dropOut()" style="width:100%;">Afmeld</button>
                         <button class="mb-3 btn btn-primary" v-else @click="signUp()" style="width:100%;">Tilmeld</button>
                     </div>
                 </div>
                 <button v-else class="mb-3 btn btn-primary" @click="routeLogin()" style="width:100%;">Log ind for at tilmelde</button>
+                <b-button variant="primary" class="tilmeldt-button mb-3" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
+                <b-button variant="danger" class="tilmeldt-button mb-3" @click="deleteTask()" v-if="isTaskCreator">Slet Opgave</b-button>
                 <div class="seeMore">
                     <p class="font-weight-bold text-center">Arbejdsgiver<p/>
                     <p>
@@ -72,13 +80,12 @@
                         {{userNumber}}
                     </p>
                 </div>
+
                 <div class="seeMore mt-3">
                     <p class="font-weight-bold text-center">Praktisk<p/>
                     <p><strong>Oprettet: </strong>{{ mom(new Date(date)).format("DD-MM-YYYY") }}</p>
                     <p><strong>Region: </strong>{{region}}</p>
                     <p><strong >Status: </strong><span :class="status" style="margin-right: 5px;">{{status}}</span>
-                    <b-button class="circleButton" title="Skift til ledig" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator && (!isGreen || isYellow)"></b-button>
-                    <b-button class="circleButton" title="Skift til løst" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator && (isGreen || isYellow)"></b-button>
                     <b-modal v-model="modalShow" hide-footer title="Giv en bedømmelse">
                         <b-alert v-if="noInput" variant="danger" show>Udfyld felterne</b-alert>
                         <h3>{{ rateUser.firstName }} {{ rateUser.lastName }}</h3>
@@ -91,8 +98,7 @@
                     </b-modal>
                     <p v-if="isTaskCreator"><strong>Visninger: </strong>{{ task.pageViews }}</p>
                 </div>
-                 <b-button variant="primary" class="tilmeldt-button mt-3" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
-                 <b-button variant="danger" class="tilmeldt-button mt-3" @click="deleteTask()" v-if="isTaskCreator">Slet Opgave</b-button>
+                <b-button variant="danger" class="tilmeldt-button mt-3"  @click="changeRed()" v-if="isTaskCreator && !isLost">Markér opgaven som løst</b-button>
             </b-col>
         </b-row>
     </div>
@@ -121,8 +127,7 @@ export default class SeeMore extends Vue {
     description = "";
     region = "";
     status = "";
-    isGreen = false;
-    isYellow = false;
+    isLost = false;
 
     user = {} as User;
     firstName = "";
@@ -146,6 +151,15 @@ export default class SeeMore extends Vue {
     rateUser = {} as User;
     rating = 0;
     message = "";
+
+    regions = [
+        { id: 0, name: "Sjælland", active: false },
+        { id: 1, name: "Nordjylland", active: false },
+        { id: 2, name: "Syddanmark", active: false },
+        { id: 3, name: "Hovedstaden", active: false },
+        { id: 4, name: "Midtjylland", active: false }]
+
+    regionSelected = "Hovedstaden";
 
     accepted = false;
 
@@ -172,8 +186,6 @@ export default class SeeMore extends Vue {
     changeGreen() {
         RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Ledig", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
         this.status = "Ledig";
-        this.isGreen = true;
-        this.isYellow = false;
     }
 
     changeRed() {
@@ -183,6 +195,7 @@ export default class SeeMore extends Vue {
             this.rating = 0;
             this.message = "";
             this.setValues();
+            this.isLost = true;
         } else {
             this.notChosen = true;
         }
@@ -191,7 +204,6 @@ export default class SeeMore extends Vue {
     setValues() {
         RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Løst", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
         this.status = "Løst";
-        this.isGreen = false;
     }
 
     edit() {
@@ -199,7 +211,7 @@ export default class SeeMore extends Vue {
     }
 
     redigerOpgave() {
-        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.categorySelected, this.task.date.toString(), this.titleInput, Number(this.prisInput), this.opgaveBeskrivelseInput, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), this.task.pageViews).then(response => {
+        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.categorySelected, this.task.date.toString(), this.titleInput, Number(this.prisInput), this.opgaveBeskrivelseInput, this.task.status, this.task.promoted, this.regionSelected, this.task.promotedEnd.toString(), this.task.pageViews).then(response => {
             this.rediger = false;
             this.getAllElements();
         });
@@ -220,6 +232,9 @@ export default class SeeMore extends Vue {
                 this.titleInput = this.task.title;
                 this.opgaveBeskrivelseInput = this.task.description;
                 this.prisInput = this.task.price.toString();
+                this.regionSelected = this.task.region;
+
+                if (this.task.status === "Løst") this.isLost = true;
 
                 this.loadKommentarer();
 
@@ -229,12 +244,6 @@ export default class SeeMore extends Vue {
                     this.userMail = response.data.email;
                     this.userNumber = response.data.phone;
                 });
-                if (this.status === "Ledig") {
-                    this.isGreen = true;
-                }
-                if (this.status === "Aktiv") {
-                    this.isYellow = true;
-                }
 
                 RedigerTask(this.task.id, this.task.userId, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
                 this.task.pageViews++;
@@ -291,12 +300,6 @@ export default class SeeMore extends Vue {
                 this.userMail = response.data.email;
                 this.userNumber = response.data.phone;
             });
-            if (this.status === "Ledig") {
-                this.isGreen = true;
-            }
-            if (this.status === "Aktiv") {
-                this.isYellow = true;
-            }
         });
     }
 
@@ -461,13 +464,14 @@ svg {
 }
 
 .circleButton {
-    padding: 0px;
+    border: none!important;
     display: inline-block;
-    width: 13px;
-    height: 13px;
-    border-radius: 15px;
+    border-radius: 6px;
     margin-right: 3px;
     border-style: none;
+    color: white;
+    margin-top: -2px;
+
 }
 
 .title {
@@ -497,15 +501,15 @@ h1 {
 }
 
 .Løst {
-    color: #dc3545;
+    color: #dc3545!important;
 }
 
 .Aktiv {
-    color: #ffab00;
+    color: #ffab00!important;
 }
 
 .Ledig {
-    color: #28a745;
+    color: #28a745!important;
 }
 
 .rating {

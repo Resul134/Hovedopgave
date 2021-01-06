@@ -1,14 +1,16 @@
 <template>
     <div>
         <h2 class="accepted">Godkendt</h2>
+        <p v-if="TasksAccepted.length < 1">Du har ingen godkendte tilmeldinger.</p>
         <div>
             <div v-for="(acceptedTask, idx) in TasksAccepted" :key="idx" class="box">
-                <div @click="goToSeeMore(acceptedTask.id)" class="task" v-if="acceptedTask.status === 'Aktiv'">
+                <div @click="goToSeeMore(acceptedTask.id)" class="task">
                     <Tile :title="acceptedTask.title" :categoryId="acceptedTask.categoryId" :region="acceptedTask.region" :description="acceptedTask.description" :price="acceptedTask.price" :promoted="acceptedTask.promoted" />
                 </div>
             </div>
         </div>
         <h2 class="pending">Afventer afklaring</h2>
+        <p v-if="TasksPending.length < 1 || pendingTaskEmpty">Du har ingen afventende tilmeldinger.</p>
         <div>
             <div v-for="(pendingTask, idx) in TasksPending" :key="idx" class="box">
                 <div @click="goToSeeMore(pendingTask.id)" class="task" v-if="pendingTask.status === 'Ledig'">
@@ -17,6 +19,7 @@
             </div>
         </div>
         <h2 class="denied">Afvist</h2>
+        <p v-if="TasksDenied.length < 1 || denyTaskEmpty">Du har ingen afviste tilmeldinger.</p>
         <div>
             <div v-for="(deniedTask, idx) in TasksDenied" :key="idx" class="task">
                 <div @click="goToSeeMore(deniedTask.id)" v-if="deniedTask.status === 'Aktiv' || deniedTask.status === 'Løst'">
@@ -50,6 +53,8 @@ export default class MyTasks extends Vue {
     TasksAccepted = Array<Task>();
     TasksDenied = Array<Task>();
     TasksPending = Array<Task>();
+    denyTaskEmpty = true;
+    pendingTaskEmpty = true;
 
     mounted() {
         this.AcceptedAssignment();
@@ -74,7 +79,13 @@ export default class MyTasks extends Vue {
             this.pendingTasks.forEach(element => {
                 GetTaskById(element.taskID).then(response => {
                     this.TasksPending.push(response.data);
-                    console.log(this.TasksPending);
+
+                    this.TasksPending.forEach(e => {
+                        console.log(e);
+                        if (e.status === "Ledig") {
+                            this.pendingTaskEmpty = false;
+                        }
+                    });
                 }).catch((err) => {
                     console.error(err);
                 });
@@ -88,6 +99,12 @@ export default class MyTasks extends Vue {
             this.deniedTasks.forEach(element => {
                 GetTaskById(element.taskID).then(response => {
                     this.TasksDenied.push(response.data);
+
+                    this.TasksDenied.forEach(e => {
+                        if (e.status === "Aktiv" || e.status === "Løst") {
+                            this.denyTaskEmpty = false;
+                        }
+                    });
                 }).catch((err) => {
                     console.error(err);
                 });

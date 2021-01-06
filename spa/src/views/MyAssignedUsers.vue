@@ -7,7 +7,7 @@
                 <div>
                     <div class="background">
                         <div class="flex">
-                            <h4>Navn: <b-button @click="goToProfile(assignedUser.userID)" class="goto">{{ getUser[idx].firstName + " " + getUser[idx].lastName }}</b-button></h4>
+                            <h4>Navn: <b-button @click="goToProfile(assignedUser.userID)" class="goto">{{ assignedUser.firstName + " " + assignedUser.lastName }}</b-button></h4>
                             <h4 v-if="!assignedUser.accepted" class="notaccepted">Ikke godkendt</h4>
                             <h4 v-if="assignedUser.accepted" class="accepted">Godkendt</h4>
                         </div>
@@ -26,40 +26,59 @@ import { GetAssignedUsersOnMyTask, UpdateAssignedUser } from "@/api/assignedUser
 import { GetBrugerById } from "@/api/user";
 import { AssignedUser } from "../types/assignedUser";
 import { User } from "../types/user";
+import { GetTaskById, RedigerTask } from "@/api/task";
+import { Task } from "@/types/task";
 
 @Component
 export default class MyTasks extends Vue {
     AssignedUsers = Array<AssignedUser>();
-    getUser = Array<User>();
     status = {} as AssignedUser;
     allow = false;
+    task = {} as Task
 
     mounted() {
         this.getAllUsers();
+        this.getTask();
     }
 
     getAllUsers() {
+        this.allow = false;
         GetAssignedUsersOnMyTask(this.$store.state.AssignedTaskID).then(response => {
             this.AssignedUsers = response.data;
             let lidx = 0;
+            console.log(this.AssignedUsers.length + "lenght");
             this.AssignedUsers.forEach(element => {
                 GetBrugerById(element.userID).then(response => {
-                    this.getUser.push(response.data);
-
+                    element.firstName = response.data.firstName;
+                    element.lastName = response.data.lastName;
                     lidx++;
+
                     if (lidx === this.AssignedUsers.length) {
                         this.allow = true;
                     }
                 });
                 if (element.accepted) {
-                    console.log(element.accepted);
-                    this.AssignedUsers = this.AssignedUsers.filter((obj: AssignedUser) => {
-                        return obj.accepted;
+                    GetBrugerById(element.userID).then(response => {
+                        console.log(element.userID);
+                        element.firstName = response.data.firstName;
+                        element.lastName = response.data.lastName;
+
+                        this.AssignedUsers = this.AssignedUsers.filter((obj: AssignedUser) => {
+                            return obj.accepted;
+                        });
+
+                        this.allow = true;
                     });
                 }
             });
         }).catch((err) => {
             console.error(err);
+        });
+    }
+
+    getTask() {
+        GetTaskById(this.$store.state.AssignedTaskID).then(response => {
+            this.task = response.data;
         });
     }
 
@@ -71,6 +90,7 @@ export default class MyTasks extends Vue {
             }).catch(() => {
                 console.log("Couldn't remove user");
             });
+            RedigerTask(this.task.id, this.task.userId, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Ledig", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), this.task.pageViews);
         }
     }
 
@@ -86,6 +106,7 @@ export default class MyTasks extends Vue {
             }).catch((err) => {
                 console.error(err);
             });
+            RedigerTask(this.task.id, this.task.userId, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Aktiv", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), this.task.pageViews);
         }
     }
 }

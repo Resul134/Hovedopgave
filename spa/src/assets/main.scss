@@ -9,6 +9,23 @@ $sidebar-width: 230px;
     background: #111;
     color: #fff;
 
+    svg {
+        fill: white;
+    }
+
+    .rating b {
+        color: #fff;
+    }
+
+    .profile h5, .profile div {
+        color: #fff;
+    }
+
+    .tilmeld-error {
+        color: #fff;
+        margin-bottom: 15px;
+    }
+
     .rediger, .create, .seeMore, .comment, .login, .background, .register {
         background: #222!important;
     }

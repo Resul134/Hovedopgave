@@ -8,15 +8,15 @@
             <p>Brugernavn</p>
             <b-form-input v-model="userUsername" :state="userNameState()"></b-form-input>
         </div>
-    <div class="flex">
+    <div class="flex mb-3">
         <div>
             <p>Kodeord</p>
-            <b-form-input v-model="userPassword" id="input-live-password" :state="passwordState()"></b-form-input>
+            <b-form-input type="password" v-model="userPassword" id="input-live-password" :state="passwordState()"></b-form-input>
             <b-form-invalid-feedback id="input-live-password">Kodeord skal være mindst 8 karakterer</b-form-invalid-feedback>
         </div>
         <div>
             <p>Gentag kodeord</p>
-            <b-form-input v-model="userPasswordRepeat" :state="passwordRepeatState()"></b-form-input>
+            <b-form-input type="password" v-model="userPasswordRepeat" :state="passwordRepeatState()"></b-form-input>
         </div>
     </div>
     <div class="flex">
@@ -31,7 +31,7 @@
     </div>
     <div style="padding-bottom: 15px;">
             <p>Fødselsdato</p>
-            <b-form disabled class="custom-form">{{ userBirthday | formatDate }}</b-form>
+            <b-form disabled class="custom-form">{{ mom(userBirthday).format("DD-MM-YYYY") }}</b-form>
         </div>
     <div class="flex">
         <div>
@@ -54,11 +54,11 @@
         <b-form-input type="text" v-model="skill"></b-form-input>
         <b-button @click="addSkill()" class="ml-auto, btn btn-secondary btn-sm, buttonStyle">Tilføj</b-button>
         </div>
-        <ul>
-        <li v-for="(qualification, idx) in userQualifications" :key="idx">
-        {{ qualification.skill }}
-        <b-button @click="deleteSkill(qualification.id)" class="ml-auto, btn btn-secondary btn-sm" variant="danger">X</b-button>
-        </li>
+        <ul style="padding: 0px;">
+            <li v-for="(qualification, idx) in userQualifications" :key="idx">
+            {{ qualification.skill }}
+            <b-button @click="deleteSkill(qualification.id)" class="ml-auto, btn btn-secondary btn-sm" variant="danger">X</b-button>
+            </li>
         </ul>
     <div class="d-flex mt-4">
         <b-button variant="danger" @click="deleteProfil()">Slet konto</b-button>
@@ -75,6 +75,7 @@ import { DeleteAllTaskByUserID } from "../api/task";
 import { User } from "../types/user";
 import { Qualification } from "../types/qualification";
 import { GetQualificationsByUserId, DeleteQualificationById, OpretQualification } from "../api/qualification";
+import moment from "moment";
 
 @Component
 export default class Profile extends Vue {
@@ -108,6 +109,10 @@ export default class Profile extends Vue {
             this.GetQualifications(this.user.id);
             this.skill = "";
         });
+    }
+
+    mom(inp: Date) {
+        return moment(inp);
     }
 
     deleteSkill(id: number) {

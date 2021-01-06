@@ -53,8 +53,8 @@ export default class Home extends Vue {
     mounted() {
         GetTasks().then(response => {
             response.data = response.data.reverse();
-            this.newTasks = response.data.filter((t: Task) => t.promoted === false).slice(0, 4);
-            this.tasks = response.data.filter((t: Task) => t.promoted).slice(0, 4);
+            this.newTasks = response.data.filter((t: Task) => t.promoted === false && t.status !== "Aktiv" && t.status !== "Løst").slice(0, 4);
+            this.tasks = response.data.filter((t: Task) => t.promoted && t.status !== "Aktiv" && t.status !== "Løst").slice(0, 4);
         });
     }
 
