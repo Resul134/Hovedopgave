@@ -14,6 +14,9 @@ export function GetTasksByCategory(id: number) {
 export function DeleteAllTaskByUserID(id: number) {
     return axios.delete(`${apiEndPoint}/tasks/deleteTaskByID/${id}`);
 }
+export function DeleteTaskByID(id: number) {
+    return axios.delete(`${apiEndPoint}/tasks/${id}`);
+}
 
 export function GetTasksByUserID(userID: number) {
     return axios.get(`${apiEndPoint}tasks/MyTasks/${userID}`, {
