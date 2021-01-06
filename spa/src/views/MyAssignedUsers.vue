@@ -24,18 +24,22 @@
 import { Component, Vue } from "vue-property-decorator";
 import { GetAssignedUsersOnMyTask, UpdateAssignedUser } from "@/api/assignedUser";
 import { GetBrugerById } from "@/api/user";
+import { GetTaskById, RedigerTask } from "@/api/task";
 import { AssignedUser } from "../types/assignedUser";
 import { User } from "../types/user";
+import { Task } from "@/types/task";
 
 @Component
 export default class MyTasks extends Vue {
     AssignedUsers = Array<AssignedUser>();
     getUser = Array<User>();
     status = {} as AssignedUser;
+    task = {} as Task
     allow = false;
 
     mounted() {
         this.getAllUsers();
+        this.getTask();
     }
 
     getAllUsers() {
@@ -63,6 +67,12 @@ export default class MyTasks extends Vue {
         });
     }
 
+    getTask() {
+        GetTaskById(this.$store.state.AssignedTaskID).then(response => {
+            this.task = response.data;
+        });
+    }
+
     RegretAssignedUser(id: number, taskID: number, userID: number, accepted: boolean) {
         if (confirm("Er du sikker?")) {
             UpdateAssignedUser(id, taskID, userID, accepted).then(response => {
@@ -71,6 +81,7 @@ export default class MyTasks extends Vue {
             }).catch(() => {
                 console.log("Couldn't remove user");
             });
+            RedigerTask(this.task.id, this.task.userId, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Ledig", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), this.task.pageViews);
         }
     }
 
@@ -86,6 +97,7 @@ export default class MyTasks extends Vue {
             }).catch((err) => {
                 console.error(err);
             });
+            RedigerTask(this.task.id, this.task.userId, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Aktiv", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), this.task.pageViews);
         }
     }
 }
