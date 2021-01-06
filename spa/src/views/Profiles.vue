@@ -36,6 +36,11 @@
                         {{ userDescription }}
                     </b-col>
                 </b-row>
+                <b-row v-if="isUser">
+                    <b-col class="desc d-flex">
+                        <b-button class="mt-4 ml-auto" variant="primary" to="/profile">Rediger profil</b-button>
+                    </b-col>
+                </b-row>
             </div>
         </b-col>
         <b-col cols="3">
@@ -70,7 +75,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { GetBrugerById } from "../api/user";
+import { GetBrugerById, GetLoggedInId } from "../api/user";
 import { GetQualificationsByUserId } from "../api/qualification";
 import { GetRatingsByUserId } from "../api/rating";
 import { User } from "../types/user";
@@ -95,10 +100,12 @@ export default class Profiles extends Vue {
     userRatings = Array<Rating>();
     raters = Array<RatingPlus>();
     avgRating = 0;
+    isUser = false;
 
     @Watch("$route.query", { immediate: true, deep: true })
     OnParamChange() {
         this.Setup();
+        if (GetLoggedInId() === this.$route.query.user) this.isUser = true;
     }
 
     Setup() {

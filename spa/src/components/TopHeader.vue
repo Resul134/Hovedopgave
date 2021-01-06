@@ -15,6 +15,7 @@
                     </svg>
                     Opret arbejdsopgave
                     </b-button>
+                    <p v-if="User.firstName !== null && User.firstName !== undefined" style="margin: 0px; color: #fff;">{{ User.firstName + " " + User.lastName }}</p>
                     <b-dropdown :class="{ 'ml-auto' : !loggedIn }" offset="500" class="icon-only">
                         <template #button-content>
                             <svg width="2.2em" height="2.2em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="white" xmlns="http://www.w3.org/2000/svg">
@@ -28,7 +29,7 @@
                             <b-dropdown-item to="/register">Registrer</b-dropdown-item>
                         </template>
                         <template v-else>
-                            <b-dropdown-item to="/profile">Min profil</b-dropdown-item>
+                            <b-dropdown-item :to="'/profiles?user=' + id">Min profil</b-dropdown-item>
                             <b-dropdown-item to="/mineTilmeldinger">Mine tilmeldinger</b-dropdown-item>
                             <b-dropdown-item to="/mytasks">Mine arbejdsopgaver</b-dropdown-item>
                             <b-dropdown-item @click="changeTheme">Skift til <template v-if="theme === 'light'">Mørkt tema</template><template v-else>Lyst tema</template></b-dropdown-item>
@@ -40,7 +41,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import { GetLoggedInId, Logout } from "../api/user";
+import { GetLoggedInId, Logout, GetBrugerById } from "../api/user";
+import { User } from "../types/user";
 import { Dictionary } from "../types/dict";
 
 @Component
@@ -48,11 +50,17 @@ export default class TopHeader extends Vue {
     loggedIn = false;
     searchBarInput = "";
     queries = {} as Dictionary<string>;
-
+    id = "";
     theme = localStorage.getItem("theme");
+    User = {} as User;
 
     @Watch("$store.state.loggedIn") t() {
         this.loggedIn = this.$store.state.loggedIn;
+        this.id = GetLoggedInId();
+
+        GetBrugerById(Number(this.id)).then(response => {
+            this.User = response.data;
+        });
     }
 
     changeTheme() {
@@ -81,7 +89,7 @@ export default class TopHeader extends Vue {
 
     Logout() {
         this.$store.commit("loggedInState", false);
-        this.$router.push({ name: "Home" });
+        if (this.$route.name !== "Home") this.$router.push({ name: "Home" });
         Logout();
     }
 
