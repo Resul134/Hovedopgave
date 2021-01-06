@@ -1,5 +1,6 @@
 <template>
     <div>
+        <b-alert v-if="notChosen" variant="danger" show>Ingen personer valgt til arbejdsopgaven!</b-alert>
         <b-row>
             <b-col cols="9">
                 <div class="seeMore">
@@ -75,6 +76,16 @@
                     <p><strong >Status: </strong><span :class="status" style="margin-right: 5px;">{{status}}</span>
                     <b-button class="circleButton" title="Skift til ledig" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator && (!isGreen || isYellow)"></b-button>
                     <b-button class="circleButton" title="Skift til løst" style="background-color: #dc3545;" @click="changeRed()"  v-if="isTaskCreator && (isGreen || isYellow)"></b-button>
+                    <b-modal v-model="modalShow" hide-footer title="Giv en bedømmelse">
+                        <b-alert v-if="noInput" variant="danger" show>Udfyld felterne</b-alert>
+                        <h3>{{ rateUser.firstName }} {{ rateUser.lastName }}</h3>
+                        <b-form-rating class="rating" no-border inline v-model="rating"></b-form-rating>
+                        <p style="margin-bottom: 1px;">Besked:</p>
+                        <b-textarea v-model="message" rows="4"></b-textarea>
+                        <div style="text-align: right;">
+                            <b-button variant="primary" style="margin-top: 10px" @click="RateUser()">Bedøm</b-button>
+                        </div>
+                    </b-modal>
                     <p v-if="isTaskCreator"><strong>Visninger: </strong>{{ task.pageViews }}</p>
                 </div>
                  <b-button variant="primary" class="tilmeldt-button mt-3" to="/assignedUsers" v-if="isTaskCreator">Tilmeldte brugere</b-button>
@@ -88,12 +99,13 @@
 import { Component, Vue } from "vue-property-decorator";
 import { GetTaskById, GetTasksByUserID, RedigerTask, DeleteTaskByID } from "../api/task";
 import { GetBrugerById, GetLoggedInId } from "../api/user";
-import { GetAssignedUserMatch, OpretAssignedUser, DeleteAssignedUser } from "../api/assignedUser";
+import { GetAssignedUserMatch, GetAssignedUsersOnMyTask, OpretAssignedUser, DeleteAssignedUser } from "../api/assignedUser";
 import { Task } from "../types/task";
 import { User } from "../types/user";
 import { AssignedUser } from "../types/assignedUser";
 import { OpretComment, GetCommentsForTask } from "../api/comments";
 import { GetCategories } from "../api/category";
+import { CreateRating } from "../api/rating";
 import Comment from "../types/comments";
 import moment from "moment";
 
@@ -125,6 +137,13 @@ export default class SeeMore extends Vue {
     categories = [];
     categorySelected = 0;
 
+    modalShow = false;
+    notChosen = false;
+    noInput = false;
+    rateUser = {} as User;
+    rating = 0;
+    message = "";
+
     accepted = false;
 
     // Comments
@@ -155,10 +174,21 @@ export default class SeeMore extends Vue {
     }
 
     changeRed() {
+        if (this.rateUser.id) {
+            this.noInput = false;
+            this.modalShow = true;
+            this.rating = 0;
+            this.message = "";
+            this.setValues();
+        } else {
+            this.notChosen = true;
+        }
+    }
+
+    setValues() {
         RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, "Løst", this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews));
         this.status = "Løst";
         this.isGreen = false;
-        this.isYellow = false;
     }
 
     edit() {
@@ -222,6 +252,18 @@ export default class SeeMore extends Vue {
                     this.setup();
                 }
             }
+
+            GetAssignedUsersOnMyTask(this.$store.state.taskID).then(response => {
+                let assignedUsers = Array<AssignedUser>();
+                assignedUsers = response.data;
+                assignedUsers.forEach(user => {
+                    if (user.accepted) {
+                        GetBrugerById(user.userID).then(response => {
+                            this.rateUser = response.data;
+                        });
+                    }
+                });
+            });
         }
     }
 
@@ -316,6 +358,17 @@ export default class SeeMore extends Vue {
         OpretComment(this.task.id, GetLoggedInId(), new Date(), this.comment).then(() => {
             this.loadKommentarer();
         });
+    }
+
+    RateUser() {
+        CreateRating(this.rateUser.id, this.$store.state.taskID, new Date(), this.rating, this.message);
+        if (this.rating === 0 || this.message === "") {
+            this.noInput = true;
+        } else {
+            this.modalShow = false;
+            this.rating = 0;
+            this.message = "";
+        }
     }
 }
 </script>
@@ -450,5 +503,15 @@ h1 {
 
 .Ledig {
     color: #28a745;
+}
+
+.rating {
+    padding: 0;
+    background: none;
+    border: none;
+}
+.rating:focus {
+    outline: none;
+    box-shadow: none;
 }
 </style>

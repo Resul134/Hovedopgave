@@ -28,6 +28,24 @@ namespace RestAPI.Controllers
             return rating.GetRatingFromId(id);
         }
 
+        //GET api/<RatingsController>/user/5
+        [HttpGet]
+        [Route("user/{userId}")]
+        public List<Rating> GetByUserId(int userId)
+        {
+            ManageRating mngRating = new ManageRating();
+            return mngRating.GetRatingFromUser(userId);
+        }
+
+        //Get api/<RatingsController>/user/5/task/10
+        [HttpGet]
+        [Route("user/{userId}/task/{taskId}")]
+        public Rating GetByUserIdAndTaskId(int userId, int taskId)
+        {
+            ManageRating mngRating = new ManageRating();
+            return mngRating.GetRatingFromUserAndTask(userId, taskId);
+        }
+
         // POST api/<RatingsController>
         [HttpPost]
         public void Post([FromBody] Rating value)
