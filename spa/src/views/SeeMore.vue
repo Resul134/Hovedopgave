@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-alert v-if="notChosen" variant="danger" show>Ingen personer valgt til arbejdsopgaven!</b-alert>
+        <b-alert class="alert" v-if="notChosen" variant="danger" show>Ingen personer valgt til arbejdsopgaven! <b-button @click="notChosen = false">x</b-button></b-alert>
         <b-row>
             <b-col cols="9">
                 <div class="seeMore">
@@ -381,6 +381,21 @@ export default class SeeMore extends Vue {
 
 <style lang="scss" scoped>
 @import "@/assets/main.scss";
+
+.alert {
+    display: flex;
+    align-items: center;
+
+    button {
+        margin-left: auto;
+        background: none!important;
+        color: #721c24;
+        font-size: 20px;
+        padding: 2px;
+        border: none!important;
+        text-transform: lowercase;
+    }
+}
 
 .comments {
     margin-top: 35px;
