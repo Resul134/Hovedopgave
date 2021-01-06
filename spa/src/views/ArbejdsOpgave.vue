@@ -106,6 +106,9 @@ export default class Home extends Vue {
                 this.created = true;
                 this.error = false;
                 this.tommefelter = false;
+                this.title = "";
+                this.price = 0;
+                this.description = "";
             }).catch(() => {
                 this.error = true;
                 this.created = false;
