@@ -17,7 +17,13 @@
                         <b-form-select v-model="categorySelected">
                             <b-select-option v-for="(category, index) in categories" :key="index" :value="category.id">{{ category.name }}</b-select-option>
                         </b-form-select>
-                </div>
+                    </div>
+                     <div v-if="rediger">
+                        <b>Region</b>
+                        <b-form-select v-model="regionSelected">
+                            <b-select-option v-for="(region, index) in regions" :key="index" :value="region.name">{{ region.name }}</b-select-option>
+                        </b-form-select>
+                    </div>
                 </div>
                 <b-button v-if="rediger" class="action-buttons" variant="success" @click="redigerOpgave">Godkend</b-button>
                 <b-button class="action-buttons" v-if="isTaskCreator && !rediger" @click="edit" variant="primary">Rediger</b-button>
@@ -146,6 +152,14 @@ export default class SeeMore extends Vue {
     rateUser = {} as User;
     rating = 0;
     message = "";
+    regions = [
+        { id: 0, name: "Sjælland", active: false },
+        { id: 1, name: "Nordjylland", active: false },
+        { id: 2, name: "Syddanmark", active: false },
+        { id: 3, name: "Hovedstaden", active: false },
+        { id: 4, name: "Midtjylland", active: false }]
+
+    regionSelected = "Hovedstaden";
 
     accepted = false;
 
@@ -199,7 +213,7 @@ export default class SeeMore extends Vue {
     }
 
     redigerOpgave() {
-        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.categorySelected, this.task.date.toString(), this.titleInput, Number(this.prisInput), this.opgaveBeskrivelseInput, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), this.task.pageViews).then(response => {
+        RedigerTask(this.$store.state.taskID, this.$store.state.userID, this.categorySelected, this.task.date.toString(), this.titleInput, Number(this.prisInput), this.opgaveBeskrivelseInput, this.task.status, this.task.promoted, this.regionSelected, this.task.promotedEnd.toString(), this.task.pageViews).then(response => {
             this.rediger = false;
             this.getAllElements();
         });
@@ -220,6 +234,7 @@ export default class SeeMore extends Vue {
                 this.titleInput = this.task.title;
                 this.opgaveBeskrivelseInput = this.task.description;
                 this.prisInput = this.task.price.toString();
+                this.regionSelected = this.task.region;
 
                 this.loadKommentarer();
 

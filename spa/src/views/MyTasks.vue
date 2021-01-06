@@ -29,7 +29,7 @@ export default class MyTasks extends Vue {
     AssignedUsers(AssignedtaskID: number) {
         // this.$store.commit("AssignedUserID", AssignedUserID);
         this.$store.commit("AssignedTaskID", AssignedtaskID);
-        this.$router.push({ name: "AssignedUsers" });
+        this.$router.push({ name: "SeeMore" });
     }
 
     mounted() {
