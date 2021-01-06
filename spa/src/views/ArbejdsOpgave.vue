@@ -55,7 +55,7 @@ export default class Home extends Vue {
     regionsField =
         [
             { value: "Sjælland", text: "Sjælland" },
-            { value: "Nordjylland", text: "Jylland" },
+            { value: "Nordjylland", text: "Nordjylland" },
             { value: "Hovedstaden", text: "Hovedstaden" },
             { value: "Midtjylland", text: "Midtjylland" },
             { value: "Syddanmark", text: "Syddanmark" }
@@ -106,6 +106,9 @@ export default class Home extends Vue {
                 this.created = true;
                 this.error = false;
                 this.tommefelter = false;
+                this.title = "";
+                this.price = 0;
+                this.description = "";
             }).catch(() => {
                 this.error = true;
                 this.created = false;

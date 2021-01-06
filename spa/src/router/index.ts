@@ -70,17 +70,20 @@ const routes: Array<RouteConfig> = [
     {
         path: "/arbejdsopgave",
         name: "ArbejdsOpgave",
-        component: ArbejdsOpgave
+        component: ArbejdsOpgave,
+        beforeEnter: ifAuthenticated
     },
     {
         path: "/myTasks",
         name: "MyTasks",
-        component: MyTasks
+        component: MyTasks,
+        beforeEnter: ifAuthenticated
     },
     {
         path: "/assignedUsers",
         name: "AssignedUsers",
-        component: MyAssignedUsers
+        component: MyAssignedUsers,
+        beforeEnter: ifAuthenticated
     },
     {
         path: "*",
@@ -90,7 +93,8 @@ const routes: Array<RouteConfig> = [
     {
         path: "/mineTilmeldinger",
         name: "MineTilmeldinger",
-        component: MineTilmeldinger
+        component: MineTilmeldinger,
+        beforeEnter: ifAuthenticated
     }
 ];
 

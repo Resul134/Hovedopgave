@@ -114,6 +114,77 @@ namespace RestAPI.DBUtil
             return rating;
         }
 
+        public List<Rating> GetRatingFromUser(int userId)
+        {
+            List<Rating> RatingList = new List<Rating>();
+
+            string queryString = "SELECT * FROM Rating WHERE UserID = @ID";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+
+                command.Parameters.AddWithValue("@ID", userId);
+
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        Rating rating = new Rating();
+                        rating.ID = reader.GetInt32(0);
+                        rating.UserID = reader.GetInt32(1);
+                        rating.TaskID = reader.GetInt32(2);
+                        rating.Date = reader.GetDateTime(3);
+                        rating.rating = reader.GetInt32(4);
+                        rating.Message = reader.GetString(5);
+                        RatingList.Add(rating);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+
+            return RatingList;
+        }
+
+        public Rating GetRatingFromUserAndTask(int userId, int taskId)
+        {
+            Rating rating = new Rating();
+
+            string queryString = "SELECT * FROM Rating WHERE UserID = @ID AND TaskID = @Task";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryString, connection);
+                command.Connection.Open();
+
+                command.Parameters.AddWithValue("@ID", userId);
+                command.Parameters.AddWithValue("@Task", taskId);
+
+                SqlDataReader reader = command.ExecuteReader();
+                try
+                {
+                    while (reader.Read())
+                    {
+                        rating.ID = reader.GetInt32(0);
+                        rating.UserID = reader.GetInt32(1);
+                        rating.TaskID = reader.GetInt32(2);
+                        rating.Date = reader.GetDateTime(3);
+                        rating.rating = reader.GetInt32(4);
+                        rating.Message = reader.GetString(5);
+                    }
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+
+            return rating;
+        }
+
         public bool UpdateRating(Rating item, int id)
         {
             string queryString = "UPDATE Rating SET UserID = @UserID, TaskID = @TaskID, Date = @Date, Rating = @Rating, Message = @Message WHERE ID = @ID";

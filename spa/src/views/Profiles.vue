@@ -50,6 +50,18 @@
                         </p>
                 </div>
             </div>
+            <div class="profile" style="margin-top: 20px;">
+                <p class="text-center" style="font-weight: bold;">Bedømmelser</p>
+                <b-form-rating class="rating" v-model="avgRating" readonly show-value></b-form-rating>
+                <p class="font-weight-bold"></p>
+                <div class="ratinglist">
+                    <div v-for="(rating, idx) in raters" :key="idx" class="font-weight-bold rating-box">
+                        <p style="margin: 0;">{{ rating.name }}</p>
+                        <b-form-rating class="rating" style="padding-left: 0" v-model="rating.rating" readonly inline></b-form-rating>
+                        <p style="font-weight: normal;">{{ rating.message }}</p>
+                    </div>
+                </div>
+            </div>
         </b-col>
         <b-col cols="1"></b-col>
     </b-row>
@@ -60,8 +72,11 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { GetBrugerById } from "../api/user";
 import { GetQualificationsByUserId } from "../api/qualification";
+import { GetRatingsByUserId } from "../api/rating";
 import { User } from "../types/user";
 import { Qualification } from "../types/qualification";
+import { Rating, RatingPlus } from "../types/rating";
+import { Dictionary } from "../types/dict";
 import moment from "moment";
 
 @Component
@@ -77,6 +92,9 @@ export default class Profiles extends Vue {
     userEmail = "";
     userDescription = "";
     userQualifications = Array<Qualification>();
+    userRatings = Array<Rating>();
+    raters = Array<RatingPlus>();
+    avgRating = 0;
 
     @Watch("$route.query", { immediate: true, deep: true })
     OnParamChange() {
@@ -104,10 +122,35 @@ export default class Profiles extends Vue {
         GetQualificationsByUserId(id).then(response => {
             this.userQualifications = response.data;
         });
+        GetRatingsByUserId(id).then(response => {
+            this.userRatings = response.data;
+            if (this.userRatings) {
+                this.calcRating();
+                this.getNames();
+            }
+        });
     }
 
-    mounted() {
-        this.Setup();
+    getNames() {
+        this.raters = Array<RatingPlus>();
+        this.userRatings.forEach(rating => {
+            const ratingPlus = {} as RatingPlus;
+            GetBrugerById(rating.userID).then(response => {
+                ratingPlus.name = response.data.firstName + " " + response.data.lastName;
+                ratingPlus.date = rating.date;
+                ratingPlus.rating = rating.rating;
+                ratingPlus.message = rating.message;
+                this.raters.push(ratingPlus);
+            });
+        });
+    }
+
+    calcRating() {
+        let sum = 0;
+        this.userRatings.forEach(rating => {
+            sum += rating.rating;
+        });
+        this.avgRating = sum / this.userRatings.length;
     }
 }
 </script>
@@ -146,5 +189,20 @@ p.divider {
 h1 {
     margin-bottom: 35px;
     font-weight: bold;
+}
+.rating-box:last-child {
+    border-bottom: none;
+}
+.rating {
+    background: none;
+    border: none;
+}
+.rating:focus {
+  outline: none;
+  box-shadow: none;
+}
+.ratinglist {
+    max-height: 300px;
+    overflow: auto;
 }
 </style>

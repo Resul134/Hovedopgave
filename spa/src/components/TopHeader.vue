@@ -24,15 +24,15 @@
                         </svg>
                         </template>
                         <template v-if="!loggedIn">
-                            <b-dropdown-item to="/login">Login</b-dropdown-item>
-                            <b-dropdown-item to="/register">Register</b-dropdown-item>
+                            <b-dropdown-item to="/login">Log ind</b-dropdown-item>
+                            <b-dropdown-item to="/register">Registrer</b-dropdown-item>
                         </template>
                         <template v-else>
-                            <b-dropdown-item to="/profile">Profile</b-dropdown-item>
+                            <b-dropdown-item to="/profile">Min profil</b-dropdown-item>
                             <b-dropdown-item to="/mineTilmeldinger">Mine tilmeldinger</b-dropdown-item>
                             <b-dropdown-item to="/mytasks">Mine arbejdsopgaver</b-dropdown-item>
                             <b-dropdown-item @click="changeTheme">Skift til <template v-if="theme === 'light'">Mørkt tema</template><template v-else>Lyst tema</template></b-dropdown-item>
-                            <b-dropdown-item @click="Logout">Logout</b-dropdown-item>
+                            <b-dropdown-item @click="Logout">Log ud</b-dropdown-item>
                         </template>
                     </b-dropdown>
         </b-navbar>
