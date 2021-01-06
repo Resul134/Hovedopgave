@@ -9,8 +9,12 @@ $sidebar-width: 230px;
     background: #111;
     color: #fff;
 
-    .rediger, .create, .seeMore, .comment, .login {
+    .rediger, .create, .seeMore, .comment, .login, .background, .register {
         background: #222!important;
+    }
+
+    .background h4{
+        color: #fff;
     }
 
     .profile {
@@ -27,7 +31,7 @@ $sidebar-width: 230px;
 
     .pagination {
         li:not(.active) {
-            span {
+            span, button {
                 border: 1px solid #000!important;
                 background: #222!important;
             }

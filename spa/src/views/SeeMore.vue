@@ -24,8 +24,11 @@
                 <b-button variant=primary v-if="rediger" @click="edit">Tilbage</b-button>
                 <div class="d-flex" style="flex-direction: column">
                     <h1 class="mt-4">Kommentarer</h1>
-                    <b-textarea class="comment" v-model="comment" placeholder="Skriv her.." rows="4"></b-textarea>
-                    <button @click="kommenter()" class="btn btn-primary mt-3 ml-auto">Skriv kommentar</button>
+                    <template v-if="this.$store.state.loggedIn">
+                        <b-textarea class="comment" v-model="comment" placeholder="Skriv her.." rows="4"></b-textarea>
+                        <button @click="kommenter()" class="btn btn-primary mt-3 ml-auto">Skriv kommentar</button>
+                    </template>
+
                     <div class="comments" v-if="allowLoad">
                         <div :key="comment.date" v-for="comment in comments" class="comment" :class="{ active : comment.userID === task.userId }">
                         <div class="d-flex"><strong>{{ comment.firstName }} {{ comment.lastName }}</strong><p class="ml-auto">{{ mom(new Date(comment.date)).format("DD-MM-YYYY") }} kl. {{ mom(new Date(comment.date)).add(1, "hours").format("HH:mm") }}</p></div>
@@ -45,7 +48,7 @@
                         <button class="mb-3 btn btn-primary" v-else @click="signUp()" style="width:100%;">Tilmeld</button>
                     </div>
                 </div>
-                <button v-else class="mb-3 btn btn-primary" @click="routeLogin()" style="width:100%;">Login for at tilmelde</button>
+                <button v-else class="mb-3 btn btn-primary" @click="routeLogin()" style="width:100%;">Log ind for at tilmelde</button>
                 <div class="seeMore">
                     <p class="font-weight-bold text-center">Arbejdsgiver<p/>
                     <p>
@@ -71,7 +74,7 @@
                 </div>
                 <div class="seeMore mt-3">
                     <p class="font-weight-bold text-center">Praktisk<p/>
-                    <p><strong>Oprettet: </strong>{{ date | formatDate }}</p>
+                    <p><strong>Oprettet: </strong>{{ mom(new Date(date)).format("DD-MM-YYYY") }}</p>
                     <p><strong>Region: </strong>{{region}}</p>
                     <p><strong >Status: </strong><span :class="status" style="margin-right: 5px;">{{status}}</span>
                     <b-button class="circleButton" title="Skift til ledig" style="background-color: #28a745;" @click="changeGreen()" v-if="isTaskCreator && (!isGreen || isYellow)"></b-button>
@@ -235,6 +238,14 @@ export default class SeeMore extends Vue {
 
                 RedigerTask(this.task.id, this.task.userId, this.task.categoryId, this.task.date.toString(), this.task.title, this.task.price, this.task.description, this.task.status, this.task.promoted, this.task.region, this.task.promotedEnd.toString(), (this.task.pageViews + 1));
                 this.task.pageViews++;
+
+                if (this.$store.state.loggedIn) {
+                    if (GetLoggedInId() === this.task.userId.toString()) {
+                        this.isTaskCreator = true;
+                    } else {
+                        this.setup();
+                    }
+                }
             });
 
             GetCategories().then(response => {
@@ -244,14 +255,6 @@ export default class SeeMore extends Vue {
             }).catch(() => {
                 console.log("Error");
             });
-
-            if (this.$store.state.loggedIn) {
-                if (GetLoggedInId() === this.task.userId) {
-                    this.isTaskCreator = true;
-                } else {
-                    this.setup();
-                }
-            }
 
             GetAssignedUsersOnMyTask(this.$store.state.taskID).then(response => {
                 let assignedUsers = Array<AssignedUser>();
