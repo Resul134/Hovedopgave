@@ -75,6 +75,7 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
+import { GetTaskById } from "../api/task";
 import { GetBrugerById, GetLoggedInId } from "../api/user";
 import { GetQualificationsByUserId } from "../api/qualification";
 import { GetRatingsByUserId } from "../api/rating";
@@ -142,12 +143,15 @@ export default class Profiles extends Vue {
         this.raters = Array<RatingPlus>();
         this.userRatings.forEach(rating => {
             const ratingPlus = {} as RatingPlus;
-            GetBrugerById(rating.userID).then(response => {
-                ratingPlus.name = response.data.firstName + " " + response.data.lastName;
-                ratingPlus.date = rating.date;
-                ratingPlus.rating = rating.rating;
-                ratingPlus.message = rating.message;
-                this.raters.push(ratingPlus);
+            GetTaskById(rating.taskID).then(response => {
+                GetBrugerById(response.data.userId).then(response => {
+                    console.log(response.data);
+                    ratingPlus.name = response.data.firstName + " " + response.data.lastName;
+                    ratingPlus.date = rating.date;
+                    ratingPlus.rating = rating.rating;
+                    ratingPlus.message = rating.message;
+                    this.raters.push(ratingPlus);
+                });
             });
         });
     }
