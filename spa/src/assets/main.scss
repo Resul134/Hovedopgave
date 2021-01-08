@@ -134,11 +134,13 @@ $sidebar-width: 230px;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     grid-gap: 15px;
+    justify-items: center;
 }
 
 .task {
     overflow-wrap: break-word;
     max-width: 450px;
+    width: 100%;
 }
 
 .sidebar {
