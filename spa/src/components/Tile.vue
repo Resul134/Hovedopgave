@@ -110,6 +110,7 @@ h4 {
     font-weight: 600;
     padding: 5px;
     margin: 0;
+    height: 3em;
 }
 .region {
     float: right;

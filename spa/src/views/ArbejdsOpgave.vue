@@ -4,28 +4,28 @@
     <b-alert v-if="created" variant="success" show>Din arbejdsopgave er blevet oprettet! Gå til <a href ="/">Home</a></b-alert>
     <b-alert v-if="error" variant="danger" show>Der skete en fejl.</b-alert>
     <b-alert v-if="tommefelter" variant="danger" show>Fyld felterne ud</b-alert>
-    <div class="flex">
-        <div>
+    <b-row>
+        <b-col md=12 xl=6>
             <p>Titel</p>
             <b-form-input v-model="title"></b-form-input>
-        </div>
-        <div>
+        </b-col>
+        <b-col md=12 xl=6 style="margin-bottom: 10px;">
             <p>Pris i DKK</p>
             <b-form-input v-model="price" type="number"></b-form-input>
-        </div>
-    </div>
-    <div class="flex">
-        <div>
+        </b-col>
+    </b-row>
+    <b-row>
+        <b-col md=12 xl=6 style="margin-bottom: 10px;">
             <p>Kategori</p>
             <b-form-select v-model="categorySelected">
                 <b-select-option v-for="(category, index) in categories" :key="index" :value="category.id">{{ category.name }}</b-select-option>
             </b-form-select>
-        </div>
-        <div>
+        </b-col>
+        <b-col md=12 xl=6>
             <p>Region</p>
             <b-form-select :options="regionsField" v-model="region"></b-form-select>
-        </div>
-    </div>
+        </b-col>
+    </b-row>
     <p class="mt-3">Promover</p>
     <b-form-select id="input-live-promoted" v-model="promoted" :options="optionsPromoted"></b-form-select>
     <template v-if="promoted">
@@ -134,10 +134,10 @@ export default class Home extends Vue {
 }
 .create {
     width: 700px;
-    max-width: 92%;
+    max-width: 100%;
     margin: 0 auto;
     background: $light;
-    padding:40px;
+    padding: 40px;
     border-radius: 12px;
 }
 p {

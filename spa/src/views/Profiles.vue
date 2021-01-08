@@ -5,28 +5,28 @@
         <b-col md=12 xl=7>
             <div class="profile">
                 <b-row>
-                    <b-col cols="9">
+                    <b-col md=12 xl=9>
                         <h1>{{ userFirstName }} {{ userLastName }}</h1>
                     </b-col>
-                    <b-col cols="3">
+                    <b-col md=12 xl=3 style="text-align: center;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="7em" height="7em " fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M10 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6 5c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
                         </svg>
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col cols="8">
+                    <b-col md=12 xl=8>
                         <p class="divider">Email:<span>{{ userEmail }}</span></p>
                     </b-col>
-                    <b-col cols="4">
+                    <b-col md=12 xl=4>
                         <p class="divider">Telefon:<span>{{ userPhone }}</span></p>
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col cols="8">
+                    <b-col md=12 xl=8>
                         <p class="divider">Fødselsdato:<span>{{ userBirthday }}</span></p>
                     </b-col>
-                    <b-col cols="4">
+                    <b-col md=12 xl=4>
                         <p class="divider">Køn:<span>{{ userGender }}</span></p>
                     </b-col>
                 </b-row>

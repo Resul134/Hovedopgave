@@ -1,1 +1,1 @@
-export default "http://localhost:51542/api/";
+export default "https://workio-rest-api.azurewebsites.net/api/";

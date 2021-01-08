@@ -2,7 +2,7 @@
     <div>
         <b-alert class="alert" v-if="notChosen" variant="danger" show>Ingen personer valgt til arbejdsopgaven! <b-button @click="notChosen = false">x</b-button></b-alert>
         <b-row>
-            <b-col cols="9">
+            <b-col md=12 xl=9>
                 <div class="seeMore">
                     <p class="tag" v-if="!rediger">{{ price }} kr</p>
                     <b-input v-model="prisInput" placeholder="Prisen" v-if="rediger" class="pris">kr</b-input>
@@ -41,13 +41,13 @@
                         <p>{{ comment.message }}</p>
                     </div>
                     </div>
-                    <div v-else class="no-comments">
+                    <div v-else class="no-comments" style="margin-bottom: 10px;">
                         Der er ingen kommentarer på opslaget.
                     </div>
                 </div>
             </b-col>
 
-            <b-col cols="3">
+            <b-col md=12 l=4 xl=3>
                 <div v-if="this.$store.state.loggedIn">
                     <div v-if="!isTaskCreator && !isLost">
                         <button class="mb-3 btn btn-danger" v-if="signedUp" @click="dropOut()" style="width:100%;">Afmeld</button>

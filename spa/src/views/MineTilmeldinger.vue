@@ -2,8 +2,8 @@
     <div>
         <h2 class="accepted">Godkendt</h2>
         <p v-if="TasksAccepted.length < 1">Du har ingen godkendte tilmeldinger.</p>
-        <div>
-            <div v-for="(acceptedTask, idx) in TasksAccepted" :key="idx" class="box">
+        <div class="overview" style="margin: 15px 0;">
+            <div v-for="(acceptedTask, idx) in TasksAccepted" :key="idx">
                 <div @click="goToSeeMore(acceptedTask.id)" class="task">
                     <Tile :title="acceptedTask.title" :categoryId="acceptedTask.categoryId" :region="acceptedTask.region" :description="acceptedTask.description" :price="acceptedTask.price" :promoted="acceptedTask.promoted" />
                 </div>
@@ -11,8 +11,8 @@
         </div>
         <h2 class="pending">Afventer afklaring</h2>
         <p v-if="TasksPending.length < 1 || pendingTaskEmpty">Du har ingen afventende tilmeldinger.</p>
-        <div>
-            <div v-for="(pendingTask, idx) in TasksPending" :key="idx" class="box">
+        <div class="overview" style="margin: 15px 0;">
+            <div v-for="(pendingTask, idx) in TasksPending" :key="idx">
                 <div @click="goToSeeMore(pendingTask.id)" class="task" v-if="pendingTask.status === 'Ledig'">
                     <Tile :title="pendingTask.title" :categoryId="pendingTask.categoryId" :region="pendingTask.region" :description="pendingTask.description" :price="pendingTask.price" :promoted="pendingTask.promoted" />
                 </div>
@@ -20,7 +20,7 @@
         </div>
         <h2 class="denied">Afvist</h2>
         <p v-if="TasksDenied.length < 1 || denyTaskEmpty">Du har ingen afviste tilmeldinger.</p>
-        <div>
+        <div class="overview">
             <div v-for="(deniedTask, idx) in TasksDenied" :key="idx" class="task">
                 <div @click="goToSeeMore(deniedTask.id)" v-if="deniedTask.status === 'Aktiv' || deniedTask.status === 'Løst'">
                     <Tile :title="deniedTask.title" :categoryId="deniedTask.categoryId" :region="deniedTask.region" :description="deniedTask.description" :price="deniedTask.price" :promoted="deniedTask.promoted" />
@@ -128,21 +128,7 @@ export default class MyTasks extends Vue {
     border-radius: 7px;
     text-align: center;
     width: 180px;
-
-}
-.box {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.task {
-    width: 24.25%;
-    margin-right: 1%;
-    margin-bottom: 1%;
-}
-
-.task:nth-child(4n) {
-    margin-right: 0;
+    padding: 5px;
 }
 
 .denied {
@@ -151,6 +137,7 @@ export default class MyTasks extends Vue {
     color: white;
     text-align: center;
     width: 130px;
+    padding: 4px;
 }
 
 .pending {
@@ -159,6 +146,7 @@ export default class MyTasks extends Vue {
     color: white;
     width: 280px;
     text-align: center;
+    padding: 4px;
 }
 
 </style>

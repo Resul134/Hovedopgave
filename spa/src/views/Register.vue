@@ -3,43 +3,43 @@
     <h1>Opret bruger</h1>
     <b-alert variant="success" show>Din bruger blev oprettet! Gå til <router-link to="/login">Log ind</router-link></b-alert>
     <b-alert v-if="error" variant="danger" show>Der skete en fejl.</b-alert>
-    <div class="flex">
-        <div>
+    <b-row>
+        <b-col md=12 xl=6>
             <p>Fornavn</p>
             <b-form-input v-model="firstName"></b-form-input>
-        </div>
-        <div>
+        </b-col>
+        <b-col md=12 xl=6>
             <p>Efternavn</p>
             <b-form-input v-model="lastName"></b-form-input>
-        </div>
-    </div>
-    <div class="flex">
-        <div>
+        </b-col>
+    </b-row>
+    <b-row>
+        <b-col md=12 xl=6>
             <p>Email</p>
             <b-form-input v-model="email"></b-form-input>
-        </div>
-        <div>
+        </b-col>
+        <b-col md=12 xl=6>
             <p>Telefon</p>
             <b-form-input v-model="phone" type="number"></b-form-input>
-        </div>
-    </div>
-    <p>Fødselsdag</p>
+        </b-col>
+    </b-row>
+    <p style="margin-top: 20px;">Fødselsdag</p>
     <b-form-datepicker id="birthday" v-model="birthday"></b-form-datepicker>
     <p>Køn</p>
     <b-form-select v-model="selectedGender" :options="genderOptions"></b-form-select>
-    <div class="flex mt-3">
-        <div>
+    <b-row style="margin-top: 20px;">
+        <b-col md=12 xl=6>
             <p>Brugernavn</p>
             <b-form-input v-model="username"></b-form-input>
-        </div>
-        <div>
+        </b-col>
+        <b-col md=12 xl=6>
             <p>Kodeord</p>
             <b-form-input type="password" v-model="password"></b-form-input>
             <p class="mt-2">Kodeord igen</p>
             <b-form-input type="password" v-model="passwordRepeat"></b-form-input>
-        </div>
-    </div>
-    <p>Beskrivelse</p>
+        </b-col>
+    </b-row>
+    <p style="margin-top: 20px;">Beskrivelse</p>
     <div>
         <b-textarea v-model="description" rows="5"></b-textarea>
     </div>
