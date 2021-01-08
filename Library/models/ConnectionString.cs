@@ -10,7 +10,7 @@ namespace Library.models
         
         public ConnectionString()
         {
-            ConnectionStr = "Data Source=DESKTOP-O7CILOQ\\SQLEXPRESS01;Initial Catalog=hovedopgave;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            ConnectionStr = "Server=tcp:simonshndb.database.windows.net,1433;Initial Catalog=WorkioDB;Persist Security Info=False;User ID=Grethe;Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         }
     }
 }
