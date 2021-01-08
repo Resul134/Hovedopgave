@@ -5,30 +5,30 @@
     <b-alert v-if="error" variant="danger" show>Oplysninger blev ikke opdateret - Server fejl.</b-alert>
     <b-alert v-if="edited" variant="success" show>Dine oplysninger er blevet opdateret!</b-alert>
     <div>
-            <p>Brugernavn</p>
-            <b-form-input v-model="userUsername" :state="userNameState()"></b-form-input>
-        </div>
-    <div class="flex mb-3">
-        <div>
+        <p>Brugernavn</p>
+        <b-form-input v-model="userUsername" :state="userNameState()"></b-form-input>
+    </div>
+    <b-row class="mb-3">
+        <b-col md=12 xl=6 class="mb-3">
             <p>Kodeord</p>
             <b-form-input type="password" v-model="userPassword" id="input-live-password" :state="passwordState()"></b-form-input>
             <b-form-invalid-feedback id="input-live-password">Kodeord skal være mindst 8 karakterer</b-form-invalid-feedback>
-        </div>
-        <div>
+        </b-col>
+        <b-col md=12 xl=6>
             <p>Gentag kodeord</p>
             <b-form-input type="password" v-model="userPasswordRepeat" :state="passwordRepeatState()"></b-form-input>
-        </div>
-    </div>
-    <div class="flex">
-        <div>
+        </b-col>
+    </b-row>
+    <b-row>
+        <b-col md=12 xl=6>
             <p>Fornavn</p>
             <b-form-input v-model="userFirstName"></b-form-input>
-        </div>
-        <div>
+        </b-col>
+        <b-col md=12 xl=6>
             <p>Efternavn</p>
             <b-form-input v-model="userLastName"></b-form-input>
-        </div>
-    </div>
+        </b-col>
+    </b-row>
     <div style="padding-bottom: 15px;">
             <p>Fødselsdato</p>
             <b-form disabled class="custom-form">{{ mom(userBirthday).format("DD-MM-YYYY") }}</b-form>
@@ -54,7 +54,7 @@
         <b-form-input type="text" v-model="skill"></b-form-input>
         <b-button @click="addSkill()" class="ml-auto, btn btn-secondary btn-sm, buttonStyle">Tilføj</b-button>
         </div>
-        <ul style="padding: 0px;">
+        <ul style="padding: 0px;" class="flex">
             <li v-for="(qualification, idx) in userQualifications" :key="idx">
             {{ qualification.skill }}
             <b-button @click="deleteSkill(qualification.id)" class="ml-auto, btn btn-secondary btn-sm" variant="danger">X</b-button>
@@ -261,6 +261,7 @@ export default class Profile extends Vue {
 
 ul {
     display: flex;
+    flex-wrap: wrap;
     list-style: none;
     margin-bottom: 6rem;
 }
@@ -268,6 +269,7 @@ ul {
 li {
     background-color:darkgray;
     margin-right: 15px;
+    margin-bottom: 15px;
     padding: 6px;
     border-radius: 7px;
 }
